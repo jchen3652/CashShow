@@ -69,7 +69,7 @@ public class googleSearcher {
 			System.out.println("No results found");
 		}
 		fullSearchableText = fullSearchableText.replaceAll("&#39;", "'").replaceAll("<br>", " ").replaceAll("<b>", "")
-				.replaceAll("</b>", "");
+				.replaceAll("</b>", "").replaceAll("&nbsp;...", " ").toLowerCase();
 
 	}
 

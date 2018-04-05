@@ -18,9 +18,6 @@ public class Algorithms {
 	 * @return Score for google occurrence test
 	 */
 	public static int occuranceAlgorithmScore(String googleResult, String answerCandidate) {
-		googleResult = googleResult.toLowerCase();
-		answerCandidate = answerCandidate.toLowerCase();
-		
 		int count = numberOfTimesContained(googleResult, answerCandidate);
 		String [] splitAnswers = answerCandidate.split(" ");
 		for(String o:splitAnswers) {

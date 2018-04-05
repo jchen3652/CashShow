@@ -1,12 +1,7 @@
-
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -52,7 +47,7 @@ public class ImageProcessor {
 	/**
 	 * Uses OCR to find the question text
 	 * 
-	 * @return String with the question text filtered into a single line
+	 * @return String with the question text filtered into a single line and lower case
 	 * @throws IOException
 	 */
 	public String getQuestionText() throws IOException {
@@ -78,9 +73,16 @@ public class ImageProcessor {
 			e.printStackTrace();
 		}
 		result = result.replaceAll("\n", " ");
+		result = result.toLowerCase();
 		return result;
 	}
 
+	/**
+	 * Returns a list of the answer question strings
+	 * 
+	 * @return Answer question list
+	 * @throws IOException
+	 */
 	public String[] getAnswerList() throws IOException {
 		// img = ImageIO.read(new File("D:\\Users\\James\\Desktop\\Screen Shot.png"));
 
@@ -105,8 +107,11 @@ public class ImageProcessor {
 		}
 		String[] listOfResults = result.split("\n");
 		listOfResults[2] = listOfResults[2].replaceAll("/n", "").replaceAll("ﬁ", "fi");
+		for(int i = 0; i < 3; i++) {
+			listOfResults[i] = listOfResults[i].toLowerCase();
+		}
+		
 		return listOfResults;
 
 	}
-
 }
