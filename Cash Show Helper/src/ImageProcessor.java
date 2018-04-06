@@ -10,10 +10,101 @@ import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
 public class ImageProcessor {
-	BufferedImage img = null;
+	static BufferedImage img = null;
+	static double resolutionModifier;
 
+	private static final int questionTextThreshold = 210;
+	private static final int answerTextThreshold = 210;
+
+	private static final String questionOutputPath = "D:\\Users\\James\\Desktop\\questionimage.png";
+	private static final String answersOutputPath = "D:\\Users\\James\\Desktop\\answerarea.png";
+	
+	public String humanQuestionText;
+	public String[] humanAnswerText;
+	
 	public ImageProcessor(String file) throws IOException {
-		img = ImageIO.read(new File(Main.screenshotDirectory));
+		img = ImageIO.read(new File(file));
+
+		resolutionModifier = (1080.0 / (double) img.getWidth());
+		System.out.println("Resolution Downscale Factor: " + resolutionModifier);
+	}
+
+	/**
+	 * Uses OCR to find the question text
+	 * 
+	 * @return String with the question text filtered into a single line and lower
+	 *         case
+	 * @throws IOException
+	 */
+	public String getQuestionText() throws IOException {
+		System.out.println("Getting Question String...");
+		
+		// img = ImageIO.read(new
+		// File("D:\\Users\\James\\Desktop\\Screenshot_2018-02-24-18-32-55 (1).png"));
+
+		BufferedImage questionArea = img.getSubimage((int) Math.round((70 / resolutionModifier)),
+				(int) Math.round((350 / resolutionModifier)), (int) Math.round((920 / resolutionModifier)),
+				(int) Math.round((250 / resolutionModifier)));
+		questionArea = thresholdImage(questionArea, questionTextThreshold);
+		// Kernel kernel = new Kernel(3, 3, new float[] { -1, -1, -1, -1, 9, -1, -1, -1,
+		// -1 });
+		// BufferedImageOp op = new ConvolveOp(kernel);
+		// questionArea = op.filter(questionArea, null);
+		File outputfile = new File(questionOutputPath);
+		ImageIO.write(questionArea, "png", outputfile);
+
+		ITesseract instance = new Tesseract();
+
+		String result = null;
+		try {
+			result = instance.doOCR(questionArea);
+		} catch (TesseractException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		result = result.replaceAll("\n", " ");
+		humanQuestionText = result;
+		System.out.println("Got Question String");
+		return result;
+	}
+
+	/**
+	 * Returns a list of the answer question strings
+	 * 
+	 * @return Answer question list
+	 * @throws IOException
+	 */
+	public String[] getAnswerList() throws IOException {
+		System.out.println("Getting Answer List...");
+		BufferedImage answerArea = img.getSubimage((int) (70 / resolutionModifier), (int) (750 / resolutionModifier),
+				(int) (710 / resolutionModifier), (int) (600 / resolutionModifier));
+
+		answerArea = thresholdImage(answerArea, answerTextThreshold);
+
+		// Kernel kernel = new Kernel(3, 3, new float[] { -1, -1, -1, -1, 9, -1, -1, -1,
+		// -1 });
+		// BufferedImageOp op = new ConvolveOp(kernel);
+		// answerArea = op.filter(answerArea, null);
+		File outputfile = new File(answersOutputPath);
+		ImageIO.write(answerArea, "png", outputfile);
+
+		ITesseract instance = new Tesseract();
+
+		String result = null;
+		try {
+			result = instance.doOCR(answerArea);
+		} catch (TesseractException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		humanAnswerText = result.split("\n");
+		humanAnswerText[2] = humanAnswerText[2].replaceAll("/n", "").replaceAll("ﬁ", "fi");
+		
+
+		
+		System.out.println("Got Answer List");
+		return humanAnswerText;
+
 	}
 
 	/**
@@ -44,74 +135,4 @@ public class ImageProcessor {
 		return result;
 	}
 
-	/**
-	 * Uses OCR to find the question text
-	 * 
-	 * @return String with the question text filtered into a single line and lower case
-	 * @throws IOException
-	 */
-	public String getQuestionText() throws IOException {
-		// img = ImageIO.read(new
-		// File("D:\\Users\\James\\Desktop\\Screenshot_2018-02-24-18-32-55 (1).png"));
-
-		BufferedImage questionArea = img.getSubimage(70, 350, 920, 250);
-		questionArea = thresholdImage(questionArea, 200);
-		// Kernel kernel = new Kernel(3, 3, new float[] { -1, -1, -1, -1, 9, -1, -1, -1,
-		// -1 });
-		// BufferedImageOp op = new ConvolveOp(kernel);
-		// questionArea = op.filter(questionArea, null);
-		File outputfile = new File("D:\\Users\\James\\Desktop\\dimage.png");
-		ImageIO.write(questionArea, "png", outputfile);
-
-		ITesseract instance = new Tesseract();
-
-		String result = null;
-		try {
-			result = instance.doOCR(questionArea);
-		} catch (TesseractException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		result = result.replaceAll("\n", " ");
-		result = result.toLowerCase();
-		return result;
-	}
-
-	/**
-	 * Returns a list of the answer question strings
-	 * 
-	 * @return Answer question list
-	 * @throws IOException
-	 */
-	public String[] getAnswerList() throws IOException {
-		// img = ImageIO.read(new File("D:\\Users\\James\\Desktop\\Screen Shot.png"));
-
-		BufferedImage answerArea = img.getSubimage(70, 750, 710, 600);
-		// answerArea = thresholdImage(answerArea, 200);
-
-		// Kernel kernel = new Kernel(3, 3, new float[] { -1, -1, -1, -1, 9, -1, -1, -1,
-		// -1 });
-		// BufferedImageOp op = new ConvolveOp(kernel);
-		// answerArea = op.filter(answerArea, null);
-		File outputfile = new File("D:\\Users\\James\\Desktop\\answerarea.png");
-		ImageIO.write(answerArea, "png", outputfile);
-
-		ITesseract instance = new Tesseract();
-
-		String result = null;
-		try {
-			result = instance.doOCR(answerArea);
-		} catch (TesseractException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String[] listOfResults = result.split("\n");
-		listOfResults[2] = listOfResults[2].replaceAll("/n", "").replaceAll("ﬁ", "fi");
-		for(int i = 0; i < 3; i++) {
-			listOfResults[i] = listOfResults[i].toLowerCase();
-		}
-		
-		return listOfResults;
-
-	}
 }

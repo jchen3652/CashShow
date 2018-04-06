@@ -6,28 +6,36 @@ import java.io.IOException;
 public class Main {
 	static String[] allAnswers = null;
 	static int[] allScores = new int[3];
-	public static final String screenshotDirectory = "D:\\\\Users\\\\James\\\\Desktop\\\\Screen Shot.png";
+	static String questionText;
+	static String fullSearchableText;
+	public static final String screenshotDirectory = "D:\\Users\\James\\Desktop\\";
+	public static final String screenshotIdentifier = "testscreenshot.png";
+	
+	
+	
+	
 	
 	public static void main(String[] args) throws IOException {
-		ImageProcessor processor = new ImageProcessor(screenshotDirectory);
-		googleSearcher.loadFullSearchableText(processor.getQuestionText());
+		// new ConsoleOutput().setVisible(true);
+		ImageProcessor processor = new ImageProcessor(screenshotDirectory + screenshotIdentifier);
+		questionText = processor.getQuestionText();		
 		allAnswers = processor.getAnswerList();
+		System.out.println(processor.humanQuestionText);
+		fullSearchableText = googleSearcher.loadFullSearchableText(questionText);
 		
-		System.out.println(processor.getQuestionText());
 		
-		for (String o : allAnswers) {
-			System.out.println(o);
+		for (String o : processor.humanAnswerText) {
+			System.out.println("***" + o);
 
 		}
 	
-		
+		// System.out.println(fullSearchableText);
 		for (int i = 0; i < 3; i++) {
 			allScores[i] += Algorithms.occuranceAlgorithmScore(
-					googleSearcher.getFullSearchableText(), allAnswers[i]);
-			System.out.println(googleSearcher.getFullSearchableText());
+					fullSearchableText, allAnswers[i]);
+			System.out.println(processor.humanAnswerText[i] + ": " + allScores[i]);
 		}
-		System.out.println(allScores[0]);
-		System.out.println(allScores[1]);
-		System.out.println(allScores[2]);
+		
+		
 	}
 }
