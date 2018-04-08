@@ -28,7 +28,7 @@ public class ConsoleOutput extends JFrame {
     private PrintStream standardOut;
      
     public ConsoleOutput() {
-        super("Hitler did nothing wrong");
+        super("Cash Show Helper");
          
         textArea = new JTextArea(50, 10);
         textArea.setEditable(false);

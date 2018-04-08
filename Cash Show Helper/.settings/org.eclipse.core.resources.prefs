@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/ImageProcessor.java=UTF-8
-encoding//src/Main.java=UTF-8
+encoding//src/algorithms/Algorithms.java=UTF-8
+encoding//src/consoleOutput/CustomOutputStream.java=UTF-8
+encoding//src/vision/ImageProcessor.java=UTF-8
