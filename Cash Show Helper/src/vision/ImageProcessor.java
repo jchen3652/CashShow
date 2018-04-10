@@ -23,16 +23,14 @@ public class ImageProcessor {
 	public String humanQuestionText;
 	public String[] humanAnswerText = new String[3];
 
-	public ImageProcessor(String file) throws IOException {
-		img = ImageIO.read(new File(file));
+	public ImageProcessor(BufferedImage image) throws IOException {
+		img = image;
 
 		resolutionModifier = (1080.0 / (double) img.getWidth());
 
 		System.out.println("Resolution Downscale Factor: " + resolutionModifier);
 	}
-	
 
-	
 	/**
 	 * Uses OCR to find the question text
 	 * 
@@ -49,13 +47,11 @@ public class ImageProcessor {
 		BufferedImage questionArea = img.getSubimage((int) Math.round((70 / resolutionModifier)),
 				(int) Math.round((350 / resolutionModifier)), (int) Math.round((920 / resolutionModifier)),
 				(int) Math.round((250 / resolutionModifier)));
-		
+
 		// crusty ass code
-				questionArea = sharpenImage(questionArea);
+		//questionArea = sharpenImage(questionArea);
 		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
-		
-		
-		
+
 		File outputfile = new File(Config.questionOutputPath);
 		ImageIO.write(questionArea, "png", outputfile);
 
@@ -89,27 +85,27 @@ public class ImageProcessor {
 		//answerArea = sharpenImage(answerArea);
 		answerArea = thresholdImage(answerArea, Config.answerTextThreshold);
 
-		
-		
 		File outputfile = new File(Config.answersOutputPath);
 		ImageIO.write(answerArea, "png", outputfile);
-		
+
 		ITesseract instance = new Tesseract();
-		
+
 		String result1 = null;
 		String result2 = null;
 		String result3 = null;
-		
-		BufferedImage subimage1 = answerArea.getSubimage((int) (80/resolutionModifier), (int) (30/resolutionModifier), (int) (630 /resolutionModifier), (int) (170/resolutionModifier));
-		BufferedImage subimage2 = answerArea.getSubimage((int) (80/resolutionModifier), (int) (230/resolutionModifier), (int) (630 /resolutionModifier), (int) (170/resolutionModifier));
-		BufferedImage subimage3 = answerArea.getSubimage((int) (80/resolutionModifier), (int) (430/resolutionModifier), (int) (630 /resolutionModifier), (int) (170/resolutionModifier));
-		
-		ImageIO.write(subimage1, "png", new File("D:\\Users\\James\\Desktop\\subimage1.png"));
-		ImageIO.write(subimage2, "png", new File("D:\\Users\\James\\Desktop\\subimage2.png"));
-		ImageIO.write(subimage3, "png", new File("D:\\Users\\James\\Desktop\\subimage3.png"));
-		
-		
-		
+
+		BufferedImage subimage1 = answerArea.getSubimage((int) (80 / resolutionModifier),
+				(int) (30 / resolutionModifier), (int) (630 / resolutionModifier), (int) (170 / resolutionModifier));
+		BufferedImage subimage2 = answerArea.getSubimage((int) (80 / resolutionModifier),
+				(int) (250 / resolutionModifier), (int) (630 / resolutionModifier), (int) (150 / resolutionModifier));
+		BufferedImage subimage3 = answerArea.getSubimage((int) (80 / resolutionModifier),
+				(int) (440 / resolutionModifier), (int) (630 / resolutionModifier), (int) (160 / resolutionModifier));
+
+		if (Config.isDebug) {
+			ImageIO.write(subimage1, "png", new File("D:\\Users\\James\\Desktop\\subimage1.png"));
+			ImageIO.write(subimage2, "png", new File("D:\\Users\\James\\Desktop\\subimage2.png"));
+			ImageIO.write(subimage3, "png", new File("D:\\Users\\James\\Desktop\\subimage3.png"));
+		}
 		try {
 			result1 = instance.doOCR(subimage1);
 			result2 = instance.doOCR(subimage2);
@@ -121,7 +117,7 @@ public class ImageProcessor {
 		humanAnswerText[0] = result1;
 		humanAnswerText[1] = result2;
 		humanAnswerText[2] = result3;
-		
+
 		try {
 			humanAnswerText[2] = humanAnswerText[2].replaceAll("/n", "");
 		} catch (Exception e) {
@@ -133,51 +129,10 @@ public class ImageProcessor {
 
 		System.out.println("Got Answer List");
 		return humanAnswerText;
-		/*
-		System.out.println("Getting Answer List...");
-		BufferedImage answerArea = img.getSubimage((int) (70 / resolutionModifier), (int) (750 / resolutionModifier),
-				(int) (710 / resolutionModifier), (int) (600 / resolutionModifier));
-		// crusty ass code
-		answerArea = sharpenImage(answerArea);
-		answerArea = thresholdImage(answerArea, Config.answerTextThreshold);
-
-		
-		
-		File outputfile = new File(Config.answersOutputPath);
-		ImageIO.write(answerArea, "png", outputfile);
-		
-		ITesseract instance = new Tesseract();
-		
-		
-		
-		
-		
-		String result = null;
-		try {
-			result = instance.doOCR(answerArea);
-		} catch (TesseractException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		humanAnswerText = result.split("\n");
-		try {
-			humanAnswerText[2] = humanAnswerText[2].replaceAll("/n", "");
-		} catch (Exception e) {
-			System.out.println("No image was detected");
-		}
-		for (int i = 0; i < humanAnswerText.length; i++) {
-			humanAnswerText[i] = Algorithms.cleanOCRError(humanAnswerText[i]);
-		}
-
-		System.out.println("Got Answer List");
-		return humanAnswerText;
-		*/
 	}
 
 	public BufferedImage sharpenImage(BufferedImage image) {
-		Kernel kernel = new Kernel(3, 3, new float[] { 0.0f, -1.0f, 0.0f,
-			    -1.0f, 5.0f, -1.0f,
-			     0.0f, -1.0f, 0.0f});
+		Kernel kernel = new Kernel(3, 3, new float[] {0.0f, -1.0f, 0.0f, -1.0f, 5.0f, -1.0f, 0.0f, -1.0f, 0.0f});
 		BufferedImageOp op = new ConvolveOp(kernel);
 		image = op.filter(image, null);
 		return image;

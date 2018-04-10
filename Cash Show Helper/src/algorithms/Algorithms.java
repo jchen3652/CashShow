@@ -1,45 +1,82 @@
 package algorithms;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+import org.json.JSONException;
+
+import main.Config;
+
 public class Algorithms {
+	public static void main(String[] args) throws JSONException, IOException, InterruptedException {
+		//System.out.println(googleResultsAlgorithm("Which animal helped build more civilizations than any other", "Dog"));
+		//Thread.sleep(2000);
+		System.out.println(LocalDateTime.now());
 
-	public static void main(String[] args) {
-
-		System.out.println(primaryAlgorithm(GoogleSearcher.loadFullSearchableText(
-				"Which country is considered to have the world’s largest lottery game"), "Spain"));
-		///]]System.out.println(primaryAlgorithm("", "Dogs"));
-		//System.out.println(primaryAlgorithm("", "Dogs"));
-
-		//System.out.println(primaryAlgorithm("", "Dogs"));
+		System.out.println(googleResultsAlgorithm("In what city is Romeo and Juliet set?", "Rome"));
+		System.out.println(googleResultsAlgorithm("In what city is Romeo and Juliet set?", "Verona"));
+		System.out.println(googleResultsAlgorithm("In what city is Romeo and Juliet set?", "Venice"));
+		System.out.println(LocalDateTime.now());
 
 	}
 
+	public static boolean arrayContains(String string, String[] array) {
+		string = string.toLowerCase();
+		
+		boolean contains = false;
+		for(int i = 0; i < 3; i ++) {
+			array[i] = array[i].toLowerCase();
+			if(string.contains(array[i])) {
+				contains = true;
+			}
+		}
+		return contains;
+	}
+	
 	public static String cleanOCRError(String text) {
-		text = text.replaceAll("\n", " ").replaceAll("ﾓ", "\"").replaceAll("‘", "\'").replaceAll("ﾗ", "-")
-				.replaceAll("ﬁ", "fi").replaceAll("tﾑ", "t'").replaceAll("“", "\"").replaceAll("E! ", "Et ");
+		text = text.replaceAll("\n", " ").replaceAll(",", ",").replaceAll("‘", "\'").replaceAll("ﾗ", "-")
+				.replaceAll("ﬁ", "fi").replaceAll("tﾑ", "t'").replaceAll("“", "\"").replaceAll(	"”", "\"").trim();
 		return text;
 	}
 
-	public static int primaryAlgorithm(String result, String answerCandidate) {
+	public static int googleResultsAlgorithm(String question, String answerCandidate)
+			throws JSONException, IOException {
+
+		question = question.replaceAll(" ", "%20");
+		answerCandidate = answerCandidate.replaceAll(" ", "%20");
+		return (int) (JSONs.getNumberOfResults(question + "%20" + answerCandidate) / Config.googleResultsScaleDown);
+	}
+
+	/**
+	 * Combined score calculation algorithm, all other algorithms are called
+	 * with this
+	 * 
+	 * @param searchResult
+	 *            Google Search Result
+	 * @param answerCandidate
+	 *            Potential answer
+	 * @return Calculated Score
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+
+	public static int primaryAlgorithm(String question, String searchResult, String answerCandidate)
+			throws JSONException, IOException {
 
 		int score = 0;
-		result = stringLowerCase(result);
-		answerCandidate = stringLowerCase(answerCandidate);
-
-		score += occuranceAlgorithmScore(result, answerCandidate);
+		searchResult = stringLowerCase(searchResult);
+		answerCandidate = answerCandidate.replaceAll("A ", "").toLowerCase();
+		if (Config.isDebug) {
+			System.out.println("search result" + searchResult);
+			System.out.println("answer candidate" + answerCandidate);
+		}
+		score += occuranceAlgorithmScore(searchResult, answerCandidate);
 		return score;
 	}
 
 	/*
 	 * public static int getNumberOfResults(String result, String
 	 * answerCandidate) { int score = 0;
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 * }
 	 */
@@ -83,10 +120,6 @@ public class Algorithms {
 	public static int occuranceAlgorithmScore(String googleResult, String answerCandidate) {
 		int count = 0;
 		String[] splitAnswers = answerCandidate.split(" ");
-
-		for (String o : splitAnswers) {
-			//	count += numberOfTimesContained(googleResult, o);
-		}
 
 		count += numberOfTimesContained(googleResult, answerCandidate);
 

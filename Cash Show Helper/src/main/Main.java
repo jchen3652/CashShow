@@ -14,6 +14,7 @@ import algorithms.Algorithms;
 import algorithms.GoogleSearcher;
 import consoleOutput.ConsoleOutput;
 import vision.ImageProcessor;
+import vision.ScreenListenerAlgorithms;
 
 public class Main {
 
@@ -25,69 +26,39 @@ public class Main {
 	public static final String screenshotIdentifier = "testscreenshot.png";
 	static File rawOutputfile = new File(screenshotDirectory + screenshotIdentifier);
 
-	public static final int pixelLocationX = 951; // 955 is left, 964 is right
-	public static final int pixelLocationY = 135;
-	
-	public static final int alternatePixelLocationX = 950;
-	public static final int alternatePixelLocationY = 335;
-	
-	public static final int[] grayRToleranceRange = {200, 230};
-	public static final int[] grayGToleranceRange = {200, 230};
-	public static final int[] grayBToleranceRange = {205, 230};
-
-	public static final int[] greenRToleranceRange = {50, 75};
-	public static final int[] greenGToleranceRange = {215, 245};
-	public static final int[] greenBToleranceRange = {50, 70};
-	
-	public static final int[] randomRToleranceRange = {254, 255};
-	public static final int[] randomGToleranceRange = {254, 255};
-	public static final int[] randomBToleranceRange = {254, 255};
-	
 	
 
-	public static final boolean isLiveShow = false;
+	
+
+	static Color pixelColor;
+
+	private static ScreenListenerAlgorithms algorithms = new ScreenListenerAlgorithms();
+
+	public static final boolean isLiveShow = true;
 
 	private static final int[] phoneScreenArea = {680, 40, 557, 990};
 
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-		new ConsoleOutput().show();
+		new ConsoleOutput().setVisible(true);
+
 		System.out.println("Is live show: " + false);
 		Thread.sleep(4000);
 		Robot robot = new Robot();
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);
 		while (true) {
-
-			// System.out.println("new question");
-			// System.out.println(new Date());
-
-			// Rectangle screenRect = new Rectangle();
-			// screenRect.setBounds(680, 40, 557, 990); //actual good phone screen
-
-			// screenRect.setBounds(953, 132, 4, 4);
-			// BufferedImage img = robot.createScreenCapture(screenRect);
-			Color pixelColor = robot.getPixelColor(pixelLocationX, pixelLocationY);
-			int red = pixelColor.getRed();
-			int green = pixelColor.getGreen();
-			int blue = pixelColor.getBlue();
-			boolean isGray = ((red > grayRToleranceRange[0]) && (red < grayRToleranceRange[1]))
-					&& ((green > grayGToleranceRange[0]) && (green < grayGToleranceRange[1]))
-					&& ((blue > grayBToleranceRange[0]) && (blue < grayBToleranceRange[1]));
-			boolean isGreen = ((red > greenRToleranceRange[0]) && (red < greenRToleranceRange[1]))
-					&& ((green > greenGToleranceRange[0]) && (green < greenGToleranceRange[1]))
-					&& ((blue > greenBToleranceRange[0]) && (blue < greenBToleranceRange[1]));
-			if (isGray || isGreen) {
-
-				System.out.println("Is Gray: " + isGray);
-				System.out.println("Is Green: " + isGreen);
+			algorithms.refreshPixelListener(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
+			if (algorithms.isGray() || algorithms.isGreen()) {
+				long start = System.currentTimeMillis();
+			
 				Rectangle screenRect = new Rectangle();
 				screenRect.setBounds(phoneScreenArea[0], phoneScreenArea[1], phoneScreenArea[2], phoneScreenArea[3]); // actual good phone screen
-
-				Thread.sleep(1000);
+				Thread.sleep(1050);
 				BufferedImage img = robot.createScreenCapture(screenRect);
-				ImageIO.write(img, "png", rawOutputfile);
-
-				ImageProcessor processor = new ImageProcessor(screenshotDirectory + screenshotIdentifier);
+				if (Config.isDebug) {
+					ImageIO.write(img, "png", rawOutputfile);
+				}
+				ImageProcessor processor = new ImageProcessor(img);
 				questionText = processor.getQuestionText();
 				String[] allAnswers = processor.getAnswerList();
 				System.out.println(processor.humanQuestionText);
@@ -98,96 +69,65 @@ public class Main {
 
 				}
 
-				// System.out.println(fullSearchableText);
-
 				for (int i = 0; i < 3; i++) {
 					try {
 						allScores[i] = 0;
-						allScores[i] += Algorithms.primaryAlgorithm(fullSearchableText, allAnswers[i]);
-						System.out.println(processor.humanAnswerText[i] + ": " + allScores[i]);
+						allScores[i] += Algorithms.primaryAlgorithm(questionText, fullSearchableText, allAnswers[i]);
+
 					} catch (Exception e) {
-						System.out.println("Not enough results on the scanned area");
+						e.printStackTrace();
 					}
 				}
+				if ((allScores[0] < 2 && allScores[1] < 2 && (allScores[2] < 2))) {
+					System.out.println("No results, alternate started");
+					for (int i = 0; i < 3; i++) {
+						allScores[i] = Algorithms.googleResultsAlgorithm(questionText, allAnswers[i]);
 
-				pixelColor = robot.getPixelColor(alternatePixelLocationX, alternatePixelLocationY);
-				red = pixelColor.getRed();
-				green = pixelColor.getGreen();
-				blue = pixelColor.getBlue();
-//				isGray = ((red > grayRToleranceRange[0]) && (red < grayRToleranceRange[1]))
-//						&& ((green > grayGToleranceRange[0]) && (green < grayGToleranceRange[1]))
-//						&& ((blue > grayBToleranceRange[0]) && (blue < grayBToleranceRange[1]));
-//				isGreen = ((red > greenRToleranceRange[0]) && (red < greenRToleranceRange[1]))
-//						&& ((green > greenGToleranceRange[0]) && (green < greenGToleranceRange[1]))
-//						&& ((blue > greenBToleranceRange[0]) && (blue < greenBToleranceRange[1]));
-				boolean isRandom = ((red >= randomRToleranceRange[0]) && (red <= randomRToleranceRange[1]))
-						&& ((green >= randomGToleranceRange[0]) && (green <= randomGToleranceRange[1]))
-						&& ((blue >= randomBToleranceRange[0]) && (blue <= randomBToleranceRange[1]));
-				// newQuestionExists = true;
-			
-				while ((/*isGray || isGreen ||*/ isRandom)) {
-
-					//do nothing
-					pixelColor = robot.getPixelColor(alternatePixelLocationX, alternatePixelLocationY);
-					red = pixelColor.getRed();
-					green = pixelColor.getGreen();
-					blue = pixelColor.getBlue();
-					/*isGray = ((red > grayRToleranceRange[0]) && (red < grayRToleranceRange[1]))
-							&& ((green > grayGToleranceRange[0]) && (green < grayGToleranceRange[1]))
-							&& ((blue > grayBToleranceRange[0]) && (blue < grayBToleranceRange[1]));
-					isGreen = ((red > greenRToleranceRange[0]) && (red < greenRToleranceRange[1]))
-							&& ((green > greenGToleranceRange[0]) && (green < greenGToleranceRange[1]))
-							&& ((blue > greenBToleranceRange[0]) && (blue < greenBToleranceRange[1]));*/
-					isRandom = ((red >= randomRToleranceRange[0]) && (red <= randomRToleranceRange[1]))
-							&& ((green >= randomGToleranceRange[0]) && (green <= randomGToleranceRange[1]))
-							&& ((blue >= randomBToleranceRange[0]) && (blue <= randomBToleranceRange[1]));
-				
-
+					}
 				}
-				System.out.println("r" + red);
-				System.out.println("g" + green);
-				System.out.println("b" + blue);
+				
+				if (Algorithms.arrayContains(questionText, processor.humanAnswerText)) {
+					System.out.println("compensating");
+					for (int i = 0; i < 3; i++) {
+						allScores[i] -= Algorithms.occuranceAlgorithmScore(fullSearchableText, allAnswers[i]);
+
+					}
+				}
+				for (int i = 0; i < 3; i++) {
+					System.out.println(processor.humanAnswerText[i] + ": " + allScores[i]);
+				}
+				System.out.println((System.currentTimeMillis() - start) / 1000.0);
+				
+				
+				algorithms.refreshPixelListener(Config.whitePixelXLocation, Config.whitePixelYLocation, robot);
+				System.out.println(algorithms.getR());
+				System.out.println(algorithms.getG());
+				System.out.println(algorithms.getB());
+
+				while ((/* isGray || isGreen || */ algorithms.isWhite())) {
+					algorithms.refreshPixelListener(Config.whitePixelXLocation, Config.whitePixelYLocation, robot);
+					
+				}
+
 				System.out.println("Screen changed");
-				pixelColor = robot.getPixelColor(pixelLocationX, pixelLocationY);
-				red = pixelColor.getRed();
-				green = pixelColor.getGreen();
-				blue = pixelColor.getBlue();
-				isGray = ((red > grayRToleranceRange[0]) && (red < grayRToleranceRange[1]))
-						&& ((green > grayGToleranceRange[0]) && (green < grayGToleranceRange[1]))
-						&& ((blue > grayBToleranceRange[0]) && (blue < grayBToleranceRange[1]));
-				isGreen = ((red > greenRToleranceRange[0]) && (red < greenRToleranceRange[1]))
-						&& ((green > greenGToleranceRange[0]) && (green < greenGToleranceRange[1]))
-						&& ((blue > greenBToleranceRange[0]) && (blue < greenBToleranceRange[1]));
-				while (!isGray && !isGreen) {
+				
+				algorithms.refreshPixelListener(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
+				
+				while (!algorithms.isGray() && !algorithms.isGreen()) {
 
 					//do nothing
-					pixelColor = robot.getPixelColor(pixelLocationX, pixelLocationY);
-					red = pixelColor.getRed();
-					green = pixelColor.getGreen();
-					blue = pixelColor.getBlue();
-					isGray = ((red > grayRToleranceRange[0]) && (red < grayRToleranceRange[1]))
-							&& ((green > grayGToleranceRange[0]) && (green < grayGToleranceRange[1]))
-							&& ((blue > grayBToleranceRange[0]) && (blue < grayBToleranceRange[1]));
-					isGreen = ((red > greenRToleranceRange[0]) && (red < greenRToleranceRange[1]))
-							&& ((green > greenGToleranceRange[0]) && (green < greenGToleranceRange[1]))
-							&& ((blue > greenBToleranceRange[0]) && (blue < greenBToleranceRange[1]));
+					algorithms.refreshPixelListener(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
+					
 				}
 				System.out.println("Screen changed back to questions");
-				
+
 				if (isLiveShow) {
 					System.out.print(" jk it's the answer reveal, waiting until it's not");
-					while (isGray || isGreen) {
+					algorithms.refreshPixelListener(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
+					while (algorithms.isGray() || algorithms.isGreen()) {
 
-						pixelColor = robot.getPixelColor(pixelLocationX, pixelLocationY);
-						red = pixelColor.getRed();
-						green = pixelColor.getGreen();
-						blue = pixelColor.getBlue();
-						isGray = ((red > grayRToleranceRange[0]) && (red < grayRToleranceRange[1]))
-								&& ((green > grayGToleranceRange[0]) && (green < grayGToleranceRange[1]))
-								&& ((blue > grayBToleranceRange[0]) && (blue < grayBToleranceRange[1]));
-						isGreen = ((red > greenRToleranceRange[0]) && (red < greenRToleranceRange[1]))
-								&& ((green > greenGToleranceRange[0]) && (green < greenGToleranceRange[1]))
-								&& ((blue > greenBToleranceRange[0]) && (blue < greenBToleranceRange[1]));
+						algorithms.refreshPixelListener(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
+						
 					}
 					System.out.println("Now answer reveal is over");
 				}

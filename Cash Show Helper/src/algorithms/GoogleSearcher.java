@@ -40,7 +40,7 @@ public class GoogleSearcher {
 		}
 		fullSearchableText = fullSearchableText.replaceAll("&#39;", "'").replaceAll("<br>", " ").replaceAll("<b>", "")
 				.replaceAll("</b>", " ").replaceAll("&nbsp;...", " ").toLowerCase();
-
+		
 		return fullSearchableText;
 	}
 
