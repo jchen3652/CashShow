@@ -10,8 +10,18 @@ public class ScreenListenerAlgorithms {
 	int green;
 	int blue;
 
-	public void refreshPixelListener(int x, int y, Robot robot) {
-		Color pixelColor = robot.getPixelColor(x, y);
+	Robot bot;
+	int xCoordinate;
+	int yCoordinate;
+
+	public ScreenListenerAlgorithms(int x, int y, Robot robot) {
+		xCoordinate = x;
+		yCoordinate = y;
+		bot = robot;
+	}
+
+	public void refreshPixelListener() {
+		Color pixelColor = bot.getPixelColor(xCoordinate, yCoordinate);
 		red = pixelColor.getRed();
 		green = pixelColor.getGreen();
 		blue = pixelColor.getBlue();
@@ -40,19 +50,19 @@ public class ScreenListenerAlgorithms {
 	public boolean isGreen() {
 		return isColor(Config.greenRTOL, Config.greenGTOL, Config.greenBTOL);
 	}
-	
+
 	public boolean isWhite() {
 		return isColor(Config.whiteRTOL, Config.whiteGTOL, Config.whiteBTOL);
 	}
-	
+
 	public int getR() {
 		return red;
 	}
-	
+
 	public int getB() {
 		return blue;
 	}
-	
+
 	public int getG() {
 		return green;
 	}

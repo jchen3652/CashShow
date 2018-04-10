@@ -17,7 +17,7 @@ public class GoogleSearcher {
 			.setApplicationName("My Project").build();
 
 	public static void main(String[] args) {
-		search("hitler");
+		System.out.println(search("hitler"));
 	}
 
 	public static String loadFullSearchableText(String keyword) {
@@ -25,7 +25,6 @@ public class GoogleSearcher {
 		String fullSearchableText = "";
 		try {
 			results = search(keyword);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -35,8 +34,7 @@ public class GoogleSearcher {
 				fullSearchableText = fullSearchableText + result.getTitle();
 			}
 		} catch (Exception e) {
-			System.out.println("No results found, setting fake searchableText");
-			fullSearchableText = "DogsdfdDogs";
+			e.printStackTrace();
 		}
 		fullSearchableText = fullSearchableText.replaceAll("&#39;", "'").replaceAll("<br>", " ").replaceAll("<b>", "")
 				.replaceAll("</b>", " ").replaceAll("&nbsp;...", " ").toLowerCase();
@@ -56,8 +54,7 @@ public class GoogleSearcher {
 			Search results = list.execute();
 			resultList = results.getItems();
 			//System.out.println(results.toString());
-		} catch (UnknownHostException e) {
-			System.out.println("Unable to search google, check connection");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
