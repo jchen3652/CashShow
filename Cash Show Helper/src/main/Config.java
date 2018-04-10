@@ -41,8 +41,8 @@ public class Config {
 	public static final int questionTextThreshold = 197; //191 tried and tested
 	public static final int answerTextThreshold = 220; // 191 tried and tested
 
-	public static final String questionOutputPath = "D:\\Users\\James\\Desktop\\questionimage.png";
-	public static final String answersOutputPath = "D:\\Users\\James\\Desktop\\answerarea.png";
+	public static final String questionOutputPath = mainDirectory + "questionimage.png";
+	public static final String answersOutputPath = mainDirectory + "answerarea.png";
 
 	public static final int timerPixelXLocation = 951;
 	public static final int timerPixelYLocation = 135;
