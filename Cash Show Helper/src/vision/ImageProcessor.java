@@ -105,9 +105,9 @@ public class ImageProcessor {
 				(int) (440 / resolutionModifier), (int) (630 / resolutionModifier), (int) (160 / resolutionModifier));
 
 		if (Config.isDebug) {
-			ImageIO.write(subimage1, "png", new File("D:\\Users\\James\\Desktop\\subimage1.png"));
-			ImageIO.write(subimage2, "png", new File("D:\\Users\\James\\Desktop\\subimage2.png"));
-			ImageIO.write(subimage3, "png", new File("D:\\Users\\James\\Desktop\\subimage3.png"));
+			ImageIO.write(subimage1, "png", new File(Config.mainDirectory + "\\subimage1.png"));
+			ImageIO.write(subimage2, "png", new File(Config.mainDirectory + "\\subimage2.png"));
+			ImageIO.write(subimage3, "png", new File(Config.mainDirectory + "\\subimage3.png"));
 		}
 		try {
 			result1 = instance.doOCR(subimage1);
