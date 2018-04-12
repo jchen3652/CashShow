@@ -11,58 +11,67 @@ import javax.imageio.ImageIO;
 
 import algorithms.Algorithms;
 import algorithms.GoogleSearcher;
+import consoleOutput.ConsoleOutput;
 import vision.ImageProcessor;
-import vision.ScreenListenerAlgorithms;
+import vision.PixelListener;
+import vision.SmartScreen;
 
 public class Main {
-	String[] allAnswers;
 	private static int[] allScores = new int[3];
 	static String questionText;
 	static String fullSearchableText;
 
-	static File rawOutputfile = new File(Config.mainDirectory + Config.screenshotIdentifier);
+	private static PixelListener timerListener;
+	private static PixelListener whiteListener;
 
-	private static ScreenListenerAlgorithms timerListener;
-	private static ScreenListenerAlgorithms whiteListener;
-
-	static Rectangle screenRect = new Rectangle(Config.phoneScreenArea[0], Config.phoneScreenArea[1],
-			Config.phoneScreenArea[2], Config.phoneScreenArea[3]);
-
-	public static final boolean isLiveShow = true;
-
-	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-		//new ConsoleOutput().setVisible(true);
-		Thread.sleep(2000);
-		System.out.println((new StringBuilder("Is live show: ")).append(isLiveShow));
+	static long startTime;
+		
+	public static void main(String[] args) throws AWTException, IOException, InterruptedException {	
+		new ConsoleOutput().setVisible(true);
+		
+		int[] smartScreenSize = SmartScreen.runSmartScreenCheck();
+		
 		Robot robot = new Robot();
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);
 
-		whiteListener = new ScreenListenerAlgorithms(Config.whitePixelXLocation, Config.whitePixelYLocation, robot);
-		timerListener = new ScreenListenerAlgorithms(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
-
-		while (true) {
+		whiteListener = new PixelListener(Config.whitePixelXLocation, Config.whitePixelYLocation, robot);
+		timerListener = new PixelListener(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
+		
+		System.out.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow));
+		Thread.sleep(2000);
+		
+		while (true) {		
 			timerListener.refreshPixelListener();
-
-			while (!(timerListener.isGray() || timerListener.isGreen())) {
+			whiteListener.refreshPixelListener();
+			
+			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
+				whiteListener.refreshPixelListener();
 			}
+			
 			System.out.println("Detected Question");
-			long start = System.currentTimeMillis();
-
-			Thread.sleep(50);
-			BufferedImage img = robot.createScreenCapture(screenRect);
-			if (Config.isDebug) {
-				ImageIO.write(img, "png", rawOutputfile);
+			
+			if(Config.isDebug) {
+				timerListener.printRGB();
+				startTime = System.currentTimeMillis();
 			}
-			ImageProcessor processor = new ImageProcessor(img);
+			
+			Thread.sleep(400);
+			
+			BufferedImage rawCapture = robot.createScreenCapture(new Rectangle(smartScreenSize[0], smartScreenSize[1],smartScreenSize[2],smartScreenSize[3]));
+			if (Config.isDebug) {
+				ImageIO.write(rawCapture, "png", new File((new StringBuilder(Config.mainDirectory)).append(Config.screenshotIdentifier).toString()));
+			}
+			
+			ImageProcessor processor = new ImageProcessor(rawCapture);
 			questionText = processor.getQuestionText();
 			String[] allAnswers = processor.getAnswerList();
 			System.out.println(processor.humanQuestionText);
 			fullSearchableText = GoogleSearcher.loadFullSearchableText(questionText);
 
 			for (String o : processor.humanAnswerText) {
-				System.out.println("***" + o);
+				System.out.println((new StringBuilder("***")).append(o));
 
 			}
 
@@ -71,10 +80,11 @@ public class Main {
 					allScores[i] = 0;
 					allScores[i] += Algorithms.primaryAlgorithm(questionText, fullSearchableText, allAnswers[i]);
 
-					String[] splitQuestionText = questionText.split(" ");
-					for (String o : splitQuestionText) {
+					String[] splitAnswerText = allAnswers[i].split(" ");
+					for (String o : splitAnswerText) {
 						if (questionText.toLowerCase().contains(o.toLowerCase())) {
-							allScores[i] -= Algorithms.occuranceAlgorithmScore(fullSearchableText, o);
+							System.out.println("contains shit");
+							allScores[i] -= Algorithms.occuranceAlgorithmScore(fullSearchableText.toLowerCase(), o.toLowerCase());
 						}
 					}
 
@@ -92,14 +102,13 @@ public class Main {
 			}
 
 			for (int i = 0; i < 3; i++) {
-				System.out.println(processor.humanAnswerText[i] + ": " + allScores[i]);
+				System.out.println((new StringBuilder(processor.humanAnswerText[i])).append(": ").append(allScores[i]));
 			}
-			System.out.println((System.currentTimeMillis() - start) / 1000.0);
-
+			if(Config.isDebug) {
+				System.out.println((System.currentTimeMillis() - startTime) / 1000.0);
+			}
 			whiteListener.refreshPixelListener();
-			System.out.println(whiteListener.getR());
-			System.out.println(whiteListener.getG());
-			System.out.println(whiteListener.getB());
+			whiteListener.printRGB();
 
 			while ((/* isGray || isGreen || */ whiteListener.isWhite())) {
 				whiteListener.refreshPixelListener();
@@ -109,31 +118,25 @@ public class Main {
 			System.out.println("Screen changed");
 
 			timerListener.refreshPixelListener();
-
 			while (!timerListener.isGray() && !timerListener.isGreen()) {
-
-				//do nothing
 				timerListener.refreshPixelListener();
-
 			}
+			
 			System.out.println("Screen changed back to questions");
 
-			if (isLiveShow) {
-				System.out.print(" jk it's the answer reveal, waiting until it's not");
+			if (Config.isLiveShow) {
+				System.out.println("JK it's actually the answer reveal, waiting until it's over");
+				
 				whiteListener.refreshPixelListener();
 				while (whiteListener.isWhite()) {
-
 					whiteListener.refreshPixelListener();
-
 				}
 
-				System.out.println("Now answer reveal is over");
+				System.out.println("Answer Reveal is over");
 
 				timerListener.refreshPixelListener();
 				Thread.sleep(50);
-
 			}
-
 		}
 	}
 }

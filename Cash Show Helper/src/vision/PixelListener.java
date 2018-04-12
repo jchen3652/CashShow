@@ -5,7 +5,7 @@ import java.awt.Robot;
 
 import main.Config;
 
-public class ScreenListenerAlgorithms {
+public class PixelListener {
 	int red;
 	int green;
 	int blue;
@@ -14,7 +14,7 @@ public class ScreenListenerAlgorithms {
 	int xCoordinate;
 	int yCoordinate;
 
-	public ScreenListenerAlgorithms(int x, int y, Robot robot) {
+	public PixelListener(int x, int y, Robot robot) {
 		xCoordinate = x;
 		yCoordinate = y;
 		bot = robot;
@@ -59,11 +59,17 @@ public class ScreenListenerAlgorithms {
 		return red;
 	}
 
-	public int getB() {
-		return blue;
-	}
-
 	public int getG() {
 		return green;
+	}
+	
+	public int getB() {
+		return blue;
+	}	
+	
+	public void printRGB() {
+		System.out.println((new StringBuilder("R: ")).append(red));
+		System.out.println((new StringBuilder("G: ")).append(green));
+		System.out.println((new StringBuilder("B: ")).append(blue));
 	}
 }

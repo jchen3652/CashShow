@@ -40,14 +40,17 @@ public class ImageProcessor {
 	 */
 	public String getQuestionText() throws IOException {
 		System.out.println("Getting Question String...");
-
-		// img = ImageIO.read(new
-		// File("D:\\Users\\James\\Desktop\\Screenshot_2018-02-24-18-32-55 (1).png"));
-
+		
 		BufferedImage questionArea = img.getSubimage((int) Math.round((70 / resolutionModifier)),
 				(int) Math.round((350 / resolutionModifier)), (int) Math.round((920 / resolutionModifier)),
 				(int) Math.round((250 / resolutionModifier)));
 
+		if(Config.isDebug) {
+			File rawScreenshot = new File(Config.mainDirectory + "shit");
+			ImageIO.write(img,  "png", rawScreenshot);
+		}
+		
+		
 		// crusty ass code
 		//questionArea = sharpenImage(questionArea);
 		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);

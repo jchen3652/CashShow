@@ -2,7 +2,7 @@ package algorithms;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 
 import main.Config;
@@ -34,15 +34,19 @@ public class Algorithms {
 	}
 	
 	public static String cleanOCRError(String text) {
-		text = text.replaceAll("\n", " ").replaceAll(",", ",").replaceAll("‘", "\'").replaceAll("ﾗ", "-")
-				.replaceAll("ﬁ", "fi").replaceAll("tﾑ", "t'").replaceAll("“", "\"").replaceAll(	"”", "\"").trim();
+		
+		
+		for(String[] o: Config.ocrReplaceList) {
+			text = StringUtils.replaceAll(text, o[0], o[1]);
+		}
+		text = text.trim();
 		return text;
 	}
 
 	public static int googleResultsAlgorithm(String question, String answerCandidate)
 			throws JSONException, IOException {
 
-		question = question.replaceAll(" ", "%20");
+		question = StringUtils.replaceAll(question, " ", "%20"); //question.replaceAll(" ", "%20");
 		answerCandidate = answerCandidate.replaceAll(" ", "%20");
 		return (int) (JSONs.getNumberOfResults(question + "%20" + answerCandidate) / Config.googleResultsScaleDown);
 	}
@@ -59,7 +63,6 @@ public class Algorithms {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-
 	public static int primaryAlgorithm(String question, String searchResult, String answerCandidate)
 			throws JSONException, IOException {
 

@@ -1,11 +1,13 @@
 package consoleOutput;
 
  
+import java.awt.AWTException;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Date;
 
@@ -22,7 +24,7 @@ public class ConsoleOutput extends JFrame {
      */
     private JTextArea textArea;
      
-    private JButton buttonStart = new JButton("Start");
+    private JButton buttonStart = new JButton("Force Start");
     private JButton buttonClear = new JButton("Clear");
      
     private PrintStream standardOut;
@@ -67,7 +69,13 @@ public class ConsoleOutput extends JFrame {
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                printLog();
+                String[] nuffin = {};
+            	try {
+					main.Main.main(nuffin);
+				} catch (AWTException | IOException | InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
          

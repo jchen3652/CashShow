@@ -1,7 +1,8 @@
 package algorithms;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -17,7 +18,7 @@ public class GoogleSearcher {
 			.setApplicationName("My Project").build();
 
 	public static void main(String[] args) {
-		System.out.println(search("hitler"));
+		System.out.println(search("Testing"));
 	}
 
 	public static String loadFullSearchableText(String keyword) {
@@ -36,9 +37,12 @@ public class GoogleSearcher {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		fullSearchableText = fullSearchableText.replaceAll("&#39;", "'").replaceAll("<br>", " ").replaceAll("<b>", "")
-				.replaceAll("</b>", " ").replaceAll("&nbsp;...", " ").toLowerCase();
-		
+
+		for (String[] o : Config.searchReplaceList) {
+			fullSearchableText = StringUtils.replaceAll(fullSearchableText, o[0], o[1]);
+		}
+		fullSearchableText = fullSearchableText.toLowerCase();
+
 		return fullSearchableText;
 	}
 
