@@ -1,24 +1,25 @@
 package main;
 
 public class Config {
-	public static final String mainDirectory = "D:\\Users\\James\\Desktop\\";
+	public static final String mainDirectory = "data";
 	public static final String screenshotIdentifier = "testscreenshot.png";
-	
-	public static final boolean isLiveShow = true;
+
+	public static final boolean isDebug = false;
+	public static final boolean isLiveShow = false;
 	//************************************************************************************************
 	// Google API restricts the number of times you can search, listed are different sets of API Keys
 
 	//dtrump3652
-//	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
-//	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
+	//	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
+	//	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
 
 	//nibbakilla3652
-		public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
-		public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
+	public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
+	public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
 
 	// ahitler3652
-//		public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
-//		public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
+	//		public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
+	//		public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
 
 	// 2563nehcsemaj
 	//	public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
@@ -33,8 +34,6 @@ public class Config {
 	//	 public static final String SEARCH_ENGINE_ID = "014723624719242706501:ky6zn2teax4"; 
 	//************************************************************************************************
 	public static final int[] phoneScreenArea = {680, 40, 557, 990};
-
-	public static final boolean isDebug = true;
 
 	public static final double googleResultsScaleDown = 1;
 
@@ -62,9 +61,10 @@ public class Config {
 
 	public static final int whitePixelXLocation = 950;
 	public static final int whitePixelYLocation = 335;
-	
-	public static final String[][] ocrReplaceList = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﾗ", "-"}, {"ﬁ", "fi"}, {"tﾑ", "t'"}, {"“", "\""}, {"”", "\""}};
-	public static final String[][] searchReplaceList = {{"&#39;", "'"}, {"<br>", " "}, {"<b>", ""}, {"</b>", " "}, {"&nbsp;...", " "}};
-	
+
+	public static final String[][] ocrReplaceList = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﾗ", "-"}, {"ﬁ", "fi"},
+			{"tﾑ", "t'"}, {"“", "\""}, {"”", "\""}};
+	public static final String[][] searchReplaceList = {{"&#39;", "'"}, {"<br>", " "}, {"<b>", ""}, {"</b>", " "},
+			{"&nbsp;...", " "}};
 
 }

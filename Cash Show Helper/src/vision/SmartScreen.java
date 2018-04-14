@@ -5,7 +5,10 @@ import java.awt.Toolkit;
 
 public class SmartScreen {
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	
+	/**
+	 * Calculates and returns the x, y, width, and height of the phone screen based on overall resolution
+	 * @return Integer array with the calculated data, this can be passed straight to rectangle coords
+	 */
 	public static int[] runSmartScreenCheck() {
 		
 		int availableHeight = (int) Math.round(screenSize.getHeight() - 90);

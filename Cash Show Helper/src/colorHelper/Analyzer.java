@@ -53,6 +53,7 @@ public class Analyzer {
 	}
 
 	public class MouseColorPane extends JPanel implements MouseMonitorListener {
+		private static final long serialVersionUID = 8538585200237133842L;
 
 		private Robot robot;
 

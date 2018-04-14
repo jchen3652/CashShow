@@ -5,6 +5,12 @@ import java.awt.Robot;
 
 import main.Config;
 
+/**
+ * Monitors a specified pixel and returns color valuess
+ * 
+ * @author James
+ *
+ */
 public class PixelListener {
 	int red;
 	int green;
@@ -14,6 +20,15 @@ public class PixelListener {
 	int xCoordinate;
 	int yCoordinate;
 
+	/**
+	 * 
+	 * @param x
+	 *            X location
+	 * @param y
+	 *            Y location
+	 * @param robot
+	 *            Robot object
+	 */
 	public PixelListener(int x, int y, Robot robot) {
 		xCoordinate = x;
 		yCoordinate = y;
@@ -62,11 +77,11 @@ public class PixelListener {
 	public int getG() {
 		return green;
 	}
-	
+
 	public int getB() {
 		return blue;
-	}	
-	
+	}
+
 	public void printRGB() {
 		System.out.println((new StringBuilder("R: ")).append(red));
 		System.out.println((new StringBuilder("G: ")).append(green));

@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.StringUtils;
+
 import algorithms.Algorithms;
 import main.Config;
 import net.sourceforge.tess4j.ITesseract;
@@ -25,7 +27,6 @@ public class ImageProcessor {
 
 	public ImageProcessor(BufferedImage image) throws IOException {
 		img = image;
-
 		resolutionModifier = (1080.0 / (double) img.getWidth());
 
 		System.out.println("Resolution Downscale Factor: " + resolutionModifier);
@@ -105,9 +106,9 @@ public class ImageProcessor {
 				(int) (440 / resolutionModifier), (int) (630 / resolutionModifier), (int) (160 / resolutionModifier));
 
 		if (Config.isDebug) {
-			ImageIO.write(subimage1, "png", new File("D:\\Users\\James\\Desktop\\subimage1.png"));
-			ImageIO.write(subimage2, "png", new File("D:\\Users\\James\\Desktop\\subimage2.png"));
-			ImageIO.write(subimage3, "png", new File("D:\\Users\\James\\Desktop\\subimage3.png"));
+			ImageIO.write(subimage1, "png", new File((new StringBuilder(Config.mainDirectory).append("subimage1.png").toString())));
+			ImageIO.write(subimage2, "png", new File((new StringBuilder(Config.mainDirectory).append("subimage2.png").toString())));
+			ImageIO.write(subimage3, "png", new File((new StringBuilder(Config.mainDirectory).append("subimage3.png").toString())));
 		}
 		try {
 			result1 = instance.doOCR(subimage1);
@@ -122,7 +123,7 @@ public class ImageProcessor {
 		humanAnswerText[2] = result3;
 
 		try {
-			humanAnswerText[2] = humanAnswerText[2].replaceAll("/n", "");
+			humanAnswerText[2] = StringUtils.replaceAll(humanAnswerText[2], "/n", "");
 		} catch (Exception e) {
 			System.out.println("No image was detected");
 		}
@@ -166,6 +167,7 @@ public class ImageProcessor {
 			}
 			raster.setPixels(0, y, image.getWidth(), 1, pixels);
 		}
+		System.out.println("Threshold image completed");
 		return result;
 	}
 

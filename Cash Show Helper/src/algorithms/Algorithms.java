@@ -2,6 +2,7 @@ package algorithms;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 
@@ -22,29 +23,27 @@ public class Algorithms {
 
 	public static boolean arrayContains(String string, String[] array) {
 		string = string.toLowerCase();
-		
+
 		boolean contains = false;
-		for(int i = 0; i < 3; i ++) {
+		for (int i = 0; i < 3; i++) {
 			array[i] = array[i].toLowerCase();
-			if(string.contains(array[i])) {
+			if (string.contains(array[i])) {
 				contains = true;
 			}
 		}
 		return contains;
 	}
-	
+
 	public static String cleanOCRError(String text) {
-		
-		
-		for(String[] o: Config.ocrReplaceList) {
+
+		for (String[] o : Config.ocrReplaceList) {
 			text = StringUtils.replaceAll(text, o[0], o[1]);
 		}
 		text = text.trim();
 		return text;
 	}
 
-	public static int googleResultsAlgorithm(String question, String answerCandidate)
-			throws JSONException, IOException {
+	public static int googleResultsAlgorithm(String question, String answerCandidate) throws IOException {
 
 		question = StringUtils.replaceAll(question, " ", "%20"); //question.replaceAll(" ", "%20");
 		answerCandidate = answerCandidate.replaceAll(" ", "%20");
@@ -122,7 +121,6 @@ public class Algorithms {
 	 */
 	public static int occuranceAlgorithmScore(String googleResult, String answerCandidate) {
 		int count = 0;
-		String[] splitAnswers = answerCandidate.split(" ");
 
 		count += numberOfTimesContained(googleResult, answerCandidate);
 

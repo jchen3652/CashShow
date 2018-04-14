@@ -1,5 +1,6 @@
 package algorithms;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,11 +32,11 @@ public class GoogleSearcher {
 		}
 		try {
 			for (Result result : results) {
-				fullSearchableText = fullSearchableText + result.getHtmlSnippet();
-				fullSearchableText = fullSearchableText + result.getTitle();
+				fullSearchableText = (new StringBuilder(fullSearchableText)).append(result.getHtmlSnippet()).toString();
+				fullSearchableText = (new StringBuilder(fullSearchableText)).append(result.getTitle()).toString();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("No results were found in Google Search");
 		}
 
 		for (String[] o : Config.searchReplaceList) {
@@ -59,7 +60,9 @@ public class GoogleSearcher {
 			resultList = results.getItems();
 			//System.out.println(results.toString());
 
-		} catch (Exception e) {
+		} catch (UnknownHostException e) {
+			System.out.println("You ain't connected to the internet dumbass");
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return resultList;
