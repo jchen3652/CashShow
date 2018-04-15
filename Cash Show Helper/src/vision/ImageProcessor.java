@@ -46,10 +46,7 @@ public class ImageProcessor {
 				(int) Math.round((350 / resolutionModifier)), (int) Math.round((920 / resolutionModifier)),
 				(int) Math.round((250 / resolutionModifier)));
 
-		if(Config.isDebug) {
-			File rawScreenshot = new File(Config.mainDirectory + "shit");
-			ImageIO.write(img,  "png", rawScreenshot);
-		}
+		
 		
 		
 		// crusty ass code

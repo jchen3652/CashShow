@@ -1,21 +1,21 @@
 package main;
 
 public class Config {
-	public static final String mainDirectory = "data";
-	public static final String screenshotIdentifier = "testscreenshot.png";
+	public static final String mainDirectory = "";
+	public static final String screenshotIdentifier = "rawscreenshot.png";
 
-	public static final boolean isDebug = false;
+	public static final boolean isDebug = true;
 	public static final boolean isLiveShow = false;
 	//************************************************************************************************
 	// Google API restricts the number of times you can search, listed are different sets of API Keys
 
 	//dtrump3652
-	//	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
-	//	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
+		public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
+		public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
 
 	//nibbakilla3652
-	public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
-	public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
+//	public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
+//	public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
 
 	// ahitler3652
 	//		public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
@@ -39,7 +39,7 @@ public class Config {
 
 	// Vision Constants
 	public static final int questionTextThreshold = 195; //191 tried and tested
-	public static final int answerTextThreshold = 200; // 191 tried and tested
+	public static final int answerTextThreshold = 210; // 191 tried and tested
 
 	public static final String questionOutputPath = mainDirectory + "questionimage.png";
 	public static final String answersOutputPath = mainDirectory + "answerarea.png";

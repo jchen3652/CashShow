@@ -35,9 +35,8 @@ public class Main {
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
 		output.setVisible(true);
 		
-		phoneRectangle = SmartScreen.runSmartScreenCheck();
-		System.out.println(SmartScreen.getTaskbarSize());
-		System.out.println(SmartScreen.getTitleHeight());
+		phoneRectangle = SmartScreen.runSmartScreenCheck(output);
+		
 		robot = new Robot();
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);
@@ -47,7 +46,7 @@ public class Main {
 
 		System.out.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow));
 		//Thread.sleep(2000);
-		int[] phoneRectangle = SmartScreen.runSmartScreenCheck();
+		int[] phoneRectangle = SmartScreen.runSmartScreenCheck(output);
 
 		while (true) {
 			if (isListening()) {
