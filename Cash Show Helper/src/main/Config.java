@@ -1,7 +1,5 @@
 package main;
 
-import vision.SmartScreen;
-
 public class Config {
 	public static final String mainDirectory = "";
 	public static final String screenshotIdentifier = "phoneScreen.png";
@@ -45,11 +43,9 @@ public class Config {
 	public static final int questionTextThreshold = 195; //191 tried and tested
 	public static final int answerTextThreshold = 210; // 191 tried and tested
 
-	
 	public static final int timerXLocation = 269;
 	public static final int timerYLocation = 95;
-	
-		
+
 	@Deprecated
 	public static final int timerPixelXLocation = 951; //269
 	@Deprecated
@@ -70,7 +66,7 @@ public class Config {
 	public static final int whitePixelXLocation = 950; //755
 	public static final int whitePixelYLocation = 335; //125
 
-	public static final String[][] ocrReplaceList = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﾗ", "-"}, {"ﬁ", "fi"},
+	public static final String[][] ocrReplaceArray = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﾗ", "-"}, {"ﬁ", "fi"},
 			{"tﾑ", "t'"}, {"“", "\""}, {"”", "\""}, {"`", ""}};
 	public static final String[][] searchReplaceList = {{"&#39;", "'"}, {"<br>", " "}, {"<b>", ""}, {"</b>", " "},
 			{"&nbsp;...", " "}};

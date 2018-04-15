@@ -10,8 +10,6 @@ import main.Config;
 
 public class Algorithms {
 	public static void main(String[] args) throws JSONException, IOException, InterruptedException {
-		//System.out.println(googleResultsAlgorithm("Which animal helped build more civilizations than any other", "Dog"));
-		//Thread.sleep(2000);
 		System.out.println(LocalDateTime.now());
 
 		System.out.println(googleResultsAlgorithm("In what city is Romeo and Juliet set?", "Rome"));
@@ -21,30 +19,35 @@ public class Algorithms {
 
 	}
 
-	public static boolean arrayContains(String string, String[] array) {
-		string = string.toLowerCase();
-
-		boolean contains = false;
-		for (int i = 0; i < 3; i++) {
-			array[i] = array[i].toLowerCase();
-			if (string.contains(array[i])) {
-				contains = true;
-			}
-		}
-		return contains;
-	}
-
+	/**
+	 * Finds and replaces all OCR mistakes
+	 * 
+	 * @param text
+	 *            input text
+	 * @return filtered text
+	 */
 	public static String cleanOCRError(String text) {
-
-		for (String[] o : Config.ocrReplaceList) {
+		for (String[] o : Config.ocrReplaceArray) {
 			text = StringUtils.replaceAll(text, o[0], o[1]);
 		}
 		text = text.trim();
 		return text;
 	}
 
+	/**
+	 * This algorithm google searches "question" + " " + "potential answer". It
+	 * gets the number of google page results and returns that number. It is
+	 * used secondarily, if none of the answer strings are contained in the
+	 * first 10 text thumbnails of a google search of the question
+	 * 
+	 * @param question
+	 *            Cash Show Question
+	 * @param answerCandidate
+	 *            Potential answer
+	 * @return Number of google page results for question + space + answer
+	 * @throws IOException
+	 */
 	public static int googleResultsAlgorithm(String question, String answerCandidate) throws IOException {
-
 		question = StringUtils.replaceAll(question, " ", "%20"); //question.replaceAll(" ", "%20");
 		answerCandidate = answerCandidate.replaceAll(" ", "%20");
 		return (int) (JSONs.getNumberOfResults(question + "%20" + answerCandidate) / Config.googleResultsScaleDown);
@@ -52,7 +55,7 @@ public class Algorithms {
 
 	/**
 	 * Combined score calculation algorithm, all other algorithms are called
-	 * with this
+	 * in this
 	 * 
 	 * @param searchResult
 	 *            Google Search Result
@@ -64,25 +67,14 @@ public class Algorithms {
 	 */
 	public static int primaryAlgorithm(String question, String searchResult, String answerCandidate)
 			throws JSONException, IOException {
-		
-			
-		
-		
-		
-		
+
 		int score = 0;
 		searchResult = stringLowerCase(searchResult);
-		answerCandidate = answerCandidate.replaceAll("A ", "").toLowerCase();
+		answerCandidate = StringUtils.replaceAll(answerCandidate, "A ", "").toLowerCase();
 		score += occuranceAlgorithmScore(searchResult, answerCandidate);
 		return score;
 	}
 
-	/*
-	 * public static int getNumberOfResults(String result, String
-	 * answerCandidate) { int score = 0;
-	 * 
-	 * }
-	 */
 
 	/**
 	 * Converts a string to lower case
@@ -96,10 +88,10 @@ public class Algorithms {
 	}
 
 	/**
-	 * Lower cases every single String of a string array
+	 * Lower cases every single String inside a string array
 	 * 
 	 * @param array
-	 *            input array
+	 *            Inputted array to be made completely lower case
 	 * @return lower cased array
 	 */
 	public static String[] stringArrayLowerCase(String[] array) {
@@ -112,7 +104,7 @@ public class Algorithms {
 
 	/**
 	 * Basic scoring algorithm for how many occurrences the word shows up on the
-	 * first 9 google headers
+	 * first 10 google headers. This is the ideal algorithm
 	 * 
 	 * @param googleResult
 	 *            The blob of search data you are looking in
@@ -122,9 +114,7 @@ public class Algorithms {
 	 */
 	public static int occuranceAlgorithmScore(String googleResult, String answerCandidate) {
 		int count = 0;
-
 		count += numberOfTimesContained(googleResult, answerCandidate);
-
 		return count;
 	}
 
