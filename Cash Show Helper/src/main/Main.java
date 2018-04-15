@@ -27,13 +27,17 @@ public class Main {
 	public static boolean watchingScreen = true;
 	static int[] phoneRectangle;
 	static Robot robot;
+	public static  ConsoleOutput output = new ConsoleOutput();
+			
 
 	static long startTime;
 
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-		new ConsoleOutput().setVisible(true);
+		output.setVisible(true);
+		
 		phoneRectangle = SmartScreen.runSmartScreenCheck();
-
+		System.out.println(SmartScreen.getTaskbarSize());
+		System.out.println(SmartScreen.getTitleHeight());
 		robot = new Robot();
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);

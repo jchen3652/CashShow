@@ -33,18 +33,18 @@ public class Config {
 	//	 public static final String GOOGLE_API_KEY = "AIzaSyBFnKBQPESdi2sP1twKp59-3mBscTVw99k";
 	//	 public static final String SEARCH_ENGINE_ID = "014723624719242706501:ky6zn2teax4"; 
 	//************************************************************************************************
-	public static final int[] phoneScreenArea = {680, 40, 557, 990};
+	public static final int[] phoneScreenArea = {682, 40, 557, 990};
 
 	public static final double googleResultsScaleDown = 1;
 
 	// Vision Constants
 	public static final int questionTextThreshold = 195; //191 tried and tested
-	public static final int answerTextThreshold = 210; // 191 tried and tested
+	public static final int answerTextThreshold = 200; // 191 tried and tested
 
 	public static final String questionOutputPath = mainDirectory + "questionimage.png";
 	public static final String answersOutputPath = mainDirectory + "answerarea.png";
 
-	public static final int timerPixelXLocation = 951;
+	public static final int timerPixelXLocation = 951; //
 	public static final int timerPixelYLocation = 135;
 
 	public static final int[] grayRTOL = {200, 230};

@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 
 import main.Main;
+import vision.SmartScreen;
 
 public class ConsoleOutput extends JFrame {
 	/**
@@ -126,7 +127,10 @@ public class ConsoleOutput extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new ConsoleOutput().setVisible(true);
+				ConsoleOutput output = new ConsoleOutput();
+				output.setVisible(true);
+				
+				
 			}
 		});
 	}
