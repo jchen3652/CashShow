@@ -21,10 +21,10 @@ public class GoogleSearcher {
 	public static void main(String[] args) {
 		System.out.println(search("Testing"));
 	}
-
-	public static String loadFullSearchableText(String keyword) {
+	
+	public static String getGoogleResultsString(String keyword) {
 		java.util.List<Result> results = new ArrayList<>();
-		String fullSearchableText = "";
+		String googleResultsString = "";
 		try {
 			results = search(keyword);
 		} catch (Exception e) {
@@ -32,21 +32,28 @@ public class GoogleSearcher {
 		}
 		try {
 			for (Result result : results) {
-				fullSearchableText = (new StringBuilder(fullSearchableText)).append(result.getHtmlSnippet()).toString();
-				fullSearchableText = (new StringBuilder(fullSearchableText)).append(result.getTitle()).toString();
+				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getHtmlSnippet()).toString();
+				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getTitle()).toString();
 			}
 		} catch (Exception e) {
 			System.out.println("No results were found in Google Search");
 		}
 
 		for (String[] o : Config.searchReplaceList) {
-			fullSearchableText = StringUtils.replaceAll(fullSearchableText, o[0], o[1]);
+			googleResultsString = StringUtils.replaceAll(googleResultsString, o[0], o[1]);
 		}
-		fullSearchableText = fullSearchableText.toLowerCase();
+		googleResultsString = googleResultsString.toLowerCase();
 
-		return fullSearchableText;
+		return googleResultsString;
 	}
 
+	/**
+	 * Gets the google result objects of the top 10 google results of the search query
+	 * 
+	 * @param keyword
+	 *            Search Query
+	 * @return List of result objects
+	 */
 	public static java.util.List<Result> search(String keyword) {
 
 		java.util.List<Result> resultList = null;
@@ -62,7 +69,7 @@ public class GoogleSearcher {
 
 		} catch (UnknownHostException e) {
 			System.out.println("You ain't connected to the internet dumbass");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return resultList;

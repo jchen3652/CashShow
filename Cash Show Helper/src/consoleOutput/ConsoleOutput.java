@@ -1,14 +1,11 @@
 package consoleOutput;
 
-import java.awt.AWTException;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,10 +14,9 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 
-import main.Main;
-import vision.SmartScreen;
-
 public class ConsoleOutput extends JFrame {
+	private static final long serialVersionUID = 4155892261443706094L;
+
 	/**
 	 * The text area which is used for displaying logging information.
 	 */
@@ -71,13 +67,7 @@ public class ConsoleOutput extends JFrame {
 		buttonStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				Main.watchingScreen = !Main.watchingScreen;
-				if (Main.watchingScreen == true) {
-					System.out.println("resumed");
-				} else {
-					System.out.println("paused");
-				}
-				System.out.println(Main.watchingScreen);
+				System.out.println("This button does nothing, don't click it");
 			}
 		});
 
@@ -101,27 +91,9 @@ public class ConsoleOutput extends JFrame {
 	}
 
 	/**
-	 * Prints log statements for testing in a thread
-	 */
-	private void printLog() {
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					System.out.println("Time now is " + (new Date()));
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		});
-		thread.start();
-	}
-
-	/**
-	 * Runs the program
+	 * 
+	 * 
+	 * /** Runs the program
 	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -129,8 +101,7 @@ public class ConsoleOutput extends JFrame {
 			public void run() {
 				ConsoleOutput output = new ConsoleOutput();
 				output.setVisible(true);
-				
-				
+
 			}
 		});
 	}

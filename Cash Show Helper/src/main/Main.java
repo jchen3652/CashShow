@@ -1,13 +1,9 @@
 package main;
 
 import java.awt.AWTException;
-import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import algorithms.Algorithms;
 import algorithms.GoogleSearcher;
@@ -17,226 +13,108 @@ import vision.PixelListener;
 import vision.SmartScreen;
 
 public class Main {
-	private static int[] allScores = new int[3];
-	static String questionText;
-	static String fullSearchableText;
+	private static String[] allAnswers;
+	private static int[] allScores = {0, 0, 0};
+	private static String questionText;
+	private static String googleResultsString;
 
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
 
-	public static boolean watchingScreen = true;
-	static int[] phoneRectangle;
-	static Robot robot;
-	public static  ConsoleOutput output = new ConsoleOutput();
-			
-
-	static long startTime;
-
+	private static Robot robot;
+	public static ConsoleOutput output = new ConsoleOutput();
+	
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
+
 		output.setVisible(true);
-		
-		phoneRectangle = SmartScreen.runSmartScreenCheck(output);
-		
+
 		robot = new Robot();
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);
+		BufferedImage phoneScreen = robot.createScreenCapture(SmartScreen.runSmartScreenCheck(output));
 
+		ImageProcessor processor = new ImageProcessor(phoneScreen);
 		whiteListener = new PixelListener(Config.whitePixelXLocation, Config.whitePixelYLocation, robot);
-		timerListener = new PixelListener(Config.timerPixelXLocation, Config.timerPixelYLocation, robot);
-
+		timerListener = new PixelListener(
+				SmartScreen.relToAbsPixLoc(Config.timerXLocation, SmartScreen.screenshotXCoordinate),
+				SmartScreen.relToAbsPixLoc(Config.timerYLocation, SmartScreen.screenshotYCoordinate), robot);
+		System.out.println(SmartScreen.relToAbsPixLoc(Config.timerYLocation, SmartScreen.screenshotYCoordinate));
 		System.out.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow));
-		//Thread.sleep(2000);
-		int[] phoneRectangle = SmartScreen.runSmartScreenCheck(output);
 
+		// Do everything in this forever
 		while (true) {
-			if (isListening()) {
-				timerListener.refreshPixelListener();
-				whiteListener.refreshPixelListener();
-
-				while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
-					timerListener.refreshPixelListener();
-					whiteListener.refreshPixelListener();
-				}
-
-				System.out.println("Detected Question");
-
-				if (Config.isDebug) {
-					timerListener.printRGB();
-					startTime = System.currentTimeMillis();
-				}
-
-				Thread.sleep(500);
-
-				BufferedImage rawCapture = robot.createScreenCapture(
-						new Rectangle(phoneRectangle[0], phoneRectangle[1], phoneRectangle[2], phoneRectangle[3]));
-				if (Config.isDebug) {
-					ImageIO.write(rawCapture, "png", new File(
-							(new StringBuilder(Config.mainDirectory)).append(Config.screenshotIdentifier).toString()));
-				}
-
-				ImageProcessor processor = new ImageProcessor(rawCapture);
-				questionText = processor.getQuestionText();
-				String[] allAnswers = processor.getAnswerList();
-				System.out.println(processor.humanQuestionText);
-				fullSearchableText = GoogleSearcher.loadFullSearchableText(questionText);
-
-				for (String o : processor.humanAnswerText) {
-					System.out.println((new StringBuilder("***")).append(o));
-
-				}
-
-				for (int i = 0; i < 3; i++) {
-					try {
-						allScores[i] = 0;
-						allScores[i] += Algorithms.primaryAlgorithm(questionText, fullSearchableText, allAnswers[i]);
-
-						String[] splitAnswerText = allAnswers[i].split(" ");
-						for (String o : splitAnswerText) {
-							if (questionText.toLowerCase().contains(o.toLowerCase())) {
-								System.out.println("contains shit");
-								allScores[i] -= Algorithms.occuranceAlgorithmScore(fullSearchableText.toLowerCase(),
-										o.toLowerCase());
-							}
-						}
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-
-				if ((allScores[0] < 2 && allScores[1] < 2 && (allScores[2] < 2))) {
-					System.out.println("No results, alternate started");
-					for (int i = 0; i < 3; i++) {
-						allScores[i] = Algorithms.googleResultsAlgorithm(questionText, allAnswers[i]);
-
-					}
-				}
-
-				for (int i = 0; i < 3; i++) {
-					System.out.println(
-							(new StringBuilder(processor.humanAnswerText[i])).append(": ").append(allScores[i]));
-				}
-				if (Config.isDebug) {
-					System.out.println((System.currentTimeMillis() - startTime) / 1000.0);
-				}
-				whiteListener.refreshPixelListener();
-				whiteListener.printRGB();
-
-				while ((/* isGray || isGreen || */ whiteListener.isWhite())) {
-					whiteListener.refreshPixelListener();
-
-				}
-
-				System.out.println("Screen changed");
-
-				timerListener.refreshPixelListener();
-				while (!timerListener.isGray() && !timerListener.isGreen()) {
-					timerListener.refreshPixelListener();
-				}
-
-				System.out.println("Screen changed back to questions");
-
-				if (Config.isLiveShow) {
-					System.out.println("JK it's actually the answer reveal, waiting until it's over");
-
-					whiteListener.refreshPixelListener();
-					while (whiteListener.isWhite()) {
-						whiteListener.refreshPixelListener();
-					}
-
-					System.out.println("Answer Reveal is over");
-
-					timerListener.refreshPixelListener();
-					Thread.sleep(50);
-				}
-			}
-		}
-	}
-
-	public static void doEverything() throws IOException, InterruptedException, AWTException {
-
-		if (true) {
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
-
+			// Stay in this loop until the wheel has turned gray/green and white box showed up
 			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
 				whiteListener.refreshPixelListener();
 			}
 
+			// Exited loop, this means a question popped up
 			System.out.println("Detected Question");
 
-			if (Config.isDebug) {
-				timerListener.printRGB();
-				startTime = System.currentTimeMillis();
-			}
-
+			// Waiting for the cash show text to load
 			Thread.sleep(500);
 
-			BufferedImage rawCapture = robot.createScreenCapture(
-					new Rectangle(phoneRectangle[0], phoneRectangle[1], phoneRectangle[2], phoneRectangle[3]));
-			if (Config.isDebug) {
-				ImageIO.write(rawCapture, "png", new File(
-						(new StringBuilder(Config.mainDirectory)).append(Config.screenshotIdentifier).toString()));
-			}
-
-			ImageProcessor processor = new ImageProcessor(rawCapture);
+			phoneScreen = robot.createScreenCapture(SmartScreen.runSmartScreenCheck(output));
+			processor = new ImageProcessor(phoneScreen);
 			questionText = processor.getQuestionText();
-			String[] allAnswers = processor.getAnswerList();
-			System.out.println(processor.humanQuestionText);
-			fullSearchableText = GoogleSearcher.loadFullSearchableText(questionText);
+			allAnswers = processor.getAnswerList();
+			System.out.println(processor.rawQuestionText);
+			googleResultsString = GoogleSearcher.getGoogleResultsString(questionText);
 
-			for (String o : processor.humanAnswerText) {
+			for (String o : processor.rawAnswerStrings) {
 				System.out.println((new StringBuilder("***")).append(o));
 
 			}
 
 			for (int i = 0; i < 3; i++) {
 				try {
-					allScores[i] = 0;
-					allScores[i] += Algorithms.primaryAlgorithm(questionText, fullSearchableText, allAnswers[i]);
+
+					allScores[i] += Algorithms.primaryAlgorithm(questionText, googleResultsString, allAnswers[i]);
 
 					String[] splitAnswerText = allAnswers[i].split(" ");
 					for (String o : splitAnswerText) {
 						if (questionText.toLowerCase().contains(o.toLowerCase())) {
-							System.out.println("contains shit");
-							allScores[i] -= Algorithms.occuranceAlgorithmScore(fullSearchableText.toLowerCase(),
+							System.out.println("Question contains Answer String");
+							allScores[i] -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(),
 									o.toLowerCase());
 						}
 					}
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 
+			// If the first algorithm failed, try the other one
 			if ((allScores[0] < 2 && allScores[1] < 2 && (allScores[2] < 2))) {
 				System.out.println("No results, alternate started");
 				for (int i = 0; i < 3; i++) {
 					allScores[i] = Algorithms.googleResultsAlgorithm(questionText, allAnswers[i]);
-
 				}
 			}
 
+			// Print out the answers with their respective scores
 			for (int i = 0; i < 3; i++) {
-				System.out.println((new StringBuilder(processor.humanAnswerText[i])).append(": ").append(allScores[i]));
+				System.out
+						.println((new StringBuilder(processor.rawAnswerStrings[i])).append(": ").append(allScores[i]));
 			}
-			if (Config.isDebug) {
-				System.out.println((System.currentTimeMillis() - startTime) / 1000.0);
-			}
+
 			whiteListener.refreshPixelListener();
-			whiteListener.printRGB();
-
-			while ((/* isGray || isGreen || */ whiteListener.isWhite())) {
+			// Wait until the screen is no longer white
+			while ((whiteListener.isWhite())) {
 				whiteListener.refreshPixelListener();
-
 			}
 
-			System.out.println("Screen changed");
+			System.out.println("Screen changed away from question");
 
 			timerListener.refreshPixelListener();
-			while (!timerListener.isGray() && !timerListener.isGreen()) {
+			whiteListener.refreshPixelListener();
+			// Wait until the question showed up
+			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
+				whiteListener.refreshPixelListener();
 			}
 
 			System.out.println("Screen changed back to questions");
@@ -256,9 +134,4 @@ public class Main {
 			}
 		}
 	}
-
-	public static boolean isListening() {
-		return watchingScreen;
-	}
-
 }

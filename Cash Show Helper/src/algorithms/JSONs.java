@@ -60,7 +60,7 @@ public class JSONs {
 		String totalResults1 = null;
 		JSONObject json = readJsonFromUrl(
 				(new StringBuilder("https://www.googleapis.com/customsearch/v1?key=").append(Config.GOOGLE_API_KEY)
-						.append("&cx=").append(Config.GOOGLE_API_KEY).append("&q=").append(question).toString()));
+						.append("&cx=").append(Config.SEARCH_ENGINE_ID).append("&q=").append(question).toString()));
 		try {
 		JSONObject queries = json.getJSONObject("queries");
 		JSONArray request = queries.getJSONArray("request");

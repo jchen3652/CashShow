@@ -18,17 +18,29 @@ import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
+/**
+ * Processes screenshot to get question and answer strings
+ * 
+ * @author James
+ *
+ */
 public class ImageProcessor {
-	static BufferedImage img = null;
-	static double resolutionModifier;
+	private static BufferedImage phoneScreen = null;
+	public static double resolutionModifier;
 
-	public String humanQuestionText;
-	public String[] humanAnswerText = new String[3];
+	public String rawQuestionText;
+	public String[] rawAnswerStrings = new String[3];
 
+	/**
+	 * Retrieves Questions and Answers from Screenshot
+	 * 
+	 * @param image
+	 *            Screenshot to process
+	 * @throws IOException
+	 */
 	public ImageProcessor(BufferedImage image) throws IOException {
-		img = image;
-		resolutionModifier = (1080.0 / (double) img.getWidth());
-
+		phoneScreen = image;
+		resolutionModifier = (1080.0 / (double) phoneScreen.getWidth());
 		System.out.println("Resolution Downscale Factor: " + resolutionModifier);
 	}
 
@@ -41,14 +53,18 @@ public class ImageProcessor {
 	 */
 	public String getQuestionText() throws IOException {
 		System.out.println("Getting Question String...");
-		
-		BufferedImage questionArea = img.getSubimage((int) Math.round((70 / resolutionModifier)),
+
+		BufferedImage questionArea = phoneScreen.getSubimage((int) Math.round((70 / resolutionModifier)),
 				(int) Math.round((350 / resolutionModifier)), (int) Math.round((920 / resolutionModifier)),
 				(int) Math.round((250 / resolutionModifier)));
 
-		
-		
-		
+		// If in debugging mode, output the 
+		if (Config.isDebug) {
+			File phoneScreenFile = new File(Config.mainDirectory + Config.screenshotIdentifier);
+			ImageIO.write(phoneScreen, "png", phoneScreenFile);
+
+		}
+
 		// crusty ass code
 		//questionArea = sharpenImage(questionArea);
 		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
@@ -65,9 +81,10 @@ public class ImageProcessor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		result = Algorithms.cleanOCRError(result);
 
-		humanQuestionText = result;
+		rawQuestionText = result;
 		System.out.println("Got Question String");
 		return result;
 	}
@@ -80,58 +97,53 @@ public class ImageProcessor {
 	 */
 	public String[] getAnswerList() throws IOException {
 		System.out.println("Getting Answer List...");
-		BufferedImage answerArea = img.getSubimage((int) (70 / resolutionModifier), (int) (750 / resolutionModifier),
-				(int) (710 / resolutionModifier), (int) (600 / resolutionModifier));
-		// crusty ass code
-		//answerArea = sharpenImage(answerArea);
-		answerArea = thresholdImage(answerArea, Config.answerTextThreshold);
-
-		File outputfile = new File(Config.answersOutputPath);
-		ImageIO.write(answerArea, "png", outputfile);
 
 		ITesseract instance = new Tesseract();
 
-		String result1 = null;
-		String result2 = null;
-		String result3 = null;
-
-		BufferedImage subimage1 = answerArea.getSubimage((int) (80 / resolutionModifier),
-				(int) (30 / resolutionModifier), (int) (630 / resolutionModifier), (int) (170 / resolutionModifier));
-		BufferedImage subimage2 = answerArea.getSubimage((int) (80 / resolutionModifier),
-				(int) (250 / resolutionModifier), (int) (630 / resolutionModifier), (int) (150 / resolutionModifier));
-		BufferedImage subimage3 = answerArea.getSubimage((int) (80 / resolutionModifier),
-				(int) (440 / resolutionModifier), (int) (630 / resolutionModifier), (int) (160 / resolutionModifier));
+		//80, 30, 630, 170
+		BufferedImage answer1 = thresholdImage(
+				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (780 / resolutionModifier),
+						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
+				Config.answerTextThreshold);
+		BufferedImage answer2 = thresholdImage(
+				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1000 / resolutionModifier),
+						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
+				Config.answerTextThreshold);
+		BufferedImage answer3 = thresholdImage(
+				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1190 / resolutionModifier),
+						(int) (630 / resolutionModifier), (int) (160 / resolutionModifier)),
+				Config.answerTextThreshold);
 
 		if (Config.isDebug) {
-			ImageIO.write(subimage1, "png", new File((new StringBuilder(Config.mainDirectory).append("subimage1.png").toString())));
-			ImageIO.write(subimage2, "png", new File((new StringBuilder(Config.mainDirectory).append("subimage2.png").toString())));
-			ImageIO.write(subimage3, "png", new File((new StringBuilder(Config.mainDirectory).append("subimage3.png").toString())));
+			ImageIO.write(answer1, "png",
+					new File((new StringBuilder(Config.mainDirectory).append("answer1.png").toString())));
+			ImageIO.write(answer2, "png",
+					new File((new StringBuilder(Config.mainDirectory).append("answer2.png").toString())));
+			ImageIO.write(answer3, "png",
+					new File((new StringBuilder(Config.mainDirectory).append("answer3.png").toString())));
 		}
-		try {
-			result1 = instance.doOCR(subimage1);
-			result2 = instance.doOCR(subimage2);
-			result3 = instance.doOCR(subimage3);
-		} catch (TesseractException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		humanAnswerText[0] = result1;
-		humanAnswerText[1] = result2;
-		humanAnswerText[2] = result3;
 
 		try {
-			humanAnswerText[2] = StringUtils.replaceAll(humanAnswerText[2], "/n", "");
-		} catch (Exception e) {
-			System.out.println("No image was detected");
+			rawAnswerStrings[0] = instance.doOCR(answer1).trim();
+			rawAnswerStrings[1] = instance.doOCR(answer2).trim();
+			rawAnswerStrings[2] = instance.doOCR(answer3).trim();
+		} catch (TesseractException e) {
+			e.printStackTrace();
 		}
-		for (int i = 0; i < humanAnswerText.length; i++) {
-			humanAnswerText[i] = Algorithms.cleanOCRError(humanAnswerText[i]);
+
+		for (String o : rawAnswerStrings) {
+			o = Algorithms.cleanOCRError(o);
 		}
 
 		System.out.println("Got Answer List");
-		return humanAnswerText;
+		return rawAnswerStrings;
 	}
-
+	
+	/**
+	 * Increases the sharpness of a BufferedImage
+	 * @param image Desired image to be sharpened
+	 * @return Sharpened Image
+	 */
 	public BufferedImage sharpenImage(BufferedImage image) {
 		Kernel kernel = new Kernel(3, 3, new float[] {0.0f, -1.0f, 0.0f, -1.0f, 5.0f, -1.0f, 0.0f, -1.0f, 0.0f});
 		BufferedImageOp op = new ConvolveOp(kernel);
@@ -167,5 +179,4 @@ public class ImageProcessor {
 		System.out.println("Threshold image completed");
 		return result;
 	}
-
 }

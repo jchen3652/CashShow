@@ -64,14 +64,15 @@ public class Algorithms {
 	 */
 	public static int primaryAlgorithm(String question, String searchResult, String answerCandidate)
 			throws JSONException, IOException {
-
+		
+			
+		
+		
+		
+		
 		int score = 0;
 		searchResult = stringLowerCase(searchResult);
 		answerCandidate = answerCandidate.replaceAll("A ", "").toLowerCase();
-		if (Config.isDebug) {
-			System.out.println("search result" + searchResult);
-			System.out.println("answer candidate" + answerCandidate);
-		}
 		score += occuranceAlgorithmScore(searchResult, answerCandidate);
 		return score;
 	}

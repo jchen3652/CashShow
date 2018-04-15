@@ -6,7 +6,7 @@ import java.awt.Robot;
 import main.Config;
 
 /**
- * Monitors a specified pixel and returns color valuess
+ * Monitors a specified pixel location and reports color changes
  * 
  * @author James
  *
