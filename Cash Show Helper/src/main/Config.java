@@ -6,7 +6,7 @@ public class Config {
 	public static final String questionOutputPath = mainDirectory + "questionimage.png";
 
 	public static final boolean isDebug = true;
-	public static final boolean isLiveShow = false;
+	public static final boolean isLiveShow = true;
 	//************************************************************************************************
 	// Google API restricts the number of times you can search, listed are different sets of API Keys
 
