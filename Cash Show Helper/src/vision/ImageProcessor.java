@@ -101,18 +101,29 @@ public class ImageProcessor {
 		ITesseract instance = new Tesseract();
 
 		//80, 30, 630, 170
-		BufferedImage answer1 = thresholdImage(
+//		BufferedImage answer1 = thresholdImage(
+//				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (780 / resolutionModifier),
+//						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
+//				Config.answerTextThreshold);
+//		BufferedImage answer2 = thresholdImage(
+//				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1000 / resolutionModifier),
+//						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
+//				Config.answerTextThreshold);
+//		BufferedImage answer3 = thresholdImage(
+//				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1200 / resolutionModifier),
+//						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
+//				Config.answerTextThreshold);
+		
+		BufferedImage answer1 = 
 				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (780 / resolutionModifier),
-						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
-				Config.answerTextThreshold);
-		BufferedImage answer2 = thresholdImage(
+						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier))
+				;
+		BufferedImage answer2 = 
 				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1000 / resolutionModifier),
-						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
-				Config.answerTextThreshold);
-		BufferedImage answer3 = thresholdImage(
-				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1190 / resolutionModifier),
-						(int) (630 / resolutionModifier), (int) (160 / resolutionModifier)),
-				Config.answerTextThreshold);
+						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier));
+		BufferedImage answer3 = 
+				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1200 / resolutionModifier),
+						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier));
 
 		if (Config.isDebug) {
 			ImageIO.write(answer1, "png",
@@ -132,7 +143,7 @@ public class ImageProcessor {
 		}
 
 		for (String o : rawAnswerStrings) {
-			o = Algorithms.cleanOCRError(o);
+			//o = Algorithms.cleanOCRError(o);
 		}
 
 		System.out.println("Got Answer List");

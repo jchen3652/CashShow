@@ -6,7 +6,7 @@ public class Config {
 	public static final String questionOutputPath = mainDirectory + "questionimage.png";
 
 	public static final boolean isDebug = true;
-	public static final boolean isLiveShow = true;
+	public static final boolean isLiveShow = false;
 	//************************************************************************************************
 	// Google API restricts the number of times you can search, listed are different sets of API Keys
 
@@ -41,7 +41,7 @@ public class Config {
 
 	// Vision Constants
 	public static final int questionTextThreshold = 195; //191 tried and tested
-	public static final int answerTextThreshold = 210; // 191 tried and tested
+	public static final int answerTextThreshold = 140; // 191 tried and tested
 
 	public static final int timerXLocation = 269;
 	public static final int timerYLocation = 95;
@@ -63,8 +63,11 @@ public class Config {
 	public static final int[] whiteGTOL = {254, 255};
 	public static final int[] whiteBTOL = {254, 255};
 
-	public static final int whitePixelXLocation = 950; //755
-	public static final int whitePixelYLocation = 335; //125
+	public static final int  whiteXLocation = 268;
+	public static final int whiteYLocation = 295;
+	
+	public static final int whitePixelXLocation = 950; //
+	public static final int whitePixelYLocation = 335; //
 
 	public static final String[][] ocrReplaceArray = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﾗ", "-"}, {"ﬁ", "fi"},
 			{"tﾑ", "t'"}, {"“", "\""}, {"”", "\""}, {"`", ""}};

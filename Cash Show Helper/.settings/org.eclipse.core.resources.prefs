@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/algorithms/Algorithms.java=UTF-8
+encoding//src/consoleOutput/ConsoleOutput.java=UTF-8
 encoding//src/consoleOutput/CustomOutputStream.java=UTF-8
 encoding//src/main/Config.java=UTF-8
 encoding//src/vision/ImageProcessor.java=UTF-8

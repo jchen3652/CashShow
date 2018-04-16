@@ -34,7 +34,8 @@ public class Main {
 		BufferedImage phoneScreen = robot.createScreenCapture(SmartScreen.runSmartScreenCheck(output));
 
 		ImageProcessor processor = new ImageProcessor(phoneScreen);
-		whiteListener = new PixelListener(Config.whitePixelXLocation, Config.whitePixelYLocation, robot);
+		whiteListener = new PixelListener(SmartScreen.relToAbsPixLoc(Config.whiteYLocation, SmartScreen.screenshotXCoordinate),
+				SmartScreen.relToAbsPixLoc(Config.whiteYLocation, SmartScreen.screenshotYCoordinate), robot);
 		timerListener = new PixelListener(
 				SmartScreen.relToAbsPixLoc(Config.timerXLocation, SmartScreen.screenshotXCoordinate),
 				SmartScreen.relToAbsPixLoc(Config.timerYLocation, SmartScreen.screenshotYCoordinate), robot);
@@ -55,7 +56,7 @@ public class Main {
 			System.out.println("Detected Question");
 
 			// Waiting for the cash show text to load
-			Thread.sleep(500);
+			Thread.sleep(700);
 
 			phoneScreen = robot.createScreenCapture(SmartScreen.runSmartScreenCheck(output));
 			processor = new ImageProcessor(phoneScreen);
@@ -99,6 +100,7 @@ public class Main {
 			for (int i = 0; i < 3; i++) {
 				System.out
 						.println((new StringBuilder(processor.rawAnswerStrings[i])).append(": ").append(allScores[i]));
+				allScores[i] = 0;
 			}
 
 			whiteListener.refreshPixelListener();
