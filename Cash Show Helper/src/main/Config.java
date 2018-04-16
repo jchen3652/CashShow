@@ -43,7 +43,7 @@ public class Config {
 	public static final int questionTextThreshold = 195; //191 tried and tested
 	public static final int answerTextThreshold = 140; // 191 tried and tested
 
-	public static final int timerXLocation = 269;
+	public static final int timerXLocation = 271;
 	public static final int timerYLocation = 95;
 
 	@Deprecated
@@ -64,7 +64,7 @@ public class Config {
 	public static final int[] whiteBTOL = {254, 255};
 
 	public static final int  whiteXLocation = 268;
-	public static final int whiteYLocation = 295;
+	public static final int whiteYLocation = 345;
 	
 	public static final int whitePixelXLocation = 950; //
 	public static final int whitePixelYLocation = 335; //

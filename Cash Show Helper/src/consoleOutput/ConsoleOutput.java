@@ -89,7 +89,12 @@ public class ConsoleOutput extends JFrame {
 		setSize(480, 320);
 		setLocationRelativeTo(null); // centers on screen
 	}
-
+	
+	public double getConsoleHeight() {
+		return  (Math.round(this.getInsets().top / 10.0) * 10);
+	}
+	
+	
 	/**
 	 * 
 	 * 

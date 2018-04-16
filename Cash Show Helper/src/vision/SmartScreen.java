@@ -1,6 +1,5 @@
 package vision;
 
-import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -9,24 +8,36 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 import consoleOutput.ConsoleOutput;
-import main.Main;
 
 public class SmartScreen {
-	static ConsoleOutput thisOutput;
 
-	public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	double titleHeight;
+	double taskbarHeight;
+	double monitorScreenHeight;
+	double monitorScreenWidth;
 
-	public static int monitorScreenHeight = (int) screenSize.getHeight();
-	public static int monitorScreenWidth = (int) screenSize.getWidth();
-	public static int screenshotXCoordinate;
-	public static int screenshotYCoordinate;
+	public int screenshotXCoordinate;
+	public int screenshotYCoordinate;
+	public int phoneHeight;
+	public double phoneWidth;
 
-	public SmartScreen() {
-		runSmartScreenCheck(Main.output);
+	public SmartScreen(double monitorX, double monitorY, double tHeight, double bHeight) {
+		monitorScreenHeight = monitorY;
+		monitorScreenWidth = monitorX;
+		titleHeight = tHeight;
+		taskbarHeight = bHeight;
+
 	}
 
-	public static double scaleToAnyScreen(int dimension) {
-		return monitorScreenHeight * dimension / 1080.0;
+	public void actualSmartScreenCheck() {
+		phoneHeight = (int) Math.round(monitorScreenHeight - (taskbarHeight + titleHeight));
+		phoneWidth = (int) Math.round(9.0 * phoneHeight / 16.0);
+		screenshotXCoordinate = (int) Math.round((monitorScreenWidth - phoneWidth) / 2.0);
+		screenshotYCoordinate = (int) titleHeight;
+	}
+
+	public double scaleToAnyScreen(int dimension) {
+		return phoneHeight * dimension / 1080.0;
 	}
 
 	/**
@@ -35,28 +46,31 @@ public class SmartScreen {
 	 * @param baseCoordinate
 	 * @return
 	 */
-	public static int relToAbsPixLoc(int relLocation, int baseCoordinate) {
-		return (int) Math.round(baseCoordinate + scaleToAnyScreen(relLocation));
+	public int relToAbsHorizontal(int relLocation, int baseCoordinate) {
+		return (int) Math.round(baseCoordinate + relLocation / 557.0 * phoneWidth);
 	}
+	
+	
+
+	//	/**
+	//	 * Calculates and returns the x, y, width, and height of the phone screen
+	//	 * based on overall resolution
+	//	 * @param output Console Output object which is used to find the height of the window
+	//	 * @return Integer array with the calculated data, this can be passed
+	//	 *         straight to rectangle coordinates
+	//	 */
+	//	public static Rectangle runSmartScreenCheck(ConsoleOutput output) {
+	//		thisOutput = output;
+	//		int availableHeight = (int) Math.round(monitorScreenHeight - (getTaskbarSize() + output.getConsoleHeight()));
+	//		int availableWidth = (int) Math.round(availableHeight * monitorScreenHeight / monitorScreenWidth);
+	//		screenshotXCoordinate = (int) Math.round((monitorScreenWidth - availableWidth) / 2);
+	//		screenshotYCoordinate = output.getConsoleHeight();
+	//		return new Rectangle(screenshotXCoordinate, screenshotYCoordinate, availableWidth, availableHeight);
+	//	}
 
 	/**
-	 * Calculates and returns the x, y, width, and height of the phone screen
-	 * based on overall resolution
-	 * @param output Console Output object which is used to find the height of the window
-	 * @return Integer array with the calculated data, this can be passed
-	 *         straight to rectangle coordinates
-	 */
-	public static Rectangle runSmartScreenCheck(ConsoleOutput output) {
-		thisOutput = output;
-		int availableHeight = (int) Math.round(monitorScreenHeight - (getTaskbarSize() + getTitleHeight()));
-		int availableWidth = (int) Math.round(availableHeight * monitorScreenHeight / monitorScreenWidth);
-		screenshotXCoordinate = (int) Math.round((monitorScreenWidth - availableWidth) / 2);
-		screenshotYCoordinate = getTitleHeight();
-		return new Rectangle(screenshotXCoordinate, screenshotYCoordinate, availableWidth, availableHeight);
-	}
-
-	/**
-	 * Calculates the 
+	 * Calculates the
+	 * 
 	 * @return
 	 */
 	public static int getTaskbarSize() {
@@ -68,16 +82,26 @@ public class SmartScreen {
 
 	}
 
-	public static int getTitleHeight() {
-		return (int) (Math.round(thisOutput.getInsets().top / 10.0) * 10);
+	public Rectangle getRectangle() {
+		System.out.println(screenshotXCoordinate);
+		System.out.println(screenshotYCoordinate);
+		System.out.println(phoneWidth);
+		System.out.println(phoneHeight);
+
+		
+		
+		return (new Rectangle(screenshotXCoordinate, screenshotYCoordinate, (int) phoneWidth, phoneHeight));
 	}
 
 	public static void main(String[] args) {
 		ConsoleOutput output = new ConsoleOutput();
-		output.setVisible(true);
-		System.out.println(runSmartScreenCheck(output).x);
-		System.out.println(runSmartScreenCheck(output).y);
-		System.out.println(runSmartScreenCheck(output).width);
-		System.out.println(runSmartScreenCheck(output).height);
+		output.show();
+		SmartScreen screen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(), output.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
+		screen.actualSmartScreenCheck();
+		
+		System.out.println(screen.screenshotXCoordinate);
+		System.out.println(screen.screenshotYCoordinate);
+		System.out.println(screen.phoneWidth);
+		System.out.println(screen.phoneHeight);
 	}
 }

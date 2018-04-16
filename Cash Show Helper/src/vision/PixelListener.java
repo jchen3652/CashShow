@@ -81,7 +81,10 @@ public class PixelListener {
 	public int getB() {
 		return blue;
 	}
-
+	public void printLocation() {
+		System.out.println((new StringBuilder("x: ").append(xCoordinate).append(" y: ").append(yCoordinate)));
+	}
+	
 	public void printRGB() {
 		System.out.println((new StringBuilder("R: ")).append(red));
 		System.out.println((new StringBuilder("G: ")).append(green));
