@@ -48,7 +48,7 @@ public class Analyzer {
 					exp.printStackTrace();
 				}
 
-			}
+			}		
 		});
 	}
 

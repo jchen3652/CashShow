@@ -37,6 +37,13 @@ public class Config {
 	@Deprecated
 	public static final int[] phoneScreenArea = {682, 40, 557, 990}; //Fallback Number
 
+	
+	public static final double[] rawQuestionLocation = {36.0, 181.0, 474.0, 129.0};
+	
+	public static final double[] rawAnswer1Location = {77, 402, 325, 77};
+	public static final double[] rawAnswer2Location = {77, 516, 325, 77};
+	public static final double[] rawAnswer3Location = {77, 619, 325, 77};
+	
 	public static final double googleResultsScaleDown = 1;
 
 	// Vision Constants

@@ -27,13 +27,14 @@ public class Main {
 
 	private static Robot robot;
 	public static ConsoleOutput output = new ConsoleOutput();
+	public static SmartScreen smartscreen;
 	
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
 		
 		
 		
 		output.setVisible(true);
-		SmartScreen smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(), output.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
+		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(), output.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
 		smartscreen.actualSmartScreenCheck();
 		robot = new Robot();
 		
