@@ -8,7 +8,21 @@ import org.json.JSONException;
 
 import main.Config;
 
+/**
+ * This is where all the search and answer finding algorithms are located
+ * 
+ * @author James
+ *
+ */
 public class Algorithms {
+	/**
+	 * Just a random test method that is never run in the actual program
+	 * 
+	 * @param args
+	 * @throws JSONException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public static void main(String[] args) throws JSONException, IOException, InterruptedException {
 		System.out.println(LocalDateTime.now());
 
@@ -20,7 +34,7 @@ public class Algorithms {
 	}
 
 	/**
-	 * Finds and replaces all OCR mistakes
+	 * Finds and replaces all potential OCR mistakes
 	 * 
 	 * @param text
 	 *            input text
@@ -54,8 +68,8 @@ public class Algorithms {
 	}
 
 	/**
-	 * Combined score calculation algorithm, all other algorithms are called
-	 * in this
+	 * Combined score calculation algorithm, all other algorithms are called in
+	 * this
 	 * 
 	 * @param searchResult
 	 *            Google Search Result
@@ -74,7 +88,6 @@ public class Algorithms {
 		score += occuranceAlgorithmScore(searchResult, answerCandidate);
 		return score;
 	}
-
 
 	/**
 	 * Converts a string to lower case

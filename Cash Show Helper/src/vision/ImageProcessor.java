@@ -23,10 +23,8 @@ import net.sourceforge.tess4j.TesseractException;
  *
  */
 public class ImageProcessor {
-	private static BufferedImage phoneScreen = null;
-	public static double resolutionModifier;
-	public static double newResolutionModifier;
-
+	private BufferedImage phoneScreen = null;
+	private double newResolutionModifier;
 	public String rawQuestionText;
 	public String[] rawAnswerStrings = new String[3];
 
@@ -39,11 +37,8 @@ public class ImageProcessor {
 	 */
 	public ImageProcessor(BufferedImage image) throws IOException {
 		phoneScreen = image;
-		resolutionModifier = (1080.0 / (double) phoneScreen.getWidth());
-	
-		newResolutionModifier = phoneScreen.getHeight()/990.0;
-		
-		System.out.println("Resolution Downscale Factor: " + resolutionModifier);
+		newResolutionModifier = phoneScreen.getHeight() / 990.0;
+
 	}
 
 	/**
@@ -56,20 +51,18 @@ public class ImageProcessor {
 	public String getQuestionText() throws IOException {
 		System.out.println("Getting Question String...");
 
-		BufferedImage questionArea = phoneScreen.getSubimage((int) Math.round((Config.rawQuestionLocation[0])*newResolutionModifier),
-				(int) Math.round((Config.rawQuestionLocation[1])*newResolutionModifier), (int) Math.round((Config.rawQuestionLocation[2])*newResolutionModifier),
-				(int) Math.round((Config.rawQuestionLocation[3])*newResolutionModifier));
-		
-		
+		BufferedImage questionArea = phoneScreen.getSubimage(
+				(int) Math.round((Config.rawQuestionLocation[0]) * newResolutionModifier),
+				(int) Math.round((Config.rawQuestionLocation[1]) * newResolutionModifier),
+				(int) Math.round((Config.rawQuestionLocation[2]) * newResolutionModifier),
+				(int) Math.round((Config.rawQuestionLocation[3]) * newResolutionModifier));
 
-		// If in debugging mode, output the 
 		if (Config.isDebug) {
-			File phoneScreenFile = new File(Config.mainDirectory + Config.screenshotIdentifier);
+			File phoneScreenFile = new File(Config.mainDirectory + Config.phoneScreenIdentifier);
 			ImageIO.write(phoneScreen, "png", phoneScreenFile);
 
 		}
 
-		// crusty ass code
 		//questionArea = sharpenImage(questionArea);
 		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
 
@@ -104,56 +97,24 @@ public class ImageProcessor {
 
 		ITesseract instance = new Tesseract();
 
-		//80, 30, 630, 170
-		//		BufferedImage answer1 = thresholdImage(
-		//				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (780 / resolutionModifier),
-		//						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
-		//				Config.answerTextThreshold);
-		//		BufferedImage answer2 = thresholdImage(
-		//				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1000 / resolutionModifier),
-		//						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
-		//				Config.answerTextThreshold);
-		//		BufferedImage answer3 = thresholdImage(
-		//				phoneScreen.getSubimage((int) (150 / resolutionModifier), (int) (1200 / resolutionModifier),
-		//						(int) (630 / resolutionModifier), (int) (150 / resolutionModifier)),
-		//				Config.answerTextThreshold);
-
 		BufferedImage[] allQuestionImg = new BufferedImage[3];
-		allQuestionImg[0] = phoneScreen.getSubimage((int) Math.round((Config.rawAnswer1Location[0])*newResolutionModifier),
-				(int) Math.round((Config.rawAnswer1Location[1])*newResolutionModifier), (int) Math.round((Config.rawAnswer1Location[2])*newResolutionModifier),
-				(int) Math.round((Config.rawAnswer1Location[3])*newResolutionModifier));
-		
+		allQuestionImg[0] = phoneScreen.getSubimage(
+				(int) Math.round((Config.rawAnswer1Location[0]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer1Location[1]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer1Location[2]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer1Location[3]) * newResolutionModifier));
 
-		allQuestionImg[1] = phoneScreen.getSubimage((int) Math.round((Config.rawAnswer2Location[0])*newResolutionModifier),
-				(int) Math.round((Config.rawAnswer2Location[1])*newResolutionModifier), (int) Math.round((Config.rawAnswer2Location[2])*newResolutionModifier),
-				(int) Math.round((Config.rawAnswer2Location[3])*newResolutionModifier));
+		allQuestionImg[1] = phoneScreen.getSubimage(
+				(int) Math.round((Config.rawAnswer2Location[0]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer2Location[1]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer2Location[2]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer2Location[3]) * newResolutionModifier));
 
-		
-//		System.out.println("1: " + (int) Math.round(150.0 / resolutionModifier));
-//		System.out.println("2: " + (int) Math.round(1000.0 / resolutionModifier));
-//		System.out.println("3: " + (int) Math.round(630.0 / resolutionModifier));
-//		System.out.println("4: " + (int) Math.round(150.0 / resolutionModifier));
-		
-		
-		
-		allQuestionImg[2] = phoneScreen.getSubimage((int) Math.round((Config.rawAnswer3Location[0])*newResolutionModifier),
-				(int) Math.round((Config.rawAnswer3Location[1])*newResolutionModifier), (int) Math.round((Config.rawAnswer3Location[2])*newResolutionModifier),
-				(int) Math.round((Config.rawAnswer3Location[3])*newResolutionModifier));
-		
-		
-		
-		
-		
-
-		//		BufferedImage answer1 = phoneScreen.getSubimage((int) Math.round(150.0 / resolutionModifier),
-		//				(int) Math.round(780.0 / resolutionModifier), (int) Math.round(630.0 / resolutionModifier),
-		//				(int) Math.round(150.0 / resolutionModifier));
-		//		BufferedImage answer2 = phoneScreen.getSubimage((int) Math.round(150.0 / resolutionModifier),
-		//				(int) Math.round(1000.0 / resolutionModifier), (int) (630 / resolutionModifier),
-		//				(int) (150 / resolutionModifier));
-		//		BufferedImage answer3 = phoneScreen.getSubimage((int) (150.0 / resolutionModifier),
-		//				(int) (1200.0 / resolutionModifier), (int) (630 / resolutionModifier),
-		//				(int) (150 / resolutionModifier));
+		allQuestionImg[2] = phoneScreen.getSubimage(
+				(int) Math.round((Config.rawAnswer3Location[0]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer3Location[1]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer3Location[2]) * newResolutionModifier),
+				(int) Math.round((Config.rawAnswer3Location[3]) * newResolutionModifier));
 
 		if (Config.isDebug) {
 			for (int i = 0; i < 3; i++) {
@@ -161,12 +122,6 @@ public class ImageProcessor {
 						.append("answer" + Integer.toString(1 + i) + ".png").toString())));
 			}
 
-			//			ImageIO.write(answer1, "png",
-			//					new File((new StringBuilder(Config.mainDirectory).append("answer1.png").toString())));
-			//			ImageIO.write(answer2, "png",
-			//					new File((new StringBuilder(Config.mainDirectory).append("answer2.png").toString())));
-			//			ImageIO.write(answer3, "png",
-			//					new File((new StringBuilder(Config.mainDirectory).append("answer3.png").toString())));
 		}
 
 		try {

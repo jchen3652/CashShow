@@ -6,7 +6,7 @@ import java.awt.Robot;
 import main.Config;
 
 /**
- * Monitors a specified pixel location and reports color changes
+ * Monitors a specified pixel location and reports information about color
  * 
  * @author James
  *
@@ -43,15 +43,15 @@ public class PixelListener {
 	}
 
 	/**
-	 * Used to tell whether is
+	 * Used to tell whether if it is as color
 	 * 
 	 * @param rtol
-	 *            Red tolerance array
+	 *            Red tolerance range array
 	 * @param gtol
-	 *            Green tolerance array
+	 *            Green tolerance range array
 	 * @param btol
-	 *            Blue Tolerance array
-	 * @return
+	 *            Blue Tolerance range array
+	 * @return Whether the pixel color is within the specified tolerance range
 	 */
 	public boolean isColor(int[] rtol, int[] gtol, int[] btol) {
 		return ((red >= rtol[0]) && (red <= rtol[1])) && ((green >= gtol[0]) && (green <= gtol[1]))
@@ -81,10 +81,11 @@ public class PixelListener {
 	public int getB() {
 		return blue;
 	}
+
 	public void printLocation() {
 		System.out.println((new StringBuilder("x: ").append(xCoordinate).append(" y: ").append(yCoordinate)));
 	}
-	
+
 	public void printRGB() {
 		System.out.println((new StringBuilder("R: ")).append(red));
 		System.out.println((new StringBuilder("G: ")).append(green));

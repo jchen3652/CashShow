@@ -24,50 +24,47 @@ public class Main {
 
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
+	
 
 	private static Robot robot;
 	public static ConsoleOutput output = new ConsoleOutput();
 	public static SmartScreen smartscreen;
-	
+
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-		
-		
-		
 		output.setVisible(true);
-		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(), output.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
-		smartscreen.actualSmartScreenCheck();
-		robot = new Robot();
 		
+		
+		
+		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(),
+				output.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
+		smartscreen.getScreenInformation();
+		robot = new Robot();
+
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);
-		//BufferedImage phoneScreen = robot.createScreenCapture(SmartScreen.runSmartScreenCheck(output));
-		
-		whiteListener = new PixelListener(smartscreen.relToAbsHorizontal(Config.whiteXLocation, smartscreen.screenshotXCoordinate),
-				smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotYCoordinate), robot);
-		
-		System.out.println(smartscreen.relToAbsHorizontal(Config.whiteYLocation, smartscreen.screenshotYCoordinate));
-		
+
+		whiteListener = new PixelListener(
+				smartscreen.relToAbsHorizontal(Config.whiteXLocation, smartscreen.screenshotXCoordinate),
+				smartscreen.relToAbsHorizontal(Config.whiteYLocation, smartscreen.screenshotYCoordinate), robot);
+
 		timerListener = new PixelListener(
 				smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.relToAbsHorizontal(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
-		
-		timerListener.printLocation();
 		whiteListener.printLocation();
-		System.out.println(smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotXCoordinate));
-		Thread.sleep(4000);
+		
 		BufferedImage phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
 		ImageProcessor processor = new ImageProcessor(phoneScreen);
-		
-			ImageIO.write(phoneScreen, "png",
-					new File((new StringBuilder(Config.mainDirectory).append("phoneScreen.png").toString())));
-		
+
+		ImageIO.write(phoneScreen, "png",
+				new File((new StringBuilder(Config.mainDirectory).append("phoneScreen.png").toString())));
+
 		System.out.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow));
 
 		// Do everything in this forever
 		while (true) {
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
-			
+
 			// Stay in this loop until the wheel has turned gray/green and white box showed up
 			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
@@ -79,9 +76,9 @@ public class Main {
 
 			// Waiting for the cash show text to load
 			Thread.sleep(700);
-		phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
+			phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
 			processor = new ImageProcessor(phoneScreen);
-			
+
 			questionText = processor.getQuestionText();
 			allAnswers = processor.getAnswerList();
 			System.out.println(processor.rawQuestionText);
@@ -126,7 +123,7 @@ public class Main {
 			}
 
 			whiteListener.refreshPixelListener();
-			// Wait until the screen is no longer white
+
 			while ((whiteListener.isWhite())) {
 				whiteListener.refreshPixelListener();
 			}

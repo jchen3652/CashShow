@@ -18,6 +18,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * I just borrowed this code from some place along with analyzer. This code is
+ * never called in a run of the main program, it's used to help find pixel
+ * colors and pixel coordinates during testing
+ *
+ */
 public class WhatsMyColor {
 
 	public static void main(String[] args) throws IOException {
