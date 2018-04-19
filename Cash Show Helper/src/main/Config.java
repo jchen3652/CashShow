@@ -22,16 +22,16 @@ public class Config {
 //	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
 
 	//nibbakilla3652
-		public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
-		public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
+//		public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
+//		public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
 
 	// ahitler3652
 	//		public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
 	//		public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
 
 	// 2563nehcsemaj
-	//	public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
-	//	public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
+		public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
+		public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
 
 	// jchen3652
 	//	public static final String GOOGLE_API_KEY = "AIzaSyDhVVASBNyr0U-trn5eFaoJrNQJoHbPVzM";
@@ -91,8 +91,8 @@ public class Config {
 	public static final int[] whiteGTOL = {254, 255};
 	public static final int[] whiteBTOL = {254, 255};
 
-	public static final int whiteXLocation = 268;
-	public static final int whiteYLocation = 345;
+	public static final int whiteXLocation = 501;
+	public static final int whiteYLocation = 330;
 
 	/**
 	 * Combinations of characters that should automatically be replaced on text
