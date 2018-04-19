@@ -11,6 +11,8 @@ import javax.imageio.ImageIO;
 import algorithms.Algorithms;
 import algorithms.GoogleSearcher;
 import consoleOutput.ConsoleOutput;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
 import vision.ImageProcessor;
 import vision.PixelListener;
 import vision.ScreenUtils;
@@ -24,17 +26,22 @@ public class Main {
 
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
-	
 
 	private static Robot robot;
 	public static ConsoleOutput output = new ConsoleOutput();
 	public static SmartScreen smartscreen;
 
+	public static ITesseract instance;
+
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
+		File tessDataFolder = new File("Tesseract-OCR");
+		instance = new Tesseract();
+		instance.setDatapath(tessDataFolder.getAbsolutePath());
+		instance.setLanguage("eng");
+		
+
 		output.setVisible(true);
-		
-		
-		
+
 		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(),
 				output.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
 		smartscreen.getScreenInformation();
@@ -50,10 +57,7 @@ public class Main {
 		timerListener = new PixelListener(
 				smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.relToAbsHorizontal(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
-		
-		
-		
-		
+
 		BufferedImage phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
 		ImageProcessor processor = new ImageProcessor(phoneScreen);
 
@@ -77,7 +81,8 @@ public class Main {
 			System.out.println("Detected Question");
 
 			// Waiting for the cash show text to load
-			Thread.sleep(700);
+			Thread.sleep(1000);
+			System.out.println("Done waiting");
 			phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
 			processor = new ImageProcessor(phoneScreen);
 
@@ -90,20 +95,12 @@ public class Main {
 				System.out.println((new StringBuilder("***")).append(o));
 
 			}
-
+			String googleResultsString = GoogleSearcher.getGoogleResultsString(questionText);
 			for (int i = 0; i < 3; i++) {
 				try {
 
 					allScores[i] += Algorithms.primaryAlgorithm(questionText, googleResultsString, allAnswers[i]);
 
-					String[] splitAnswerText = allAnswers[i].split(" ");
-					for (String o : splitAnswerText) {
-						if (questionText.toLowerCase().contains(o.toLowerCase())) {
-							System.out.println("Question contains Answer String");
-							allScores[i] -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(),
-									o.toLowerCase());
-						}
-					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -117,12 +114,24 @@ public class Main {
 				}
 			}
 
+			int largestIndex = 0;
+			int largest = 0;
 			// Print out the answers with their respective scores
 			for (int i = 0; i < 3; i++) {
 				System.out
 						.println((new StringBuilder(processor.rawAnswerStrings[i])).append(": ").append(allScores[i]));
+				if (allScores[i] > largest) {
+					largest = allScores[i];
+					largestIndex = i;
+				}
+				
 				allScores[i] = 0;
 			}
+
+			
+			
+
+			System.out.println((new StringBuilder("Best Answer: ").append(allAnswers[largestIndex])));
 
 			whiteListener.refreshPixelListener();
 

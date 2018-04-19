@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 
+import com.inet.jortho.SpellChecker;
+
 import main.Config;
 
 /**
@@ -79,13 +81,30 @@ public class Algorithms {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public static int primaryAlgorithm(String question, String searchResult, String answerCandidate)
-			throws JSONException, IOException {
+	public static int primaryAlgorithm(String question, String googleResultsString, String answerCandidate) throws JSONException, IOException {
+		
 
 		int score = 0;
-		searchResult = stringLowerCase(searchResult);
-		answerCandidate = StringUtils.replaceAll(answerCandidate, "A ", "").toLowerCase();
-		score += occuranceAlgorithmScore(searchResult, answerCandidate);
+		googleResultsString = stringLowerCase(googleResultsString);
+		if (answerCandidate.startsWith("A ")) {
+			answerCandidate = answerCandidate.substring(2);
+		}
+		if (answerCandidate.startsWith("The ")) {
+			answerCandidate = answerCandidate.substring(4);
+		}
+		answerCandidate = answerCandidate.toLowerCase();
+		score += occuranceAlgorithmScore(googleResultsString, answerCandidate);
+		System.out.println((new StringBuilder("Searched for: ").append(answerCandidate)));
+
+		String[] splitAnswerText = answerCandidate.split(" ");
+		for (String o : splitAnswerText) {
+			if (question.toLowerCase().contains(o)) {
+				System.out.println("Question contains Answer String");
+				score -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(), o.toLowerCase());
+			}
+
+			
+		}
 		return score;
 	}
 
@@ -141,16 +160,17 @@ public class Algorithms {
 	 * @return number of times
 	 */
 	public static int numberOfTimesContained(String totalText, String whatToFind) {
-		int lastIndex = 0;
-		int count = 0;
-		while (lastIndex != -1) {
-			lastIndex = totalText.indexOf(whatToFind, lastIndex);
-			if (lastIndex != -1) {
-				count++;
-				lastIndex += whatToFind.length();
-			}
-		}
-		return count;
+		return StringUtils.countMatches(totalText , whatToFind);
+//		int lastIndex = 0;
+//		int count = 0;
+//		while (lastIndex != -1) {
+//			lastIndex = totalText.indexOf(whatToFind, lastIndex);
+//			if (lastIndex != -1) {
+//				count++;
+//				lastIndex += whatToFind.length();
+//			}
+//		}
+//		return count;
 	}
 
 }

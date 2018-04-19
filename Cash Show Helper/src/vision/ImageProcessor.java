@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import algorithms.Algorithms;
 import main.Config;
+import main.Main;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -65,18 +66,14 @@ public class ImageProcessor {
 		}
 
 		//questionArea = sharpenImage(questionArea);
-		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
+			questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
 
 		File outputfile = new File(Config.questionOutputPath);
 		ImageIO.write(questionArea, "png", outputfile);
 
-		File tessDataFolder = new File("Tesseract-OCR");
-		ITesseract instance = new Tesseract();
-		instance.setDatapath(tessDataFolder.getAbsolutePath());
-		
 		String result = null;
 		try {
-			result = Algorithms.cleanOCRError(instance.doOCR(questionArea));
+			result = Algorithms.cleanOCRError(Main.instance.doOCR(questionArea));
 		} catch (TesseractException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,11 +95,6 @@ public class ImageProcessor {
 	public String[] getAnswerList() throws IOException {
 		System.out.println("Getting Answer List...");
 
-		ITesseract instance = new Tesseract();
-		File tessDataFolder = new File("Tesseract-OCR");
-		
-		instance.setDatapath(tessDataFolder.getAbsolutePath());
-
 		BufferedImage[] allQuestionImg = new BufferedImage[3];
 		allQuestionImg[0] = phoneScreen.getSubimage(
 				(int) Math.round((Config.rawAnswer1Location[0]) * newResolutionModifier),
@@ -122,6 +114,10 @@ public class ImageProcessor {
 				(int) Math.round((Config.rawAnswer3Location[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer3Location[3]) * newResolutionModifier));
 
+				for(BufferedImage o: allQuestionImg) {
+					thresholdImage(o, Config.answerTextThreshold);
+				}
+
 		if (Config.isDebug) {
 			for (int i = 0; i < 3; i++) {
 				ImageIO.write(allQuestionImg[i], "png", new File((new StringBuilder(Config.mainDirectory)
@@ -132,7 +128,8 @@ public class ImageProcessor {
 
 		try {
 			for (int i = 0; i < 3; i++) {
-				rawAnswerStrings[i] = Algorithms.cleanOCRError(instance.doOCR(allQuestionImg[i]).trim());
+
+				rawAnswerStrings[i] = Algorithms.cleanOCRError(Main.instance.doOCR(allQuestionImg[i]).trim());
 			}
 
 		} catch (TesseractException e) {
@@ -182,7 +179,7 @@ public class ImageProcessor {
 			}
 			raster.setPixels(0, y, image.getWidth(), 1, pixels);
 		}
-		System.out.println("Threshold image completed");
+		
 		return result;
 	}
 }

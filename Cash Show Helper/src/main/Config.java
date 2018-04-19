@@ -10,7 +10,7 @@ public class Config {
 	 * knows how to do both, just tell it which one it is in here
 	 * 
 	 */
-	public static final boolean isLiveShow = true;
+	public static final boolean isLiveShow = false;
 
 	//************************************************************************************************
 	// This program uses Google's customsearch API to search for answers, and there is a daily 100
@@ -18,8 +18,8 @@ public class Config {
 	// information and commenting a new config
 
 	//dtrump3652
-//	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
-//	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
+	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
+	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
 
 	//nibbakilla3652
 //		public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
@@ -30,12 +30,12 @@ public class Config {
 	//		public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
 
 	// 2563nehcsemaj
-		public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
-		public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
+//		public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
+//		public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
 
 	// jchen3652
-	//	public static final String GOOGLE_API_KEY = "AIzaSyDhVVASBNyr0U-trn5eFaoJrNQJoHbPVzM";
-	//	public static final String SEARCH_ENGINE_ID = "017356742749847709225:4h4bt-iqizy";
+//		public static final String GOOGLE_API_KEY = "AIzaSyDhVVASBNyr0U-trn5eFaoJrNQJoHbPVzM";
+//		public static final String SEARCH_ENGINE_ID = "017356742749847709225:4h4bt-iqizy";
 
 	// Random github
 	//	 public static final String GOOGLE_API_KEY = "AIzaSyBFnKBQPESdi2sP1twKp59-3mBscTVw99k";
@@ -74,7 +74,7 @@ public class Config {
 
 	// Vision Constants
 	public static final int questionTextThreshold = 195; //191 tried and tested
-	public static final int answerTextThreshold = 140; // 191 tried and tested
+	public static final int answerTextThreshold = 195; // 191 tried and tested
 
 	public static final double timerXLocation = 269.0;
 	public static final double timerYLocation = 95.0;
@@ -98,8 +98,8 @@ public class Config {
 	 * Combinations of characters that should automatically be replaced on text
 	 * from OCR
 	 */
-	public static final String[][] ocrReplaceArray = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﾗ", "-"}, {"ﬁ", "fi"},
-			{"tﾑ", "t'"}, {"“", "\""}, {"”", "\""}, {"`", ""}};
+	public static final String[][] ocrReplaceArray = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﬁ", "fi"},
+			 {"“", "\""}, {"”", "\""}, {"u n", "un"}};
 
 	/**
 	 * Combinations of characters that should automatically be replaced on text
