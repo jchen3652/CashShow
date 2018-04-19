@@ -15,6 +15,7 @@ import main.Config;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import net.sourceforge.tess4j.util.LoadLibs;
 
 /**
  * Processes screenshot to get question and answer strings
@@ -69,8 +70,10 @@ public class ImageProcessor {
 		File outputfile = new File(Config.questionOutputPath);
 		ImageIO.write(questionArea, "png", outputfile);
 
+		File tessDataFolder = new File("Tesseract-OCR");
 		ITesseract instance = new Tesseract();
-
+		instance.setDatapath(tessDataFolder.getAbsolutePath());
+		
 		String result = null;
 		try {
 			result = Algorithms.cleanOCRError(instance.doOCR(questionArea));

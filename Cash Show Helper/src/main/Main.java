@@ -50,7 +50,9 @@ public class Main {
 		timerListener = new PixelListener(
 				smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.relToAbsHorizontal(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
-		whiteListener.printLocation();
+		
+		
+		
 		
 		BufferedImage phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
 		ImageProcessor processor = new ImageProcessor(phoneScreen);
