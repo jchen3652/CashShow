@@ -2,7 +2,7 @@ package main;
 
 public class Config {
 
-	public static final boolean isDebug = true;
+	public static final boolean isDebug = false;
 
 	/**
 	 * This is used to tell the program whether the show is a prerecorded show
@@ -76,7 +76,7 @@ public class Config {
 	public static final int questionTextThreshold = 195; //191 tried and tested
 	public static final int answerTextThreshold = 140; // 191 tried and tested
 
-	public static final double timerXLocation = 271.0;
+	public static final double timerXLocation = 269.0;
 	public static final double timerYLocation = 95.0;
 
 	public static final int[] grayRTOL = {200, 230};
