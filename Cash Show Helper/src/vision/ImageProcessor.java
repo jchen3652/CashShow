@@ -99,6 +99,9 @@ public class ImageProcessor {
 		System.out.println("Getting Answer List...");
 
 		ITesseract instance = new Tesseract();
+		File tessDataFolder = new File("Tesseract-OCR");
+		
+		instance.setDatapath(tessDataFolder.getAbsolutePath());
 
 		BufferedImage[] allQuestionImg = new BufferedImage[3];
 		allQuestionImg[0] = phoneScreen.getSubimage(
