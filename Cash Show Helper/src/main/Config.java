@@ -56,9 +56,9 @@ public class Config {
 	@Deprecated
 	public static final int[] phoneScreenArea = {682, 40, 557, 990}; //Fallback Number	
 	@Deprecated
-	public static final int timerPixelXLocation = 951;
+	public static final int timerPixelXLocation = 953;
 	@Deprecated
-	public static final int timerPixelYLocation = 135;
+	public static final int timerPixelYLocation = 134;
 	@Deprecated
 	public static final int whitePixelXLocation = 950;
 	@Deprecated
@@ -76,7 +76,7 @@ public class Config {
 	public static final int questionTextThreshold = 195; //191 tried and tested
 	public static final int answerTextThreshold = 195; // 191 tried and tested
 
-	public static final double timerXLocation = 269.0;
+	public static final double timerXLocation = 272.0;
 	public static final double timerYLocation = 95.0;
 
 	public static final int[] grayRTOL = {200, 230};
