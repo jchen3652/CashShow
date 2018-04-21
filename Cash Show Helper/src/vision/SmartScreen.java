@@ -18,6 +18,9 @@ public class SmartScreen {
 
 	public int screenshotXCoordinate;
 	public int screenshotYCoordinate;
+	public double unroundedScreenshotXCoordinate;
+	public double unroundedScreenshotYCoordinate;
+	
 	public double phoneHeight;
 	public double phoneWidth;
 
@@ -32,12 +35,15 @@ public class SmartScreen {
 	public void getScreenInformation() {
 		phoneHeight = (monitorScreenHeight - (taskbarHeight + titleHeight));
 		phoneWidth = (9.0 * phoneHeight / 16.0);
+		unroundedScreenshotXCoordinate = (monitorScreenWidth - phoneWidth) / 2.0;
+		unroundedScreenshotYCoordinate = titleHeight;
+		
 		screenshotXCoordinate = (int) Math.round((monitorScreenWidth - phoneWidth) / 2.0);
 		screenshotYCoordinate = (int) titleHeight;
 	}
 
 	public double scaleToAnyScreen(int dimension) {
-		return phoneHeight * dimension / 1080.0;
+		return phoneHeight * (double) dimension / 1080.0;
 	}
 
 	/**
@@ -46,7 +52,7 @@ public class SmartScreen {
 	 * @param baseCoordinate
 	 * @return
 	 */
-	public int relToAbsHorizontal(double relLocation, int baseCoordinate) {
+	public int relToAbsHorizontal(double relLocation, double baseCoordinate) {
 		return (int) Math.round(baseCoordinate + relLocation / 557.0 * phoneWidth);
 	}
 

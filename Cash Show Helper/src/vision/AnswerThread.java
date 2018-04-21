@@ -17,7 +17,6 @@ public class AnswerThread implements Runnable {
 		try {
 			answerList = processor.getAnswerList();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		isFinished = true;
@@ -26,7 +25,7 @@ public class AnswerThread implements Runnable {
 
 	public String[] getAnswerList() {
 		while (isFinished == false) {
-			
+
 		}
 		return answerList;
 	}

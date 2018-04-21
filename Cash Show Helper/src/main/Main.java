@@ -83,8 +83,8 @@ public class Main {
 		robot.setAutoWaitForIdle(false);
 
 		whiteListener = new PixelListener(
-				smartscreen.relToAbsHorizontal(Config.whiteXLocation, smartscreen.screenshotXCoordinate),
-				smartscreen.relToAbsHorizontal(Config.whiteYLocation, smartscreen.screenshotYCoordinate), robot);
+				smartscreen.relToAbsHorizontal(Config.whiteXLocation, smartscreen.unroundedScreenshotXCoordinate),
+				smartscreen.relToAbsHorizontal(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate), robot);
 
 		timerListener = new PixelListener(
 				smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotXCoordinate),
