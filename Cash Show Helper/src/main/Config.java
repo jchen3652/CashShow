@@ -10,7 +10,7 @@ public class Config {
 	 * knows how to do both, just tell it which one it is in here
 	 * 
 	 */
-	public static final boolean isLiveShow = false;
+	public static final boolean isLiveShow = true;
 
 	//************************************************************************************************
 	// This program uses Google's customsearch API to search for answers, and there is a daily 100
@@ -18,16 +18,16 @@ public class Config {
 	// information and commenting a new config
 
 	//dtrump3652
-	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
-	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
+//	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
+//	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
 
-	//nibbakilla3652
-//		public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
-//		public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
+	//nibbakilla3652 //ded
+		public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
+		public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
 
 	// ahitler3652
-	//		public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
-	//		public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
+//			public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
+//			public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
 
 	// 2563nehcsemaj
 //		public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
@@ -65,7 +65,7 @@ public class Config {
 	public static final int whitePixelYLocation = 335;
 	//************************************************************************************************
 
-	public static final double[] rawQuestionLocation = {36.0, 181.0, 474.0, 129.0};
+	public static final double[] rawQuestionLocation = {36.0, 181.0, 480.0, 129.0};
 	public static final double[] rawAnswer1Location = {77.0, 402.0, 325.0, 77.0};
 	public static final double[] rawAnswer2Location = {77.0, 516.0, 325.0, 77.0};
 	public static final double[] rawAnswer3Location = {77.0, 619.0, 325.0, 77.0};
@@ -73,8 +73,8 @@ public class Config {
 	public static final double googleResultsScaleDown = 1;
 
 	// Vision Constants
-	public static final int questionTextThreshold = 195; //191 tried and tested
-	public static final int answerTextThreshold = 195; // 191 tried and tested
+	public static final int questionTextThreshold = 191; //191 tried and tested
+	public static final int answerTextThreshold = 191; // 191 tried and tested
 
 	public static final double timerXLocation = 272.0;
 	public static final double timerYLocation = 95.0;
@@ -99,7 +99,7 @@ public class Config {
 	 * from OCR
 	 */
 	public static final String[][] ocrReplaceArray = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﬁ", "fi"},
-			 {"“", "\""}, {"”", "\""}, {"u n", "un"}};
+			 {"“", "\""}, {"”", "\""}, {"u n", "un"}, {"—", "-"}};
 
 	/**
 	 * Combinations of characters that should automatically be replaced on text

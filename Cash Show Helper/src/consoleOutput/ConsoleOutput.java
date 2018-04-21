@@ -24,6 +24,8 @@ public class ConsoleOutput extends JFrame {
 
 	private JButton buttonStart = new JButton("Force Start");
 	private JButton buttonClear = new JButton("Clear");
+	PrintStream printStream;
+	private boolean isFirstTime = true;
 
 	private PrintStream standardOut;
 
@@ -32,13 +34,13 @@ public class ConsoleOutput extends JFrame {
 
 		textArea = new JTextArea(50, 10);
 		textArea.setEditable(false);
-		PrintStream printStream = new PrintStream(new CustomOutputStream(textArea));
+		printStream = new PrintStream(new CustomOutputStream(textArea));
 
 		// keeps reference of standard output stream
 		standardOut = System.out;
 
 		// re-assigns standard output stream and error output stream
-		System.setOut(printStream);
+		//System.setOut(printStream);
 		System.setErr(printStream);
 
 		// creates the GUI
@@ -88,6 +90,15 @@ public class ConsoleOutput extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(480, 320);
 		setLocationRelativeTo(null); // centers on screen
+	}
+	
+	public void println(String str) {
+		if(isFirstTime) {
+			printStream.append(str);
+		} else {
+			printStream.append("\n" + str);
+		}
+		isFirstTime = false;
 	}
 	
 	public double getConsoleHeight() {

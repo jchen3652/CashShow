@@ -66,7 +66,7 @@ public class Algorithms {
 	public static int googleResultsAlgorithm(String question, String answerCandidate) throws IOException {
 		question = StringUtils.replaceAll(question, " ", "%20"); //question.replaceAll(" ", "%20");
 		answerCandidate = answerCandidate.replaceAll(" ", "%20");
-		return (int) (JSONs.getNumberOfResults(question + "%20" + answerCandidate) / Config.googleResultsScaleDown);
+		return (int) (JSONs.getNumberOfResults(question + "%20" + answerCandidate));
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
@@ -13,10 +14,7 @@ import javax.imageio.ImageIO;
 import algorithms.Algorithms;
 import main.Config;
 import main.Main;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-import net.sourceforge.tess4j.util.LoadLibs;
 
 /**
  * Processes screenshot to get question and answer strings
@@ -29,6 +27,14 @@ public class ImageProcessor {
 	private double newResolutionModifier;
 	public String rawQuestionText;
 	public String[] rawAnswerStrings = new String[3];
+
+	public static void main(String[] args) {
+
+	}
+
+	public ImageProcessor() {
+
+	}
 
 	/**
 	 * Retrieves Questions and Answers from Screenshot
@@ -43,6 +49,18 @@ public class ImageProcessor {
 
 	}
 
+	public void setImage(BufferedImage image) throws IOException {
+		phoneScreen = image;
+		newResolutionModifier = phoneScreen.getHeight() / 990;
+	}
+
+	public BufferedImage increaseBrightness(BufferedImage image) {
+		float brightenFactor = 1.2f;
+		RescaleOp op = new RescaleOp(brightenFactor, 0, null);
+		image = op.filter(image, image);
+		return image;
+	}
+
 	/**
 	 * Uses OCR to find the question text
 	 * 
@@ -51,7 +69,7 @@ public class ImageProcessor {
 	 * @throws IOException
 	 */
 	public String getQuestionText() throws IOException {
-		System.out.println("Getting Question String...");
+		Main.output.println("Getting Question String...");
 
 		BufferedImage questionArea = phoneScreen.getSubimage(
 				(int) Math.round((Config.rawQuestionLocation[0]) * newResolutionModifier),
@@ -59,23 +77,22 @@ public class ImageProcessor {
 				(int) Math.round((Config.rawQuestionLocation[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawQuestionLocation[3]) * newResolutionModifier));
 
+		questionArea = sharpenImage(questionArea);
+		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
+
 		if (Config.isDebug) {
 			File phoneScreenFile = new File(Config.mainDirectory + Config.phoneScreenIdentifier);
 			ImageIO.write(phoneScreen, "png", phoneScreenFile);
 
+			File outputfile = new File(Config.questionOutputPath);
+			ImageIO.write(questionArea, "png", outputfile);
+
 		}
-
-		//questionArea = sharpenImage(questionArea);
-			questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
-
-		File outputfile = new File(Config.questionOutputPath);
-		ImageIO.write(questionArea, "png", outputfile);
 
 		String result = null;
 		try {
 			result = Algorithms.cleanOCRError(Main.instance.doOCR(questionArea));
 		} catch (TesseractException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -95,32 +112,34 @@ public class ImageProcessor {
 	public String[] getAnswerList() throws IOException {
 		System.out.println("Getting Answer List...");
 
-		BufferedImage[] allQuestionImg = new BufferedImage[3];
-		allQuestionImg[0] = phoneScreen.getSubimage(
+		BufferedImage[] allAnswerImg = new BufferedImage[3];
+		allAnswerImg[0] = phoneScreen.getSubimage(
 				(int) Math.round((Config.rawAnswer1Location[0]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer1Location[1]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer1Location[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer1Location[3]) * newResolutionModifier));
 
-		allQuestionImg[1] = phoneScreen.getSubimage(
+		allAnswerImg[1] = phoneScreen.getSubimage(
 				(int) Math.round((Config.rawAnswer2Location[0]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer2Location[1]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer2Location[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer2Location[3]) * newResolutionModifier));
 
-		allQuestionImg[2] = phoneScreen.getSubimage(
+		allAnswerImg[2] = phoneScreen.getSubimage(
 				(int) Math.round((Config.rawAnswer3Location[0]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer3Location[1]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer3Location[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer3Location[3]) * newResolutionModifier));
 
-				for(BufferedImage o: allQuestionImg) {
-					thresholdImage(o, Config.answerTextThreshold);
-				}
+		for (BufferedImage o : allAnswerImg) {
+
+//			o = sharpenImage(o);
+			o = thresholdImage(o, Config.answerTextThreshold);
+		}
 
 		if (Config.isDebug) {
 			for (int i = 0; i < 3; i++) {
-				ImageIO.write(allQuestionImg[i], "png", new File((new StringBuilder(Config.mainDirectory)
+				ImageIO.write(allAnswerImg[i], "png", new File((new StringBuilder(Config.mainDirectory)
 						.append("answer" + Integer.toString(1 + i) + ".png").toString())));
 			}
 
@@ -129,7 +148,7 @@ public class ImageProcessor {
 		try {
 			for (int i = 0; i < 3; i++) {
 
-				rawAnswerStrings[i] = Algorithms.cleanOCRError(Main.instance.doOCR(allQuestionImg[i]).trim());
+				rawAnswerStrings[i] = Algorithms.cleanOCRError(Main.instance.doOCR(allAnswerImg[i]).trim());
 			}
 
 		} catch (TesseractException e) {
@@ -179,7 +198,7 @@ public class ImageProcessor {
 			}
 			raster.setPixels(0, y, image.getWidth(), 1, pixels);
 		}
-		
+
 		return result;
 	}
 }
