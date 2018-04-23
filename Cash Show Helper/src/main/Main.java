@@ -11,7 +11,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import algorithms.Algorithms;
 import algorithms.GoogleSearcher;
@@ -44,17 +43,21 @@ public class Main {
 	public static ITesseract instance;
 	public static WebDriver driver;
 	public static ConsoleOutput output;
+	public static String tessDataPath; 
 
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
 		File tessDataFolder = new File("Tesseract-OCR");
+		tessDataPath = tessDataFolder.getAbsolutePath();
+		
 		instance = new Tesseract();
-		instance.setDatapath(tessDataFolder.getAbsolutePath());
+		instance.setDatapath(tessDataPath);
+		
 		instance.setLanguage("eng");
 
 		robot = new Robot();
 		System.setProperty("webdriver.chrome.args", "--disable-logging");
-		   System.setProperty("webdriver.chrome.silentOutput", "true");
-		
+		System.setProperty("webdriver.chrome.silentOutput", "true");
+
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--log-level=3");
 
@@ -66,7 +69,7 @@ public class Main {
 		Main.driver.manage().window().setSize(
 				new Dimension((int) ((int) ScreenUtils.getScreenWidth() / 3.5), (int) ScreenUtils.getScreenHeight()));
 
-		driver.get("http://www.google.com");
+		driver.get("http://www.bing.com");
 		for (int i = 0; i < 5; i++) {
 			Main.robot.keyPress(KeyEvent.VK_CONTROL);
 			Main.robot.keyPress(KeyEvent.VK_MINUS);
@@ -84,7 +87,8 @@ public class Main {
 
 		whiteListener = new PixelListener(
 				smartscreen.relToAbsHorizontal(Config.whiteXLocation, smartscreen.unroundedScreenshotXCoordinate),
-				smartscreen.relToAbsHorizontal(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate), robot);
+				smartscreen.relToAbsHorizontal(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate),
+				robot);
 
 		timerListener = new PixelListener(
 				smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotXCoordinate),
@@ -97,30 +101,31 @@ public class Main {
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
 
-			// Stay in this loop until the wheel has turned gray/green and white box showed up
+			// Do nothing until the wheel has turned gray/green and white box showed up
 			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
 				whiteListener.refreshPixelListener();
 			}
 
-			// Exited loop, this means a question popped up
+			// Left loop, this means a question popped up
 			output.println("Detected Question");
 
 			// Waiting for the cash show text to load
-			Thread.sleep(1000);
+			Thread.sleep(750);
 			output.println("Done waiting");
 			phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
 			processor.setImage(phoneScreen);
-
+			
+			
 			AnswerThread at = new AnswerThread(processor);
 			QuestionThread qt = new QuestionThread(processor);
-			(at).run();
 			(qt).run();
+			(at).run();			
 			questionText = qt.getQuestionText();
 
 			(new ChromeWindow(driver, questionText)).run();
 			allAnswers = at.getAnswerList();
-			
+
 			output.println(processor.rawQuestionText);
 
 			for (String o : processor.rawAnswerStrings) {
@@ -158,14 +163,16 @@ public class Main {
 					}
 				}
 			}
-
+			
+			
+			// Determines the largest scores and prints out the results
 			int largestIndex = 0;
-			int largest = 0;
+			int largestScore = 0;
 			for (int i = 0; i < 3; i++) {
-				output
-						.println((new StringBuilder(processor.rawAnswerStrings[i])).append(": ").append(allScores[i]).toString());
-				if (allScores[i] > largest) {
-					largest = allScores[i];
+				output.println((new StringBuilder(processor.rawAnswerStrings[i])).append(": ").append(allScores[i])
+						.toString());
+				if (allScores[i] > largestScore) {
+					largestScore = allScores[i];
 					largestIndex = i;
 				}
 

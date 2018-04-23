@@ -32,7 +32,7 @@ public class ConsoleOutput extends JFrame {
 	public ConsoleOutput() {
 		super("Cash Show Helper");
 
-		textArea = new JTextArea(50, 10);
+		textArea = new JTextArea(200, 10);
 		textArea.setEditable(false);
 		printStream = new PrintStream(new CustomOutputStream(textArea));
 
@@ -88,7 +88,7 @@ public class ConsoleOutput extends JFrame {
 		});
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(480, 320);
+		setSize(700, 320);
 		setLocationRelativeTo(null); // centers on screen
 	}
 	
