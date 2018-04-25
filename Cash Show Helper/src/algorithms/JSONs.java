@@ -43,15 +43,14 @@ public class JSONs {
 			System.out.println("URL is incorrect");
 		}
 
-		
-			is = actualurl.openStream();
-			isr = new InputStreamReader(is, Charset.forName("UTF-8"));
-			rd = new BufferedReader(isr);
-			String jsonText = readAll(rd);
+		is = actualurl.openStream();
+		isr = new InputStreamReader(is, Charset.forName("UTF-8"));
+		rd = new BufferedReader(isr);
+		String jsonText = readAll(rd);
 
-			json = new JSONObject(jsonText);
-			is.close();
-		
+		json = new JSONObject(jsonText);
+		is.close();
+
 		return json;
 
 	}
@@ -62,18 +61,18 @@ public class JSONs {
 				(new StringBuilder("https://www.googleapis.com/customsearch/v1?key=").append(Config.GOOGLE_API_KEY)
 						.append("&cx=").append(Config.SEARCH_ENGINE_ID).append("&q=").append(question).toString()));
 		try {
-		JSONObject queries = json.getJSONObject("queries");
-		JSONArray request = queries.getJSONArray("request");
-		JSONObject totalResults = request.getJSONObject(0);
-		totalResults1 = totalResults.getString("totalResults");
-		} catch(Exception e) {
+			JSONObject queries = json.getJSONObject("queries");
+			JSONArray request = queries.getJSONArray("request");
+			JSONObject totalResults = request.getJSONObject(0);
+			totalResults1 = totalResults.getString("totalResults");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return Integer.parseInt(totalResults1.toString());
 	}
 
 	public static void main(String[] args) throws IOException {
-		System.out.println(getNumberOfResults("hitler did nothing wrong"));
+		System.out.println(getNumberOfResults("test"));
 
 	}
 }

@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 
-import com.inet.jortho.SpellChecker;
-
 import main.Config;
 
 /**
@@ -18,7 +16,7 @@ import main.Config;
  */
 public class Algorithms {
 	/**
-	 * Just a random test method that is never run in the actual program
+	 * Just a random ass test method that is never run in the actual program
 	 * 
 	 * @param args
 	 * @throws JSONException
@@ -36,7 +34,7 @@ public class Algorithms {
 	}
 
 	/**
-	 * Finds and replaces all potential OCR mistakes
+	 * Finds and replaces all potential OCR mistake cases
 	 * 
 	 * @param text
 	 *            input text
@@ -81,8 +79,8 @@ public class Algorithms {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public static int primaryAlgorithm(String question, String googleResultsString, String answerCandidate) throws JSONException, IOException {
-		
+	public static int primaryAlgorithm(String question, String googleResultsString, String answerCandidate)
+			throws JSONException, IOException {
 
 		int score = 0;
 		googleResultsString = stringLowerCase(googleResultsString);
@@ -103,7 +101,6 @@ public class Algorithms {
 				score -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(), o.toLowerCase());
 			}
 
-			
 		}
 		return score;
 	}
@@ -160,17 +157,6 @@ public class Algorithms {
 	 * @return number of times
 	 */
 	public static int numberOfTimesContained(String totalText, String whatToFind) {
-		return StringUtils.countMatches(totalText , whatToFind);
-//		int lastIndex = 0;
-//		int count = 0;
-//		while (lastIndex != -1) {
-//			lastIndex = totalText.indexOf(whatToFind, lastIndex);
-//			if (lastIndex != -1) {
-//				count++;
-//				lastIndex += whatToFind.length();
-//			}
-//		}
-//		return count;
+		return StringUtils.countMatches(totalText, whatToFind);
 	}
-
 }

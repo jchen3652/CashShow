@@ -21,18 +21,27 @@ public class GoogleSearcher {
 	public static void main(String[] args) {
 		System.out.println(search("Testing"));
 	}
-	
-	public static String getGoogleResultsString(String keyword) {
+
+	/**
+	 * Gets the large blob of google search data associated with the specific
+	 * search term
+	 * 
+	 * @param query
+	 *            Search term
+	 * @return Search data for specified search term
+	 */
+	public static String getGoogleResultsString(String query) {
 		java.util.List<Result> results = new ArrayList<>();
 		String googleResultsString = "";
 		try {
-			results = search(keyword);
+			results = search(query);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
 			for (Result result : results) {
-				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getHtmlSnippet()).toString();
+				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getHtmlSnippet())
+						.toString();
 				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getTitle()).toString();
 			}
 		} catch (Exception e) {
@@ -48,7 +57,8 @@ public class GoogleSearcher {
 	}
 
 	/**
-	 * Gets the google result objects of the top 10 google results of the search query
+	 * Gets the google result objects of the top 10 google results of the search
+	 * query
 	 * 
 	 * @param keyword
 	 *            Search Query
@@ -65,7 +75,7 @@ public class GoogleSearcher {
 			list.setCx(Config.SEARCH_ENGINE_ID);
 			Search results = list.execute();
 			resultList = results.getItems();
-			//System.out.println(results.toString());
+			//Main.console.out.println(results.toString());
 
 		} catch (UnknownHostException e) {
 			System.out.println("You ain't connected to the internet dumbass");

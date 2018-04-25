@@ -14,10 +14,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import algorithms.Algorithms;
 import algorithms.GoogleSearcher;
+import algorithms.PrimaryAlgorithmThread;
 import chromeWindow.ChromeWindow;
 import consoleOutput.ConsoleOutput;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
 import vision.AnswerThread;
 import vision.ImageProcessor;
 import vision.PixelListener;
@@ -26,33 +25,23 @@ import vision.ScreenUtils;
 import vision.SmartScreen;
 
 public class Main {
+	public static ConsoleOutput output;
+	
 	private static String[] allAnswers;
 	private static int[] allScores = {0, 0, 0};
-	public static String questionText;
-
+	private static String questionText;
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
-
-	public static Robot robot;
-
-	public static SmartScreen smartscreen;
-
+	private static Robot robot;
+	private static SmartScreen smartscreen;
 	private static ImageProcessor processor = new ImageProcessor();
 	private static BufferedImage phoneScreen;
-
-	public static ITesseract instance;
-	public static WebDriver driver;
-	public static ConsoleOutput output;
-	public static String tessDataPath; 
+	private static WebDriver driver;
+	public static String tessDataPath;
 
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
 		File tessDataFolder = new File("Tesseract-OCR");
 		tessDataPath = tessDataFolder.getAbsolutePath();
-		
-		instance = new Tesseract();
-		instance.setDatapath(tessDataPath);
-		
-		instance.setLanguage("eng");
 
 		robot = new Robot();
 		System.setProperty("webdriver.chrome.args", "--disable-logging");
@@ -86,13 +75,13 @@ public class Main {
 		robot.setAutoWaitForIdle(false);
 
 		whiteListener = new PixelListener(
-				smartscreen.relToAbsHorizontal(Config.whiteXLocation, smartscreen.unroundedScreenshotXCoordinate),
-				smartscreen.relToAbsHorizontal(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate),
+				smartscreen.scaleToNewMonitor(Config.whiteXLocation, smartscreen.unroundedScreenshotXCoordinate),
+				smartscreen.scaleToNewMonitor(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate),
 				robot);
 
 		timerListener = new PixelListener(
-				smartscreen.relToAbsHorizontal(Config.timerXLocation, smartscreen.screenshotXCoordinate),
-				smartscreen.relToAbsHorizontal(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
+				smartscreen.scaleToNewMonitor(Config.timerXLocation, smartscreen.screenshotXCoordinate),
+				smartscreen.scaleToNewMonitor(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
 
 		output.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow).toString());
 
@@ -113,35 +102,47 @@ public class Main {
 			// Waiting for the cash show text to load
 			Thread.sleep(750);
 			output.println("Done waiting");
-			phoneScreen = robot.createScreenCapture(smartscreen.getRectangle());
+			phoneScreen = robot.createScreenCapture(smartscreen.getPhoneRectangle());
 			processor.setImage(phoneScreen);
-			
-			
+
 			AnswerThread at = new AnswerThread(processor);
 			QuestionThread qt = new QuestionThread(processor);
 			(qt).run();
-			(at).run();			
+			(at).run();
 			questionText = qt.getQuestionText();
 
 			(new ChromeWindow(driver, questionText)).run();
 			allAnswers = at.getAnswerList();
 
 			output.println(processor.rawQuestionText);
-
 			for (String o : processor.rawAnswerStrings) {
 				output.println((new StringBuilder("***")).append(o).toString());
 
 			}
+
 			String googleResultsString = GoogleSearcher.getGoogleResultsString(questionText);
+			
+			PrimaryAlgorithmThread[] algorithms = new PrimaryAlgorithmThread[3];
+			
+			for(int i = 0; i < 3; i ++) {
+				algorithms[i] = new PrimaryAlgorithmThread(questionText, googleResultsString, allAnswers[i]);
+				algorithms[i].run();
+			}
+			
 			for (int i = 0; i < 3; i++) {
 				try {
 
-					allScores[i] += Algorithms.primaryAlgorithm(questionText, googleResultsString, allAnswers[i]);
+					allScores[i] += algorithms[i].getScore();
 
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
+			
+			
+			
+			
+			
 
 			// If the first algorithm failed, try the other one
 			if ((allScores[0] < 2 && allScores[1] < 2 && (allScores[2] < 2))) {
@@ -163,8 +164,7 @@ public class Main {
 					}
 				}
 			}
-			
-			
+
 			// Determines the largest scores and prints out the results
 			int largestIndex = 0;
 			int largestScore = 0;

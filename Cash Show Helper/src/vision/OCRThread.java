@@ -17,7 +17,7 @@ public class OCRThread implements Runnable {
 		this.img = img;
 		instance = new Tesseract();
 		instance.setDatapath(Main.tessDataPath);
-		instance.setLanguage("Helvetica+eng");
+		instance.setLanguage("eng");
 		
 		
 	}

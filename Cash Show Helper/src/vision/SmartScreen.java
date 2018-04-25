@@ -20,9 +20,9 @@ public class SmartScreen {
 	public int screenshotYCoordinate;
 	public double unroundedScreenshotXCoordinate;
 	public double unroundedScreenshotYCoordinate;
-	
-	public double phoneHeight;
-	public double phoneWidth;
+
+	public double phoneHeight; // In pixels
+	public double phoneWidth; // In pixels
 
 	public SmartScreen(double monitorX, double monitorY, double tHeight, double bHeight) {
 		monitorScreenHeight = monitorY;
@@ -37,7 +37,7 @@ public class SmartScreen {
 		phoneWidth = (9.0 * phoneHeight / 16.0);
 		unroundedScreenshotXCoordinate = (monitorScreenWidth - phoneWidth) / 2.0;
 		unroundedScreenshotYCoordinate = titleHeight;
-		
+
 		screenshotXCoordinate = (int) Math.round((monitorScreenWidth - phoneWidth) / 2.0);
 		screenshotYCoordinate = (int) titleHeight;
 	}
@@ -46,21 +46,14 @@ public class SmartScreen {
 		return phoneHeight * (double) dimension / 1080.0;
 	}
 
-	/**
-	 * 
-	 * @param relLocation
-	 * @param baseCoordinate
-	 * @return
-	 */
-	public int relToAbsHorizontal(double relLocation, double baseCoordinate) {
+	public int scaleToNewMonitor(double relLocation, double baseCoordinate) {
 		return (int) Math.round(baseCoordinate + relLocation / 557.0 * phoneWidth);
 	}
 
-
 	/**
-	 * Calculates the
+	 * Calculates the Windows 10 Taskbar height
 	 * 
-	 * @return
+	 * @return Taskbar height in pixels
 	 */
 	public static int getTaskbarSize() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -71,9 +64,12 @@ public class SmartScreen {
 
 	}
 
-	public Rectangle getRectangle() {
-
-
+	/**
+	 * Gets the phone area rectangle in absolute adjusted pixel coordinates
+	 * 
+	 * @return Phone area rectangle in absolute adjusted pixel coordinates
+	 */
+	public Rectangle getPhoneRectangle() {
 		return (new Rectangle(screenshotXCoordinate, screenshotYCoordinate, (int) phoneWidth, (int) phoneHeight));
 	}
 
