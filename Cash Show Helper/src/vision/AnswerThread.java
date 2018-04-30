@@ -22,14 +22,14 @@ public class AnswerThread implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Main.output.println("Answer time: " + String.valueOf(System.currentTimeMillis() - startTime));
+		Main.console.println("Answer time: " + String.valueOf(System.currentTimeMillis() - startTime));
 		isFinished = true;
 	}
 
 	public String[] getAnswerList() {
-		while (isFinished == false) {
-			// Do nothing
-		}
+//		while (isFinished == false) {
+//			// Do nothing
+//		}
 		
 		return answerList;
 	}

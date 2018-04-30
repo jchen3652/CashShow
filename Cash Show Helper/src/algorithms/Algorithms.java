@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 
 import main.Config;
+import main.Main;
 
 /**
  * This is where all the search and answer finding algorithms are located
@@ -92,16 +93,16 @@ public class Algorithms {
 		}
 		answerCandidate = answerCandidate.toLowerCase();
 		score += occuranceAlgorithmScore(googleResultsString, answerCandidate);
-		System.out.println((new StringBuilder("Searched for: ").append(answerCandidate)));
+		Main.console.println((new StringBuilder("Searched for: ").append(answerCandidate)).toString());
 
-		String[] splitAnswerText = answerCandidate.split(" ");
-		for (String o : splitAnswerText) {
-			if (question.toLowerCase().contains(o)) {
-				System.out.println("Question contains Answer String");
-				score -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(), o.toLowerCase());
+		
+		
+			if (question.toLowerCase().contains(answerCandidate)) {
+				Main.console.println("Question contains Answer String");
+				score -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(), answerCandidate.toLowerCase());
 			}
 
-		}
+		
 		return score;
 	}
 

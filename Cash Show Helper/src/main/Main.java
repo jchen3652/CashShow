@@ -14,6 +14,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import algorithms.Algorithms;
 import algorithms.GoogleSearcher;
+import algorithms.GoogleSearcherThread;
 import algorithms.PrimaryAlgorithmThread;
 import chromeWindow.ChromeWindow;
 import consoleOutput.ConsoleOutput;
@@ -25,11 +26,11 @@ import vision.ScreenUtils;
 import vision.SmartScreen;
 
 public class Main {
-	public static ConsoleOutput output;
+	public static ConsoleOutput console;
 	
-	private static String[] allAnswers;
+	
 	private static int[] allScores = {0, 0, 0};
-	private static String questionText;
+
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
 	private static Robot robot;
@@ -40,6 +41,11 @@ public class Main {
 	public static String tessDataPath;
 
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
+		Trivia trivia = new Trivia();
+		
+		
+		String[] allAnswers = null;
+		String questionText = null;
 		File tessDataFolder = new File("Tesseract-OCR");
 		tessDataPath = tessDataFolder.getAbsolutePath();
 
@@ -66,14 +72,14 @@ public class Main {
 			Main.robot.keyRelease(KeyEvent.VK_MINUS);
 		}
 
-		output = new ConsoleOutput();
-		output.setVisible(true);
+		console = new ConsoleOutput();
+		console.setVisible(true);
 		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(),
-				output.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
+				console.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
 		smartscreen.getScreenInformation();
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);
-
+		
 		whiteListener = new PixelListener(
 				smartscreen.scaleToNewMonitor(Config.whiteXLocation, smartscreen.unroundedScreenshotXCoordinate),
 				smartscreen.scaleToNewMonitor(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate),
@@ -82,8 +88,8 @@ public class Main {
 		timerListener = new PixelListener(
 				smartscreen.scaleToNewMonitor(Config.timerXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.scaleToNewMonitor(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
-
-		output.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow).toString());
+		console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
+		console.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow).toString());
 
 		// Do everything in this forever
 		while (true) {
@@ -97,89 +103,53 @@ public class Main {
 			}
 
 			// Left loop, this means a question popped up
-			output.println("Detected Question");
+			console.println("Detected Question");
 
 			// Waiting for the cash show text to load
 			Thread.sleep(750);
-			output.println("Done waiting");
+			console.println("Done waiting");
 			phoneScreen = robot.createScreenCapture(smartscreen.getPhoneRectangle());
 			processor.setImage(phoneScreen);
 
 			AnswerThread at = new AnswerThread(processor);
 			QuestionThread qt = new QuestionThread(processor);
+			GoogleSearcherThread gt = new GoogleSearcherThread();
+			
 			(qt).run();
 			(at).run();
+			while(questionText == null || allAnswers == null) {
+				if(questionText == null ) {
+					questionText = qt.getQuestionText();
+					if(questionText != null) {
+						(new ChromeWindow(driver, questionText)).run();
+						gt.setQuery(questionText);
+						gt.run();
+						allAnswers = at.getAnswerList();
+					}
+				}
+				if(allAnswers != null) {
+					allAnswers = at.getAnswerList();
+				}
+			}
 			questionText = qt.getQuestionText();
 
-			(new ChromeWindow(driver, questionText)).run();
-			allAnswers = at.getAnswerList();
-
-			output.println(processor.rawQuestionText);
+			
+			
+			
+			console.println(processor.rawQuestionText);
 			for (String o : processor.rawAnswerStrings) {
-				output.println((new StringBuilder("***")).append(o).toString());
+				console.println((new StringBuilder("***")).append(o).toString());
 
 			}
 
-			String googleResultsString = GoogleSearcher.getGoogleResultsString(questionText);
-			
-			PrimaryAlgorithmThread[] algorithms = new PrimaryAlgorithmThread[3];
-			
-			for(int i = 0; i < 3; i ++) {
-				algorithms[i] = new PrimaryAlgorithmThread(questionText, googleResultsString, allAnswers[i]);
-				algorithms[i].run();
-			}
-			
-			for (int i = 0; i < 3; i++) {
-				try {
+			String googleResultsString = gt.getResult();
+			trivia.setQuestionText(qt.getQuestionText());
+			trivia.setAnswerList(allAnswers);
+			trivia.setGoogleResult(googleResultsString);
+			trivia.calculate();
+		
 
-					allScores[i] += algorithms[i].getScore();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-			
-			
-			
-			
-
-			// If the first algorithm failed, try the other one
-			if ((allScores[0] < 2 && allScores[1] < 2 && (allScores[2] < 2))) {
-				output.println("No results, alternate started");
-				for (int i = 0; i < 3; i++) {
-					allScores[i] = Algorithms.googleResultsAlgorithm(questionText, allAnswers[i]);
-				}
-
-				boolean lessThanThreshold = false;
-
-				for (int i : allScores) {
-					if (i < 1000) {
-						lessThanThreshold = true;
-					}
-				}
-				if (!lessThanThreshold) {
-					for (int i : allScores) {
-						i = (int) Math.round(((double) i) / Config.googleResultsScaleDown);
-					}
-				}
-			}
-
-			// Determines the largest scores and prints out the results
-			int largestIndex = 0;
-			int largestScore = 0;
-			for (int i = 0; i < 3; i++) {
-				output.println((new StringBuilder(processor.rawAnswerStrings[i])).append(": ").append(allScores[i])
-						.toString());
-				if (allScores[i] > largestScore) {
-					largestScore = allScores[i];
-					largestIndex = i;
-				}
-
-				allScores[i] = 0;
-			}
-
-			output.println((new StringBuilder("Best Answer: ").append(allAnswers[largestIndex])).toString());
+			console.println((new StringBuilder("Best Answer: ").append(allAnswers[trivia.getBestScoreIndex()])).toString());
 
 			whiteListener.refreshPixelListener();
 
@@ -187,7 +157,7 @@ public class Main {
 				whiteListener.refreshPixelListener();
 			}
 
-			output.println("Screen changed away from question");
+			console.println("Screen changed away from question");
 
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
@@ -197,21 +167,23 @@ public class Main {
 				whiteListener.refreshPixelListener();
 			}
 
-			output.println("Screen changed back to questions");
+			console.println("Screen changed back to questions");
 
 			if (Config.isLiveShow) {
-				output.println("JK it's actually the answer reveal, waiting until it's over");
+				console.println("JK it's actually the answer reveal, waiting until it's over");
 
 				whiteListener.refreshPixelListener();
 				while (whiteListener.isWhite()) {
 					whiteListener.refreshPixelListener();
 				}
 
-				output.println("Answer Reveal is over");
+				console.println("Answer Reveal is over");
 
 				timerListener.refreshPixelListener();
 				Thread.sleep(50);
 			}
+			allAnswers = null;
+			questionText = null;
 		}
 	}
 }

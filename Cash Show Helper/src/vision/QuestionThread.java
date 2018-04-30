@@ -23,15 +23,15 @@ public class QuestionThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Main.output.println("Question time: " + String.valueOf(System.currentTimeMillis() - startTime));
+		Main.console.println("Question time: " + String.valueOf(System.currentTimeMillis() - startTime));
 		isFinished = true;
 
 	}
 
 	public String getQuestionText() {
-		while (isFinished == false) {
-			
-		}
+//		while (isFinished == false) {
+//			
+//		}
 		return questionText;
 	}
 }

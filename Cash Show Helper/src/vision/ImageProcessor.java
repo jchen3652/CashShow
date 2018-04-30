@@ -11,10 +11,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import algorithms.Algorithms;
 import main.Config;
 import main.Main;
-import net.sourceforge.tess4j.TesseractException;
 
 /**
  * Processes screenshot to get question and answer strings
@@ -27,7 +25,10 @@ public class ImageProcessor {
 	private double newResolutionModifier;
 	public String rawQuestionText;
 	public String[] rawAnswerStrings = new String[3];
-
+	private static OCRThread questionOcr = new OCRThread();
+	private static OCRThread answerOcr0 = new OCRThread();
+	private static OCRThread answerOcr1 = new OCRThread();
+	private static OCRThread answerOcr2 = new OCRThread();
 	public static void main(String[] args) {
 
 	}
@@ -69,7 +70,7 @@ public class ImageProcessor {
 	 * @throws IOException
 	 */
 	public String getQuestionText() throws IOException {
-		Main.output.println("Getting Question String...");
+		Main.console.println("Getting Question String...");
 
 		BufferedImage questionArea = phoneScreen.getSubimage(
 				(int) Math.round((Config.rawQuestionLocation[0]) * newResolutionModifier),
@@ -77,8 +78,8 @@ public class ImageProcessor {
 				(int) Math.round((Config.rawQuestionLocation[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawQuestionLocation[3]) * newResolutionModifier));
 
-//		questionArea = sharpenImage(questionArea);
-//		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
+		//		questionArea = sharpenImage(questionArea);
+		//		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
 
 		if (Config.isDebug) {
 			File phoneScreenFile = new File(Config.mainDirectory + Config.phoneScreenIdentifier);
@@ -90,18 +91,12 @@ public class ImageProcessor {
 		}
 
 		String result = null;
-		
-		OCRThread ocr = new OCRThread(questionArea);
-		ocr.run();
-		result = ocr.getResult();
-		
-//		try {
-//			result = Algorithms.cleanOCRError(Main.instance.doOCR(questionArea));
-//		} catch (TesseractException e) {
-//			e.printStackTrace();
-//		}
-//
-//		result = Algorithms.cleanOCRError(result);
+
+		questionOcr = new OCRThread(questionArea);
+		questionOcr.run();
+		result = questionOcr.getResult();
+
+	
 
 		rawQuestionText = result;
 		System.out.println("Got Question String");
@@ -115,7 +110,7 @@ public class ImageProcessor {
 	 * @throws IOException
 	 */
 	public String[] getAnswerList() throws IOException {
-		Main.output.println("Getting Answer List...");
+		Main.console.println("Getting Answer List...");
 
 		BufferedImage[] allAnswerImg = new BufferedImage[3];
 		allAnswerImg[0] = phoneScreen.getSubimage(
@@ -136,11 +131,11 @@ public class ImageProcessor {
 				(int) Math.round((Config.rawAnswer3Location[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawAnswer3Location[3]) * newResolutionModifier));
 
-//		for (BufferedImage o : allAnswerImg) {
-//
-//			o = sharpenImage(o);
-//			o = thresholdImage(o, Config.answerTextThreshold);
-//		}
+		//		for (BufferedImage o : allAnswerImg) {
+		//
+		//			o = sharpenImage(o);
+		//			o = thresholdImage(o, Config.answerTextThreshold);
+		//		}
 
 		if (Config.isDebug) {
 			for (int i = 0; i < 3; i++) {
@@ -149,29 +144,29 @@ public class ImageProcessor {
 			}
 
 		}
-		OCRThread ocr0 = new OCRThread(allAnswerImg[0]);
-		OCRThread ocr1 = new OCRThread(allAnswerImg[1]);
-		OCRThread ocr2 = new OCRThread(allAnswerImg[2]);
-		
-		ocr0.run();
-		ocr1.run();
-		ocr2.run();
-		
-		rawAnswerStrings[0] = ocr0.getResult().trim();
-		rawAnswerStrings[1] = ocr1.getResult().trim();
-		rawAnswerStrings[2] = ocr2.getResult().trim();
-		
-//		try {
-//			
-//			for (int i = 0; i < 3; i++) {
-//				rawAnswerStrings[i] = Algorithms.cleanOCRError(Main.instance.doOCR(allAnswerImg[i]).trim());
-//			}
-//
-//		} catch (TesseractException e) {
-//			e.printStackTrace();
-//		}
+		answerOcr0.setImage(allAnswerImg[0]);
+		answerOcr1.setImage(allAnswerImg[1]);
+		answerOcr2.setImage(allAnswerImg[2]);
 
-		Main.output.println("Got Answer List");
+		answerOcr0.run();
+		answerOcr1.run();
+		answerOcr2.run();
+
+		rawAnswerStrings[0] = answerOcr0.getResult().trim();
+		rawAnswerStrings[1] = answerOcr1.getResult().trim();
+		rawAnswerStrings[2] = answerOcr2.getResult().trim();
+
+		//		try {
+		//			
+		//			for (int i = 0; i < 3; i++) {
+		//				rawAnswerStrings[i] = Algorithms.cleanOCRError(Main.instance.doOCR(allAnswerImg[i]).trim());
+		//			}
+		//
+		//		} catch (TesseractException e) {
+		//			e.printStackTrace();
+		//		}
+
+		Main.console.println("Got Answer List");
 		return rawAnswerStrings;
 	}
 

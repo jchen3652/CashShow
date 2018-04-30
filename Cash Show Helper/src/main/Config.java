@@ -17,29 +17,30 @@ public class Config {
 	// request limit. If the program returns a 403 error, change the config by commenting the old
 	// information and commenting a new config
 
-	//dtrump3652
-	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
-	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
+	// dtrump
+//	public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
+//	public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
 
-//	//nibbakilla3652 //ded
-//			public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
-//			public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
+	//nibbakilla
+//	public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
+//	public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
 
-	// ahitler3652
-	//	public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
-	//	public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
+	// ahitler
+//	public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
+//	public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
 
-	// 2563nehcsemaj
-//		public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
+	// 	nehc
+//	public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
+//	public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
 
-	// Reserved for real ones
-	// jchen3652
-//		public static final String GOOGLE_API_KEY = "AIzaSyDhVVASBNyr0U-trn5eFaoJrNQJoHbPVzM";
-//		public static final String SEARCH_ENGINE_ID = "017356742749847709225:4h4bt-iqizy";
+	// jcehn
+		public static final String GOOGLE_API_KEY = "AIzaSyDhVVASBNyr0U-trn5eFaoJrNQJoHbPVzM";
+		public static final String SEARCH_ENGINE_ID = "017356742749847709225:4h4bt-iqizy";
 
 	// Random github
-	//	 public static final String GOOGLE_API_KEY = "AIzaSyBFnKBQPESdi2sP1twKp59-3mBscTVw99k";
-	//	 public static final String SEARCH_ENGINE_ID = "014723624719242706501:ky6zn2teax4"; 
+//	 public static final String GOOGLE_API_KEY = "AIzaSyBFnKBQPESdi2sP1twKp59-3mBscTVw99k";
+//	 public static final String SEARCH_ENGINE_ID = "014723624719242706501:ky6zn2teax4"; 
+	
 	//************************************************************************************************
 
 	/**
@@ -99,7 +100,7 @@ public class Config {
 	 * from OCR
 	 */
 	public static final String[][] ocrReplaceArray = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﬁ", "fi"},
-			 {"“", "\""}, {"”", "\""}, {"u n", "un"}, {"—", "-"}};
+			 {"“", "\""}, {"”", "\""}, {"u n", "un"}, {"—", "-"}, {"ofthe", "of the"}};
 
 	/**
 	 * Combinations of characters that should automatically be replaced on text

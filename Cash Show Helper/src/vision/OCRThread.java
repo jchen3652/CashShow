@@ -13,6 +13,12 @@ public class OCRThread implements Runnable {
 	private String result;
 	private ITesseract instance;
 	private boolean isFinished = false;
+	public OCRThread() {
+		instance = new Tesseract();
+		instance.setDatapath(Main.tessDataPath);
+		instance.setLanguage("eng");
+		
+	}
 	public OCRThread(BufferedImage img) {
 		this.img = img;
 		instance = new Tesseract();
@@ -31,6 +37,10 @@ public class OCRThread implements Runnable {
 		}
 		isFinished = true;
 	}
+	public void setImage(BufferedImage img) {
+		this.img = img;
+	}
+	
 	public String getResult() {
 		while(!isFinished) {
 			
