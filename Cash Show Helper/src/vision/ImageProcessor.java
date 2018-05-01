@@ -70,7 +70,7 @@ public class ImageProcessor {
 	 * @throws IOException
 	 */
 	public String getQuestionText() throws IOException {
-		Main.console.println("Getting Question String...");
+		Config.printStream.println("Getting Question String...");
 
 		BufferedImage questionArea = phoneScreen.getSubimage(
 				(int) Math.round((Config.rawQuestionLocation[0]) * newResolutionModifier),
@@ -110,7 +110,7 @@ public class ImageProcessor {
 	 * @throws IOException
 	 */
 	public String[] getAnswerList() throws IOException {
-		Main.console.println("Getting Answer List...");
+		Config.printStream.println("Getting Answer List...");
 
 		BufferedImage[] allAnswerImg = new BufferedImage[3];
 		allAnswerImg[0] = phoneScreen.getSubimage(
@@ -166,7 +166,7 @@ public class ImageProcessor {
 		//			e.printStackTrace();
 		//		}
 
-		Main.console.println("Got Answer List");
+		Config.printStream.println("Got Answer List");
 		return rawAnswerStrings;
 	}
 

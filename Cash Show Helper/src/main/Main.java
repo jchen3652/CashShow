@@ -12,10 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import algorithms.Algorithms;
-import algorithms.GoogleSearcher;
 import algorithms.GoogleSearcherThread;
-import algorithms.PrimaryAlgorithmThread;
 import chromeWindow.ChromeWindow;
 import consoleOutput.ConsoleOutput;
 import vision.AnswerThread;
@@ -27,9 +24,7 @@ import vision.SmartScreen;
 
 public class Main {
 	public static ConsoleOutput console;
-	
-	
-	private static int[] allScores = {0, 0, 0};
+
 
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
@@ -42,8 +37,7 @@ public class Main {
 
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
 		Trivia trivia = new Trivia();
-		
-		
+
 		String[] allAnswers = null;
 		String questionText = null;
 		File tessDataFolder = new File("Tesseract-OCR");
@@ -64,7 +58,7 @@ public class Main {
 		Main.driver.manage().window().setSize(
 				new Dimension((int) ((int) ScreenUtils.getScreenWidth() / 3.5), (int) ScreenUtils.getScreenHeight()));
 
-		driver.get("http://www.bing.com");
+		driver.get("about:blank");
 		for (int i = 0; i < 5; i++) {
 			Main.robot.keyPress(KeyEvent.VK_CONTROL);
 			Main.robot.keyPress(KeyEvent.VK_MINUS);
@@ -79,7 +73,7 @@ public class Main {
 		smartscreen.getScreenInformation();
 		robot.setAutoDelay(0);
 		robot.setAutoWaitForIdle(false);
-		
+
 		whiteListener = new PixelListener(
 				smartscreen.scaleToNewMonitor(Config.whiteXLocation, smartscreen.unroundedScreenshotXCoordinate),
 				smartscreen.scaleToNewMonitor(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate),
@@ -114,42 +108,43 @@ public class Main {
 			AnswerThread at = new AnswerThread(processor);
 			QuestionThread qt = new QuestionThread(processor);
 			GoogleSearcherThread gt = new GoogleSearcherThread();
-			
+
 			(qt).run();
 			(at).run();
-			while(questionText == null || allAnswers == null) {
-				if(questionText == null ) {
+			while (questionText == null || allAnswers == null) {
+				if (questionText == null) {
 					questionText = qt.getQuestionText();
-					if(questionText != null) {
+					if (questionText != null) {
 						(new ChromeWindow(driver, questionText)).run();
+						
+						console.println(processor.rawQuestionText);
 						gt.setQuery(questionText);
 						gt.run();
+						
 						allAnswers = at.getAnswerList();
 					}
 				}
-				if(allAnswers != null) {
+				if (allAnswers != null) {
 					allAnswers = at.getAnswerList();
+					for (String o : processor.rawAnswerStrings) {
+						console.println((new StringBuilder("***")).append(o).toString());
+
+					}
 				}
 			}
-			questionText = qt.getQuestionText();
+			
 
 			
 			
-			
-			console.println(processor.rawQuestionText);
-			for (String o : processor.rawAnswerStrings) {
-				console.println((new StringBuilder("***")).append(o).toString());
-
-			}
 
 			String googleResultsString = gt.getResult();
 			trivia.setQuestionText(qt.getQuestionText());
 			trivia.setAnswerList(allAnswers);
 			trivia.setGoogleResult(googleResultsString);
 			trivia.calculate();
-		
 
-			console.println((new StringBuilder("Best Answer: ").append(allAnswers[trivia.getBestScoreIndex()])).toString());
+			console.println(
+					(new StringBuilder("Best Answer: ").append(allAnswers[trivia.getBestScoreIndex()])).toString());
 
 			whiteListener.refreshPixelListener();
 

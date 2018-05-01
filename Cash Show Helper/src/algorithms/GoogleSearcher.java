@@ -19,7 +19,7 @@ public class GoogleSearcher {
 			.setApplicationName("My Project").build();
 
 	public static void main(String[] args) {
-		System.out.println(search("Testing"));
+		System.out.println(getGoogleResultsString("which of these is one of jupiter's moons"));
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class GoogleSearcher {
 		}
 		try {
 			for (Result result : results) {
-				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getHtmlSnippet())
+				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getSnippet())
 						.toString();
 				googleResultsString = (new StringBuilder(googleResultsString)).append(result.getTitle()).toString();
 			}
@@ -48,7 +48,7 @@ public class GoogleSearcher {
 			System.out.println("No results were found in Google Search");
 		}
 
-		for (String[] o : Config.searchReplaceList) {
+		for (String[] o : Config.googleResultReplaceList) {
 			googleResultsString = StringUtils.replaceAll(googleResultsString, o[0], o[1]);
 		}
 		googleResultsString = googleResultsString.toLowerCase();
@@ -70,10 +70,13 @@ public class GoogleSearcher {
 		try {
 
 			Customsearch.Cse.List list = customsearch.cse().list(keyword);
-
+			
+			list.setNum((long) 10);
 			list.setKey(Config.GOOGLE_API_KEY);
 			list.setCx(Config.SEARCH_ENGINE_ID);
+			
 			Search results = list.execute();
+			
 			resultList = results.getItems();
 			//Main.console.out.println(results.toString());
 

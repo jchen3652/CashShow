@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 
 import main.Config;
-import main.Main;
 
 /**
  * This is where all the search and answer finding algorithms are located
@@ -27,9 +26,9 @@ public class Algorithms {
 	public static void main(String[] args) throws JSONException, IOException, InterruptedException {
 		System.out.println(LocalDateTime.now());
 
-		System.out.println(googleResultsAlgorithm("In what city is Romeo and Juliet set?", "Rome"));
-		System.out.println(googleResultsAlgorithm("In what city is Romeo and Juliet set?", "Verona"));
-		System.out.println(googleResultsAlgorithm("In what city is Romeo and Juliet set?", "Venice"));
+		System.out.println(googleResultsAlgorithm("Which of these awards has NOT been awarded to Bob Dylan?", "Academy Award"));
+		System.out.println(googleResultsAlgorithm("Which of these awards has NOT been awarded to Bob Dylan?", "Nobel Prize"));
+		System.out.println(googleResultsAlgorithm("Which of these awards has NOT been awarded to Bob Dylan?", "Tony Award"));
 		System.out.println(LocalDateTime.now());
 
 	}
@@ -65,7 +64,7 @@ public class Algorithms {
 	public static int googleResultsAlgorithm(String question, String answerCandidate) throws IOException {
 		question = StringUtils.replaceAll(question, " ", "%20"); //question.replaceAll(" ", "%20");
 		answerCandidate = answerCandidate.replaceAll(" ", "%20");
-		return (int) (JSONs.getNumberOfResults(question + "%20" + answerCandidate));
+		return (int) (JSONUtils.getNumberOfResults(question + "%20" + answerCandidate));
 	}
 
 	/**
@@ -93,12 +92,12 @@ public class Algorithms {
 		}
 		answerCandidate = answerCandidate.toLowerCase();
 		score += occuranceAlgorithmScore(googleResultsString, answerCandidate);
-		Main.console.println((new StringBuilder("Searched for: ").append(answerCandidate)).toString());
+		Config.printStream.println((new StringBuilder("Searched for: ").append(answerCandidate)).toString());
 
 		
 		
 			if (question.toLowerCase().contains(answerCandidate)) {
-				Main.console.println("Question contains Answer String");
+				Config.printStream.println("Question contains Answer String");
 				score -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(), answerCandidate.toLowerCase());
 			}
 
@@ -159,5 +158,19 @@ public class Algorithms {
 	 */
 	public static int numberOfTimesContained(String totalText, String whatToFind) {
 		return StringUtils.countMatches(totalText, whatToFind);
+	}
+	
+	public static String removeNegation(String  str) {
+		for(String o:Config.negationRemove) {
+			str = str.replace(o, "");
+		}
+		return str;
+	}
+	
+	public static String filterQuestionText(String str) {
+		for(String o:Config.searchFilterTerms) {
+			str = str.replace(o, "");
+		}
+		return str;
 	}
 }
