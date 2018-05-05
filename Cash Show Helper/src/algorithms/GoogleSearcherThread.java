@@ -20,10 +20,8 @@ public class GoogleSearcherThread implements Runnable {
 		try {
 			googleResult = JSONUtils.getAllSearchText(question);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		googleResult = GoogleSearcher.getGoogleResultsString(question);
 		isFinished = true;
 	}
 	

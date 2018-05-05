@@ -12,7 +12,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.Config;
-import main.Main;
 
 /**
  * Processes screenshot to get question and answer strings
@@ -29,9 +28,6 @@ public class ImageProcessor {
 	private static OCRThread answerOcr0 = new OCRThread();
 	private static OCRThread answerOcr1 = new OCRThread();
 	private static OCRThread answerOcr2 = new OCRThread();
-	public static void main(String[] args) {
-
-	}
 
 	public ImageProcessor() {
 
@@ -47,7 +43,6 @@ public class ImageProcessor {
 	public ImageProcessor(BufferedImage image) throws IOException {
 		phoneScreen = image;
 		newResolutionModifier = phoneScreen.getHeight() / 990.0;
-
 	}
 
 	public void setImage(BufferedImage image) throws IOException {
@@ -77,17 +72,14 @@ public class ImageProcessor {
 				(int) Math.round((Config.rawQuestionLocation[1]) * newResolutionModifier),
 				(int) Math.round((Config.rawQuestionLocation[2]) * newResolutionModifier),
 				(int) Math.round((Config.rawQuestionLocation[3]) * newResolutionModifier));
-
 		//		questionArea = sharpenImage(questionArea);
 		//		questionArea = thresholdImage(questionArea, Config.questionTextThreshold);
 
 		if (Config.isDebug) {
 			File phoneScreenFile = new File(Config.mainDirectory + Config.phoneScreenIdentifier);
 			ImageIO.write(phoneScreen, "png", phoneScreenFile);
-
 			File outputfile = new File(Config.questionOutputPath);
 			ImageIO.write(questionArea, "png", outputfile);
-
 		}
 
 		String result = null;
@@ -95,8 +87,6 @@ public class ImageProcessor {
 		questionOcr = new OCRThread(questionArea);
 		questionOcr.run();
 		result = questionOcr.getResult();
-
-	
 
 		rawQuestionText = result;
 		System.out.println("Got Question String");
@@ -155,16 +145,6 @@ public class ImageProcessor {
 		rawAnswerStrings[0] = answerOcr0.getResult().trim();
 		rawAnswerStrings[1] = answerOcr1.getResult().trim();
 		rawAnswerStrings[2] = answerOcr2.getResult().trim();
-
-		//		try {
-		//			
-		//			for (int i = 0; i < 3; i++) {
-		//				rawAnswerStrings[i] = Algorithms.cleanOCRError(Main.instance.doOCR(allAnswerImg[i]).trim());
-		//			}
-		//
-		//		} catch (TesseractException e) {
-		//			e.printStackTrace();
-		//		}
 
 		Config.printStream.println("Got Answer List");
 		return rawAnswerStrings;

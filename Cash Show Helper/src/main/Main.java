@@ -25,7 +25,6 @@ import vision.SmartScreen;
 public class Main {
 	public static ConsoleOutput console;
 
-
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
 	private static Robot robot;
@@ -58,12 +57,13 @@ public class Main {
 		Main.driver.manage().window().setSize(
 				new Dimension((int) ((int) ScreenUtils.getScreenWidth() / 3.5), (int) ScreenUtils.getScreenHeight()));
 
+		// 
 		driver.get("about:blank");
 		for (int i = 0; i < 5; i++) {
-			Main.robot.keyPress(KeyEvent.VK_CONTROL);
-			Main.robot.keyPress(KeyEvent.VK_MINUS);
-			Main.robot.keyRelease(KeyEvent.VK_CONTROL);
-			Main.robot.keyRelease(KeyEvent.VK_MINUS);
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_MINUS);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+			robot.keyRelease(KeyEvent.VK_MINUS);
 		}
 
 		console = new ConsoleOutput();
@@ -75,7 +75,7 @@ public class Main {
 		robot.setAutoWaitForIdle(false);
 
 		whiteListener = new PixelListener(
-				smartscreen.scaleToNewMonitor(Config.whiteXLocation, smartscreen.unroundedScreenshotXCoordinate),
+				smartscreen.scaleToNewMonitor(Config.whiteXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.scaleToNewMonitor(Config.whiteYLocation, smartscreen.unroundedScreenshotYCoordinate),
 				robot);
 
@@ -96,7 +96,7 @@ public class Main {
 				whiteListener.refreshPixelListener();
 			}
 
-			// Left loop, this means a question popped up
+			// Exited loop, this means a question popped up
 			console.println("Detected Question");
 
 			// Waiting for the cash show text to load
@@ -116,30 +116,28 @@ public class Main {
 					questionText = qt.getQuestionText();
 					if (questionText != null) {
 						(new ChromeWindow(driver, questionText)).run();
-						
+
 						console.println(processor.rawQuestionText);
 						gt.setQuery(questionText);
 						gt.run();
-						
-						allAnswers = at.getAnswerList();
+
 					}
 				}
-				if (allAnswers != null) {
+				if (allAnswers == null) {
 					allAnswers = at.getAnswerList();
-					for (String o : processor.rawAnswerStrings) {
-						console.println((new StringBuilder("***")).append(o).toString());
-
+					if (allAnswers != null) {
+						allAnswers = at.getAnswerList();
+						for (String o : processor.rawAnswerStrings) {
+							console.println((new StringBuilder("***")).append(o).toString());
+						}
 					}
 				}
-			}
-			
 
-			
-			
+			}
 
 			String googleResultsString = gt.getResult();
 			trivia.setQuestionText(qt.getQuestionText());
-			trivia.setAnswerList(allAnswers);
+			trivia.setAnswerArray(allAnswers);
 			trivia.setGoogleResult(googleResultsString);
 			trivia.calculate();
 

@@ -1,7 +1,6 @@
 package algorithms;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -15,23 +14,6 @@ import main.Config;
  *
  */
 public class Algorithms {
-	/**
-	 * Just a random ass test method that is never run in the actual program
-	 * 
-	 * @param args
-	 * @throws JSONException
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	public static void main(String[] args) throws JSONException, IOException, InterruptedException {
-		System.out.println(LocalDateTime.now());
-
-		System.out.println(googleResultsAlgorithm("Which of these awards has NOT been awarded to Bob Dylan?", "Academy Award"));
-		System.out.println(googleResultsAlgorithm("Which of these awards has NOT been awarded to Bob Dylan?", "Nobel Prize"));
-		System.out.println(googleResultsAlgorithm("Which of these awards has NOT been awarded to Bob Dylan?", "Tony Award"));
-		System.out.println(LocalDateTime.now());
-
-	}
 
 	/**
 	 * Finds and replaces all potential OCR mistake cases
@@ -90,18 +72,17 @@ public class Algorithms {
 		if (answerCandidate.startsWith("The ")) {
 			answerCandidate = answerCandidate.substring(4);
 		}
+
 		answerCandidate = answerCandidate.toLowerCase();
 		score += occuranceAlgorithmScore(googleResultsString, answerCandidate);
 		Config.printStream.println((new StringBuilder("Searched for: ").append(answerCandidate)).toString());
 
-		
-		
-			if (question.toLowerCase().contains(answerCandidate)) {
-				Config.printStream.println("Question contains Answer String");
-				score -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(), answerCandidate.toLowerCase());
-			}
+		if (question.toLowerCase().contains(answerCandidate)) {
+			Config.printStream.println("Question contains Answer String");
+			score -= Algorithms.occuranceAlgorithmScore(googleResultsString.toLowerCase(),
+					answerCandidate.toLowerCase());
+		}
 
-		
 		return score;
 	}
 
@@ -159,16 +140,16 @@ public class Algorithms {
 	public static int numberOfTimesContained(String totalText, String whatToFind) {
 		return StringUtils.countMatches(totalText, whatToFind);
 	}
-	
-	public static String removeNegation(String  str) {
-		for(String o:Config.negationRemove) {
+
+	public static String removeNegation(String str) {
+		for (String o : Config.negationRemove) {
 			str = str.replace(o, "");
 		}
 		return str;
 	}
-	
+
 	public static String filterQuestionText(String str) {
-		for(String o:Config.searchFilterTerms) {
+		for (String o : Config.searchFilterTerms) {
 			str = str.replace(o, "");
 		}
 		return str;

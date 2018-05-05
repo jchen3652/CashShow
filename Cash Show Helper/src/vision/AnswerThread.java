@@ -27,10 +27,6 @@ public class AnswerThread implements Runnable {
 	}
 
 	public String[] getAnswerList() {
-//		while (isFinished == false) {
-//			// Do nothing
-//		}
-		
 		return answerList;
 	}
 }
