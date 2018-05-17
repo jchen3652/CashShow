@@ -13,6 +13,7 @@ import com.google.api.services.customsearch.model.Search;
 
 import main.Config;
 
+@Deprecated
 public class GoogleSearcher {
 
 	static Customsearch customsearch = new Customsearch.Builder(new NetHttpTransport(), new JacksonFactory(), null)

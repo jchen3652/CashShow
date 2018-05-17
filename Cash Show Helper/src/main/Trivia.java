@@ -1,16 +1,28 @@
 package main;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import algorithms.Algorithms;
-import algorithms.GoogleSearcher;
-import algorithms.PrimaryAlgorithmThread;
+import algorithms.HtmlParser;
+import algorithms.JSONTools;
+import chromeWindow.ChromeWindow;
+import threads.HtmlParserThread;
+import threads.PrimaryAlgorithmThread;
+import vision.ScreenUtils;
 
 public class Trivia {
-	private String question;
-	private String googleResult;
+	private String question = null;
+	private JSONTools json;
+
+	private String googleResult = null;
 	private String[] answerCandidates = null;
 
 	private boolean isNegated;
@@ -26,31 +38,58 @@ public class Trivia {
 
 	}
 
-	public static void main(String[] args) throws IOException {
-		String question = "Which of these condiments was created by a monarch's personal chef?";
+	public static void main(String[] args) throws IOException, AWTException {
+		Robot robot = new Robot();
+		System.setProperty("webdriver.chrome.args", "--disable-logging");
+		System.setProperty("webdriver.chrome.silentOutput", "true");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--log-level=3");
+
+		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+		ChromeDriver driver = new ChromeDriver(options);
+		driver.switchTo().defaultContent();
+		org.openqa.selenium.Point windowPosition = new org.openqa.selenium.Point(0, 0);
+		driver.manage().window().setPosition(windowPosition);
+		driver.manage().window().setSize(
+				new Dimension((int) ((int) ScreenUtils.getScreenWidth() / 3.5), (int) ScreenUtils.getScreenHeight()));
+
+		// 
+		driver.get("about:blank");
+		for (int i = 0; i < 5; i++) {
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_MINUS);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+			robot.keyRelease(KeyEvent.VK_MINUS);
+		}
+
+		String question = "Which of the following is NOT written by Maya Angelou?";
 		question = StringUtils.lowerCase(question);
 		question = Algorithms.filterQuestionText(question);
 		question = Algorithms.removeNegation(question);
 		System.out.println(question);
-		String[] allAnswers = {"Siracha", "Grey Poupon", "A.1."};
+		String[] allAnswers = {"And Still I Rise", "I, too", "When I think about myself"};
+
+		ChromeWindow window = new ChromeWindow(driver, question);
+		window.run();
+
 		Trivia trivia = new Trivia();
 		trivia.setQuestionText(question);
 		trivia.setAnswerArray(allAnswers);
 
-		trivia.setGoogleResult(GoogleSearcher.getGoogleResultsString(question));
 		trivia.calculate();
 
 		//		for(int i = 0; i < 3; i ++) {
 		//			trivia.allScores[i] = Algorithms.googleResultsAlgorithm(question, allAnswers[i]);
 		//		}
 
-		System.out.println(trivia.getBestScoreIndex());
+		trivia.printInfo();
 	}
 
 	public void calculate() throws IOException {
-		question = StringUtils.lowerCase(question);
+		String filteredQuestion = StringUtils.lowerCase(question);
 		for (String o : Config.negatedGiveaways) {
-			if (question.contains(o)) {
+			if (filteredQuestion.contains(o)) {
 				isNegated = true;
 				System.out.println("Is negated");
 				Config.printStream.println("Is negated");
@@ -58,17 +97,27 @@ public class Trivia {
 				isNegated = false;
 			}
 		}
+		googleResult = json.getAllSearchText();
 
-		question = Algorithms.filterQuestionText(question);
-		if (isNegated) {
-			question = Algorithms.removeNegation(question);
+		HtmlParserThread[] allParserThreads = new HtmlParserThread[2];
+
+		for (int i = 0; i < 2; i++) {
+			allParserThreads[i] = new HtmlParserThread(json.getAllResultURLs().get(i));
+
 		}
-		Config.printStream.println("Filtered question: " + question);
+
+		googleResult = (new StringBuilder(googleResult)).append(HtmlParser.getContainedText(json.getAllResultURLs(), 2))
+				.toString();
+		filteredQuestion = Algorithms.filterQuestionText(filteredQuestion);
+		if (isNegated) {
+			filteredQuestion = Algorithms.removeNegation(filteredQuestion);
+		}
+		Config.printStream.println("Filtered question: " + filteredQuestion);
 		PrimaryAlgorithmThread[] algorithms = new PrimaryAlgorithmThread[3];
 
 		//		if (!isNegated) {
 		for (int i = 0; i < 3; i++) {
-			algorithms[i] = new PrimaryAlgorithmThread(question, googleResult, answerCandidates[i]);
+			algorithms[i] = new PrimaryAlgorithmThread(filteredQuestion, googleResult, answerCandidates[i]);
 			algorithms[i].run();
 		}
 
@@ -89,7 +138,7 @@ public class Trivia {
 		}
 		System.out.println(numberOfZeros);
 
-		// If the first algorithm failed, try the other one
+		// If the first algorithm failed, try deep search
 		if ((allScores[0] < 1 && allScores[1] < 1 && (allScores[2] < 1)) || (isNegated && numberOfZeros == 2)) {
 			Config.printStream.println("No results, alternate started");
 			for (int i = 0; i < 3; i++) {
@@ -130,23 +179,23 @@ public class Trivia {
 		return question;
 	}
 
+	public String getFilteredQuestionText() {
+		return Algorithms.removeNegation(Algorithms.filterQuestionText(StringUtils.lowerCase(question)));
+	}
+
 	public void setQuestionText(String question) {
 		this.question = question;
 	}
 
-	public String getGoogleResult() {
-		return googleResult;
-	}
-
-	public void setGoogleResult(String result) {
-		this.googleResult = result;
+	public void setJSONTools(JSONTools tools) {
+		this.json = tools;
 	}
 
 	public int getScore(int index) {
 		return allScores[index];
 	}
 
-	public int getBestScoreIndex() {
+	public void printInfo() {
 		int largestIndex = 0;
 		int largestScore = allScores[0];
 
@@ -176,9 +225,11 @@ public class Trivia {
 			allScores[i] = 0;
 		}
 		if (isNegated) {
-			return smallestIndex;
+			Config.printStream
+					.println((new StringBuilder("Best Answer: ").append(answerCandidates[smallestIndex])).toString());
 		} else {
-			return largestIndex;
+			Config.printStream
+					.println((new StringBuilder("Best Answer: ").append(answerCandidates[largestIndex])).toString());
 		}
 	}
 }

@@ -65,6 +65,7 @@ public class Algorithms {
 			throws JSONException, IOException {
 
 		int score = 0;
+		
 		googleResultsString = stringLowerCase(googleResultsString);
 		if (answerCandidate.startsWith("A ")) {
 			answerCandidate = answerCandidate.substring(2);
@@ -94,7 +95,7 @@ public class Algorithms {
 	 * @return Lower Case String
 	 */
 	public static String stringLowerCase(String str) {
-		return str.toLowerCase();
+		return StringUtils.lowerCase(str);
 	}
 
 	/**

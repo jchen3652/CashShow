@@ -105,6 +105,10 @@ public class JSONUtils {
 		}
 		return totalResults;
 	}
+	
+//	public static String[] getAllResultURLs(String query) {
+//		
+//	}
 
 	public static void main(String[] args) throws IOException {
 		//		System.out.println(getNumberOfResults("Bob%22dylan%22Tony%22Award"));

@@ -1,8 +1,9 @@
-package vision;
+package threads;
 
 import java.io.IOException;
 
 import main.Main;
+import vision.ImageProcessor;
 
 public class QuestionThread implements Runnable {
 	private ImageProcessor processor;

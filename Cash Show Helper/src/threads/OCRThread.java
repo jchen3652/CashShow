@@ -1,4 +1,4 @@
-package vision;
+package threads;
 
 import java.awt.image.BufferedImage;
 
@@ -16,7 +16,8 @@ public class OCRThread implements Runnable {
 	public OCRThread() {
 		instance = new Tesseract();
 		instance.setDatapath(Main.tessDataPath);
-		instance.setLanguage("eng");
+		
+		
 		
 	}
 	public OCRThread(BufferedImage img) {

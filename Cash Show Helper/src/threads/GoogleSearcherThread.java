@@ -1,9 +1,11 @@
-package algorithms;
+package threads;
 
 import java.io.IOException;
 
+import algorithms.JSONTools;
+
 public class GoogleSearcherThread implements Runnable {
-	private String googleResult;
+	private JSONTools tools = new JSONTools();
 	private String question;
 	boolean isFinished;
 
@@ -18,7 +20,8 @@ public class GoogleSearcherThread implements Runnable {
 	@Override
 	public void run() {
 		try {
-			googleResult = JSONUtils.getAllSearchText(question);
+			tools.loadQuery(question);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -29,9 +32,9 @@ public class GoogleSearcherThread implements Runnable {
 		question = query;
 	}
 	
-	public String getResult() {
+	public JSONTools getResult() {
 		while(isFinished != true) {
 		}
-		return googleResult;
+		return tools;
 	}
 }

@@ -7,18 +7,20 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import algorithms.GoogleSearcherThread;
+import algorithms.Algorithms;
 import chromeWindow.ChromeWindow;
 import consoleOutput.ConsoleOutput;
-import vision.AnswerThread;
+import threads.AnswerThread;
+import threads.GoogleSearcherThread;
+import threads.QuestionThread;
 import vision.ImageProcessor;
 import vision.PixelListener;
-import vision.QuestionThread;
 import vision.ScreenUtils;
 import vision.SmartScreen;
 
@@ -35,10 +37,10 @@ public class Main {
 	public static String tessDataPath;
 
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-		Trivia trivia = new Trivia();
+		
 
-		String[] allAnswers = null;
-		String questionText = null;
+		//String[] allAnswers = null;
+		//String questionText = null;
 		File tessDataFolder = new File("Tesseract-OCR");
 		tessDataPath = tessDataFolder.getAbsolutePath();
 
@@ -98,7 +100,7 @@ public class Main {
 
 			// Exited loop, this means a question popped up
 			console.println("Detected Question");
-
+			Trivia trivia = new Trivia();
 			// Waiting for the cash show text to load
 			Thread.sleep(750);
 			console.println("Done waiting");
@@ -111,41 +113,38 @@ public class Main {
 
 			(qt).run();
 			(at).run();
-			while (questionText == null || allAnswers == null) {
-				if (questionText == null) {
-					questionText = qt.getQuestionText();
-					if (questionText != null) {
-						(new ChromeWindow(driver, questionText)).run();
+			while (trivia.getQuestionText() == null || trivia.getAnswerArray() == null) {
+				if (trivia.getQuestionText() == null) {
+					trivia.setQuestionText(qt.getQuestionText());
+					if (trivia.getQuestionText() != null) {
+
+						
+						(new ChromeWindow(driver, trivia.getFilteredQuestionText())).run();
 
 						console.println(processor.rawQuestionText);
-						gt.setQuery(questionText);
+						gt.setQuery(trivia.getQuestionText());
 						gt.run();
-
 					}
 				}
-				if (allAnswers == null) {
-					allAnswers = at.getAnswerList();
-					if (allAnswers != null) {
-						allAnswers = at.getAnswerList();
+				if (trivia.getAnswerArray() == null) {
+					trivia.setAnswerArray(at.getAnswerList());
+					if (trivia.getAnswerArray() != null) {
+						trivia.setAnswerArray(at.getAnswerList());
 						for (String o : processor.rawAnswerStrings) {
 							console.println((new StringBuilder("***")).append(o).toString());
 						}
 					}
 				}
-
 			}
 
-			String googleResultsString = gt.getResult();
 			trivia.setQuestionText(qt.getQuestionText());
-			trivia.setAnswerArray(allAnswers);
-			trivia.setGoogleResult(googleResultsString);
-			trivia.calculate();
+			
+			trivia.setJSONTools(gt.getResult());
 
-			console.println(
-					(new StringBuilder("Best Answer: ").append(allAnswers[trivia.getBestScoreIndex()])).toString());
+			trivia.calculate();
+			trivia.printInfo();
 
 			whiteListener.refreshPixelListener();
-
 			while ((whiteListener.isWhite())) {
 				whiteListener.refreshPixelListener();
 			}
@@ -154,13 +153,12 @@ public class Main {
 
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
-			// Wait until the question showed up
+
+			// Wait until the question or answer reveal shows up
 			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
 				whiteListener.refreshPixelListener();
 			}
-
-			console.println("Screen changed back to questions");
 
 			if (Config.isLiveShow) {
 				console.println("JK it's actually the answer reveal, waiting until it's over");
@@ -174,9 +172,11 @@ public class Main {
 
 				timerListener.refreshPixelListener();
 				Thread.sleep(50);
+			} else {
+				console.println("Screen changed back to questions");
 			}
-			allAnswers = null;
-			questionText = null;
+			
+		
 		}
 	}
 }

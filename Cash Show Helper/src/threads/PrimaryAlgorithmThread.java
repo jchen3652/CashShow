@@ -1,8 +1,10 @@
-package algorithms;
+package threads;
 
 import java.io.IOException;
 
 import org.json.JSONException;
+
+import algorithms.Algorithms;
 
 public class PrimaryAlgorithmThread implements Runnable{
 	private String question;

@@ -35,5 +35,12 @@
 	<classpathentry kind="lib" path="lib/gson-2.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.5.3.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.4.6.jar"/>
+	<classpathentry kind="lib" path="lib/jsoup-1.11.3.jar" sourcepath="lib/jsoup-1.11.3-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Cash%20Show%20Helper/lib/jsoup-1.11.3-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jsoup-1.11.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/jsoup-1.11.3-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

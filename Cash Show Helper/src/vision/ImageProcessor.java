@@ -12,6 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.Config;
+import threads.OCRThread;
 
 /**
  * Processes screenshot to get question and answer strings
@@ -89,7 +90,7 @@ public class ImageProcessor {
 		result = questionOcr.getResult();
 
 		rawQuestionText = result;
-		System.out.println("Got Question String");
+		Config.printStream.println("Got Question String");
 		return result;
 	}
 
