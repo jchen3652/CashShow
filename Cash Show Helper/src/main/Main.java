@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import chromeWindow.ChromeWindow;
+import consoleOutput.CashShowNew;
 import consoleOutput.ConsoleOutput;
 import threads.AnswerThread;
 import threads.GoogleSearcherThread;
@@ -23,7 +24,7 @@ import vision.ScreenUtils;
 import vision.SmartScreen;
 
 public class Main {
-	public static ConsoleOutput console;
+	public static CashShowNew console;
 
 	private static PixelListener timerListener;
 	private static PixelListener whiteListener;
@@ -62,7 +63,7 @@ public class Main {
 			robot.keyRelease(KeyEvent.VK_MINUS);
 		}
 
-		console = new ConsoleOutput();
+		console = new CashShowNew();
 		console.setVisible(true);
 		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(),
 				console.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
