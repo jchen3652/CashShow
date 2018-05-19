@@ -91,8 +91,6 @@ public class Main {
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
 			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
-				timerListener.printLocation();
-				timerListener.printRGB();
 				timerListener.refreshPixelListener();
 				whiteListener.refreshPixelListener();
 			}
@@ -130,6 +128,7 @@ public class Main {
 					if (trivia.getAnswerArray() != null) {
 						trivia.setAnswerArray(at.getAnswerList());
 						for (String o : processor.rawAnswerStrings) {
+							
 							console.println((new StringBuilder("***")).append(o).toString());
 						}
 					}

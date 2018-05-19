@@ -2,11 +2,12 @@ package main;
 
 import java.io.PrintStream;
 
+import consoleOutput.CashShowNew;
 import consoleOutput.ConsoleOutput;
 
 public class Config {
 //		public static final PrintStream printStream = System.out;
-	public static final ConsoleOutput printStream = Main.console;
+	public static final CashShowNew printStream = Main.console;
 	
 	public static final int msWaitForQuestionTime = 750;
 	public static final boolean internetIsShit = false;

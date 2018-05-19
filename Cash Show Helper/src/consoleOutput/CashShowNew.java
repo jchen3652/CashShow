@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
  * @author Roshan
  */
 public class CashShowNew extends javax.swing.JFrame {
-
+	public boolean isFirstTime = true;
 	PrintStream printStream;
     /**
      * Creates new form CashShowNew
@@ -32,7 +32,7 @@ public class CashShowNew extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+    public void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         questionLabel = new javax.swing.JLabel();
@@ -58,8 +58,9 @@ public class CashShowNew extends javax.swing.JFrame {
         questionLabel.setFont(new java.awt.Font("sansserif", 0, 50)); // NOI18N
         questionLabel.setText("Question: ");
 
-        questionField.setFont(new java.awt.Font("sansserif", 0, 35)); // NOI18N
-        questionField.setText("questionetsx");
+        questionField.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        
+        questionField.setText("");
         questionField.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -198,17 +199,26 @@ public class CashShowNew extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
-    private void bestAnswerFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                
+    public void bestAnswerFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                
         // TODO add your handling code here:
     }                                               
 
-    private void yesActionPerformed(java.awt.event.ActionEvent evt) {                                    
+    public void yesActionPerformed(java.awt.event.ActionEvent evt) {                                    
         // TODO add your handling code here:
     }                                   
 
-    private void noActionPerformed(java.awt.event.ActionEvent evt) {                                   
+    public void noActionPerformed(java.awt.event.ActionEvent evt) {                                   
         // TODO add your handling code here:
-    }                                  
+    }    
+    
+    public void println(String str) {
+    	if(isFirstTime) {
+			printStream.append(str);
+		} else {
+			printStream.append("\n" + str);
+		}
+		isFirstTime = false;
+    }
 
     /**
      * @param args the command line arguments
@@ -244,21 +254,25 @@ public class CashShowNew extends javax.swing.JFrame {
             }
         });
     }
+    
+    public double getConsoleHeight() {
+		return  (Math.round(this.getInsets().top / 10.0) * 10);
+	}
 
     // Variables declaration - do not modify                     
-    private javax.swing.JTextField bestAnswerField;
-    private javax.swing.JLabel bestAnswerLabel;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea textArea;
-    private javax.swing.JRadioButton no;
-    private javax.swing.JLabel questionField;
-    private javax.swing.JLabel questionLabel;
-    private javax.swing.JLabel settingsLabel;
-    private javax.swing.JTextField statusField;
-    private javax.swing.JLabel statusLabel;
-    private javax.swing.JRadioButton yes;
+    public javax.swing.JTextField bestAnswerField;
+    public javax.swing.JLabel bestAnswerLabel;
+    public javax.swing.ButtonGroup buttonGroup1;
+    public javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JTable jTable1;
+    public javax.swing.JTextArea textArea;
+    public javax.swing.JRadioButton no;
+    public javax.swing.JLabel questionField;
+    public javax.swing.JLabel questionLabel;
+    public javax.swing.JLabel settingsLabel;
+    public javax.swing.JTextField statusField;
+    public javax.swing.JLabel statusLabel;
+    public javax.swing.JRadioButton yes;
     // End of variables declaration                   
 }

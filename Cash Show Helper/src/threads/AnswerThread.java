@@ -2,6 +2,7 @@ package threads;
 
 import java.io.IOException;
 
+import main.Config;
 import main.Main;
 import vision.ImageProcessor;
 
@@ -23,7 +24,7 @@ public class AnswerThread implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Main.console.println("Answer time: " + String.valueOf(System.currentTimeMillis() - startTime));
+		Config.printStream.println("Answer time: " + String.valueOf(System.currentTimeMillis() - startTime));
 		isFinished = true;
 	}
 
