@@ -29,7 +29,6 @@ public class SmartScreen {
 		monitorScreenWidth = monitorX;
 		titleHeight = tHeight;
 		taskbarHeight = bHeight;
-
 	}
 
 	public void getScreenInformation() {
@@ -61,7 +60,6 @@ public class SmartScreen {
 		GraphicsConfiguration[] gc = sd.getConfigurations();
 		Insets bounds = Toolkit.getDefaultToolkit().getScreenInsets(gc[0]);
 		return bounds.bottom;
-
 	}
 
 	/**

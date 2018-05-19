@@ -44,7 +44,7 @@ public class Algorithms {
 	 * @throws IOException
 	 */
 	public static int googleResultsAlgorithm(String question, String answerCandidate) throws IOException {
-		question = StringUtils.replaceAll(question, " ", "%20"); //question.replaceAll(" ", "%20");
+		question = StringUtils.replaceAll(question, " ", "%20"); 
 		answerCandidate = answerCandidate.replaceAll(" ", "%20");
 		return (int) (JSONUtils.getNumberOfResults(question + "%20" + answerCandidate));
 	}

@@ -14,7 +14,7 @@ import algorithms.Algorithms;
 import algorithms.HtmlParser;
 import algorithms.JSONTools;
 import chromeWindow.ChromeWindow;
-import threads.HtmlParserThread;
+import threads.GoogleSearcherThread;
 import threads.PrimaryAlgorithmThread;
 import vision.ScreenUtils;
 
@@ -62,13 +62,13 @@ public class Trivia {
 			robot.keyRelease(KeyEvent.VK_CONTROL);
 			robot.keyRelease(KeyEvent.VK_MINUS);
 		}
-
-		String question = "Which of the following is NOT written by Maya Angelou?";
+//oh rip
+		String question = "what company was first to release in north america a video game console that stored games on compact discs?";
 		question = StringUtils.lowerCase(question);
 		question = Algorithms.filterQuestionText(question);
 		question = Algorithms.removeNegation(question);
 		System.out.println(question);
-		String[] allAnswers = {"And Still I Rise", "I, too", "When I think about myself"};
+		String[] allAnswers = {"Sony", "Sega", "Philips"};
 
 		ChromeWindow window = new ChromeWindow(driver, question);
 		window.run();
@@ -76,7 +76,11 @@ public class Trivia {
 		Trivia trivia = new Trivia();
 		trivia.setQuestionText(question);
 		trivia.setAnswerArray(allAnswers);
-
+		GoogleSearcherThread gt = new GoogleSearcherThread();
+		gt.setQuery(trivia.getFilteredQuestionText());
+		gt.run();
+		
+		trivia.setJSONTools(gt.getResult());
 		trivia.calculate();
 
 		//		for(int i = 0; i < 3; i ++) {
@@ -99,14 +103,27 @@ public class Trivia {
 		}
 		googleResult = json.getAllSearchText();
 
-		HtmlParserThread[] allParserThreads = new HtmlParserThread[2];
+		//		HtmlParserThread[] allParserThreads = new HtmlParserThread[2];
+		//
+		//		for (int i = 0; i < 2; i++) {
+		//			allParserThreads[i] = new HtmlParserThread(json.getAllResultURLs().get(i));
+		//
+		//		}
+		//
+		//		boolean doneParsing = false;
+		//		while (!doneParsing) {
+		//			doneParsing = true;
+		//			for (HtmlParserThread o : allParserThreads) {
+		//				if (o.isFinished()) {
+		//					(new StringBuilder(googleResult)).append(o.getText()).toString();
+		//				} else {
+		//					doneParsing = false;
+		//				}
+		//
+		//			}
+		//		}
 
-		for (int i = 0; i < 2; i++) {
-			allParserThreads[i] = new HtmlParserThread(json.getAllResultURLs().get(i));
-
-		}
-
-		googleResult = (new StringBuilder(googleResult)).append(HtmlParser.getContainedText(json.getAllResultURLs(), 2))
+		googleResult = (new StringBuilder(googleResult)).append(HtmlParser.getContainedText(json.getAllResultURLs(), Config.htmlToParse))
 				.toString();
 		filteredQuestion = Algorithms.filterQuestionText(filteredQuestion);
 		if (isNegated) {

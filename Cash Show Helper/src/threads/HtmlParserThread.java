@@ -32,10 +32,11 @@ public class HtmlParserThread implements Runnable {
 		isFinished = true;
 	}
 	
+	public boolean isFinished() {
+		return isFinished;
+	}
+	
 	public String getText() {
-		while (!isFinished) {
-			
-		}
 		return totalText;
 	}
 	

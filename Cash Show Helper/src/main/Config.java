@@ -5,13 +5,16 @@ import java.io.PrintStream;
 import consoleOutput.ConsoleOutput;
 
 public class Config {
-//	public static final PrintStream printStream = System.out;
+//		public static final PrintStream printStream = System.out;
 	public static final ConsoleOutput printStream = Main.console;
-
+	
+	public static final int msWaitForQuestionTime = 750;
+	public static final boolean internetIsShit = false;
+	public static final int htmlToParse = 3;
 	public static final boolean isDebug = false;
 
 	/**
-	 * This is used to tell the program whether the show is a prerecorded show
+	 * This is used to tell the program whether the show is a pre-recorded show
 	 * or a live show, because the sequences for each are different. The program
 	 * knows how to do both, just tell it which one it is in here
 	 * 
@@ -24,24 +27,24 @@ public class Config {
 	// information and commenting a new config
 
 	// dtrump
-//			public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
-//			public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
+//		public static final String GOOGLE_API_KEY = "AIzaSyBzRCDL-xwRaIosRsprqkfE5wPxQyZTwqg";
+//		public static final String SEARCH_ENGINE_ID = "016621176033020077306:dcds0p6z8xs";
 
 	//nibbakilla
-			public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
-			public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
+//		public static final String GOOGLE_API_KEY = "AIzaSyAUnxZBnD6Ea6eK_2Rm_z0KhVOL7ENZByg";
+//		public static final String SEARCH_ENGINE_ID = "008475191042483784633:9jfsg3fl0tm";
 
 	// ahitler 
-//	public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
-//	public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
+		public static final String GOOGLE_API_KEY = "AIzaSyCrhcL_hOd-GyIyZ2xQSB5Q6vt3e_JvmFo";
+		public static final String SEARCH_ENGINE_ID = "003884082171968744521:go5drm1boe0";
 
 	// 	nehc //ded
-//			public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
-//			public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
+	//	public static final String GOOGLE_API_KEY = "AIzaSyCBZsoCMF2_lTzhOAWZ2YYzeced9Eyy4A0";
+	//	public static final String SEARCH_ENGINE_ID = "015208795528623639953:larljf01apm";
 
 	// jcehn
-	//			public static final String GOOGLE_API_KEY = "AIzaSyDhVVASBNyr0U-trn5eFaoJrNQJoHbPVzM";
-	//			public static final String SEARCH_ENGINE_ID = "017356742749847709225:4h4bt-iqizy";
+	//	public static final String GOOGLE_API_KEY = "AIzaSyDhVVASBNyr0U-trn5eFaoJrNQJoHbPVzM";
+	//	public static final String SEARCH_ENGINE_ID = "017356742749847709225:4h4bt-iqizy";
 
 	// Random github
 	//	 public static final String GOOGLE_API_KEY = "AIzaSyBFnKBQPESdi2sP1twKp59-3mBscTVw99k";
@@ -61,11 +64,11 @@ public class Config {
 	// Old useless constants
 	//************************************************************************************************
 	@Deprecated
-	public static final int[] phoneScreenArea = {682, 40, 557, 990}; //Fallback Number	
+	public static final int[] phoneScreenArea = {682, 40, 557, 990};
 	@Deprecated
-	public static final int timerPixelXLocation = 954;
+	public static final int timerPixelXLocation = 951;
 	@Deprecated
-	public static final int timerPixelYLocation = 134;
+	public static final int timerPixelYLocation = 133;
 	@Deprecated
 	public static final int whitePixelXLocation = 950;
 	@Deprecated
@@ -79,12 +82,13 @@ public class Config {
 
 	public static final double googleResultsScaleDown = 1;
 
-	// Vision Constants
+	// Vision constants
+	//************************************************************************************************
 	public static final int questionTextThreshold = 191; //191 tried and tested
 	public static final int answerTextThreshold = 191; // 191 tried and tested
 
-	public static final double timerXLocation = 273.0;
-	public static final double timerYLocation = 95.0;
+	public static final double timerXLocation = 269.0;
+	public static final double timerYLocation = 93.0;
 
 	public static final int[] grayRTOL = {200, 230};
 	public static final int[] grayGTOL = {200, 230};
@@ -106,7 +110,7 @@ public class Config {
 	 * from OCR
 	 */
 	public static final String[][] ocrReplaceArray = {{"\n", " "}, {",", ","}, {"‘", "\'"}, {"ﬁ", "fi"}, {"“", "\""},
-			{"”", "\""}, {"u n", "un"}, {"—", "-"}, {"ofthe", "of the"}};
+			{"”", "\""}, {"u n", "un"}, {"—", "-"}, {"ofthe", "of the"}, {"ﾻ", "-"}};
 
 	/**
 	 * Combinations of characters that should automatically be replaced on text
@@ -114,10 +118,24 @@ public class Config {
 	 */
 	public static final String[][] googleResultReplaceList = {{"&nbsp;...", " "}};
 
-	public static final String[] searchFilterTerms = {"which of the following ", "of these "};
-	public static final String[] negatedGiveaways = {" not ", "n't"};
-	public static final String[] negationRemove = {" not", "n't"};
+	/**
+	 * Strings that will be removed form the question
+	 */
+	public static final String[] searchFilterTerms = {"which of the following ", "of these ", "one of"};
 
+	/**
+	 * Strings that show that the question is negated
+	 */
+	public static final String[] negatedGiveaways = {" not ", "n't "};
+
+	/**
+	 * Strings that will be removed from the question if it is negated
+	 */
+	public static final String[] negationRemove = {"is not", "n't"};
+
+	/**
+	 * This doesn't do anything rn
+	 */
 	public static final String[] uselessWords = {" a ", " the ", " what ", " is ", " an ", " of "};
 
 }
