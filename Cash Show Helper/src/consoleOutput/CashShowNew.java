@@ -59,7 +59,7 @@ public class CashShowNew extends javax.swing.JFrame {
         yes = new javax.swing.JRadioButton();
         no = new javax.swing.JRadioButton();
         
-        darkTheme();
+//        darkTheme();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         
@@ -70,7 +70,7 @@ public class CashShowNew extends javax.swing.JFrame {
         questionLabel.setFont(new java.awt.Font("Helvetica", 0, 50)); // NOI18N
         questionLabel.setText("Question: ");
 
-//        questionField.setFont(new java.awt.Font("Helvetica", 0, 18)); // NOI18N
+        questionField.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         
 //        questionField.setText("");
 //        questionField.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -148,7 +148,7 @@ public class CashShowNew extends javax.swing.JFrame {
             }
         });
         
-        questionField.setFont(new java.awt.Font("Helvetica", 0, 25));
+        questionField.setFont(new java.awt.Font("Helvetica", 0, 15));
         
         buttonGroup1.add(yes);
         buttonGroup1.add(no);
@@ -156,6 +156,8 @@ public class CashShowNew extends javax.swing.JFrame {
         no.setSelected(true);
         
         setSize(750, 980);//this.getHeight());
+        
+        darkTheme();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -269,7 +271,7 @@ public class CashShowNew extends javax.swing.JFrame {
 	}
     
     public void darkTheme() {
-    	java.awt.Color bg = new java.awt.Color(0,0,0);
+    	java.awt.Color bg = new java.awt.Color(255,255,255);
     	java.awt.Color fg = new java.awt.Color(255,165,0);
     	java.awt.Color hi = new java.awt.Color(232,150,0);
     	java.awt.Color so = new java.awt.Color(201,130,0);
@@ -282,15 +284,22 @@ public class CashShowNew extends javax.swing.JFrame {
     	bestAnswerLabel.setForeground(fg);
     	settingsLabel.setForeground(fg);
     	statusLabel.setForeground(fg);
-    	bestAnswerField.setBorder(b);
+    	
     	yes.setForeground(fg);
     	no.setForeground(fg);
     	textArea.setBackground(bg);
-    	textArea.setForeground(fg);
     	
-    	no.setBackground(new java.awt.Color(172,22, 103));
-    	yes.setBackground(new java.awt.Color(172,22, 103));
-
+//    	no.setBackground(new java.awt.Color(172,22, 103));
+//    	yes.setBackground(new java.awt.Color(172,22, 103));
+    	
+    	bestAnswerField.setBorder(b);
+    	questionField.setBorder(b);
+    	textArea.setBorder(b);
+    	jTable1.setShowVerticalLines(true);
+    	
+    	questionField.setEditable(false);
+    	questionField.setEnabled(false);
+    	
     }
 
     // Variables declaration - do not modify                     

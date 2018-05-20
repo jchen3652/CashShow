@@ -63,8 +63,8 @@ public class Main {
 			robot.keyRelease(KeyEvent.VK_MINUS);
 		}
 		
-		console = new CashShowNew();
-		/*try {
+//		console = new CashShowNew();
+		try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -72,14 +72,15 @@ public class Main {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }*/
+            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+		console = new CashShowNew();
 		console.setVisible(true);
 		console.setSize(690, 980);
 		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(),
