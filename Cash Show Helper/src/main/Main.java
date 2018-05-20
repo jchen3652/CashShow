@@ -62,9 +62,26 @@ public class Main {
 			robot.keyRelease(KeyEvent.VK_CONTROL);
 			robot.keyRelease(KeyEvent.VK_MINUS);
 		}
-
+		
 		console = new CashShowNew();
+		/*try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(console.getClass().getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }*/
 		console.setVisible(true);
+		console.setSize(690, 980);
 		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(),
 				console.getConsoleHeight(), ScreenUtils.getTaskbarHeight());
 		smartscreen.getScreenInformation();
@@ -80,7 +97,8 @@ public class Main {
 				smartscreen.scaleToNewMonitor(Config.timerXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.scaleToNewMonitor(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
 		
-		console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
+//		console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
+		
 		console.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow).toString());
 
 		// Do everything in this forever
@@ -128,7 +146,6 @@ public class Main {
 					if (trivia.getAnswerArray() != null) {
 						trivia.setAnswerArray(at.getAnswerList());
 						for (String o : processor.rawAnswerStrings) {
-							
 							console.println((new StringBuilder("***")).append(o).toString());
 						}
 					}

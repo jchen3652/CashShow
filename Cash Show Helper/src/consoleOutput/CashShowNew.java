@@ -5,9 +5,17 @@
  */
 package consoleOutput;
 
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.PrintStream;
 
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
+
+import main.Config;
 
 /**
  *
@@ -16,7 +24,6 @@ import javax.swing.JTextArea;
 public class CashShowNew extends javax.swing.JFrame {
 	public boolean isFirstTime = true;
 	PrintStream printStream;
-	
     /**
      * Creates new form CashShowNew
      */
@@ -37,8 +44,8 @@ public class CashShowNew extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         questionLabel = new javax.swing.JLabel();
-        questionField = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         bestAnswerLabel = new javax.swing.JLabel();
         bestAnswerField = new javax.swing.JTextField();
@@ -47,8 +54,12 @@ public class CashShowNew extends javax.swing.JFrame {
         settingsLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
+        questionField = new javax.swing.JTextArea();
+        
         yes = new javax.swing.JRadioButton();
         no = new javax.swing.JRadioButton();
+        
+        darkTheme();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         
@@ -56,13 +67,13 @@ public class CashShowNew extends javax.swing.JFrame {
 		textArea.setEditable(false);
 		printStream = new PrintStream(new CustomOutputStream(textArea));
 
-        questionLabel.setFont(new java.awt.Font("sansserif", 0, 50)); // NOI18N
+        questionLabel.setFont(new java.awt.Font("Helvetica", 0, 50)); // NOI18N
         questionLabel.setText("Question: ");
 
-        questionField.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+//        questionField.setFont(new java.awt.Font("Helvetica", 0, 18)); // NOI18N
         
-        questionField.setText("");
-        questionField.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+//        questionField.setText("");
+//        questionField.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -89,6 +100,8 @@ public class CashShowNew extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        questionLabel.setBackground(null);
+        
         jScrollPane2.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setMinWidth(300);
@@ -97,6 +110,7 @@ public class CashShowNew extends javax.swing.JFrame {
         }
 
         bestAnswerLabel.setText("Best Answer:");
+        bestAnswerLabel.setFont(new java.awt.Font("Helvetica", 0, 20));
 
         bestAnswerField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -104,15 +118,22 @@ public class CashShowNew extends javax.swing.JFrame {
             }
         });
 
+       questionField.setColumns(20);
+       questionField.setRows(5);
+       questionField.setLineWrap(true);
+       jScrollPane3.setViewportView(questionField);
+        
         statusLabel.setText("Status");
 
         settingsLabel.setText("Settings");
+        settingsLabel.setFont(new java.awt.Font("Helvetica", 0, 20));
 
         textArea.setColumns(20);
         textArea.setRows(5);
         jScrollPane1.setViewportView(textArea);
 
         yes.setText("Live Show");
+        yes.setFont(new java.awt.Font("Helvetica", 0, 20));
         yes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 yesActionPerformed(evt);
@@ -120,79 +141,64 @@ public class CashShowNew extends javax.swing.JFrame {
         });
 
         no.setText("Pre-recorded Show");
+        no.setFont(new java.awt.Font("Helvetica", 0, 20));
         no.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 noActionPerformed(evt);
             }
         });
+        
+        questionField.setFont(new java.awt.Font("Helvetica", 0, 25));
+        
+        buttonGroup1.add(yes);
+        buttonGroup1.add(no);
+        
+        no.setSelected(true);
+        
+        setSize(750, 980);//this.getHeight());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(statusField)
-                        .addGap(79, 79, 79)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(no)
-                            .addComponent(yes))
-                        .addGap(79, 79, 79))
+                    .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(no)
+                    .addComponent(questionLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(statusLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(settingsLabel)
-                        .addGap(142, 142, 142))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(questionLabel)
-                                    .addGap(146, 146, 146))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(bestAnswerLabel)
-                                            .addGap(49, 49, 49)
-                                            .addComponent(bestAnswerField))
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(questionField))
-                                    .addGap(41, 41, 41)))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(bestAnswerLabel)
+                        .addGap(25, 25, 25)
+                        .addComponent(bestAnswerField, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(settingsLabel)
+                    .addComponent(yes))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(19, 19, 19)
                 .addComponent(questionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bestAnswerLabel)
+                    .addComponent(bestAnswerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(settingsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(yes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(questionField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(bestAnswerLabel)
-                            .addComponent(bestAnswerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(statusLabel)
-                            .addComponent(settingsLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(18, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(yes)
-                        .addGap(18, 18, 18)
-                        .addComponent(no)
-                        .addGap(293, 293, 293))))
+                .addComponent(no)
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -204,10 +210,14 @@ public class CashShowNew extends javax.swing.JFrame {
 
     public void yesActionPerformed(java.awt.event.ActionEvent evt) {                                    
         // TODO add your handling code here:
+    	Config.isLiveShow = true;
+    	Config.printStream.println("Is Live Show: " + Config.isLiveShow);
     }                                   
 
     public void noActionPerformed(java.awt.event.ActionEvent evt) {                                   
         // TODO add your handling code here:
+    	Config.isLiveShow = false;
+    	Config.printStream.println("Is Live Show: " + Config.isLiveShow);
     }    
     
     public void println(String str) {
@@ -257,6 +267,31 @@ public class CashShowNew extends javax.swing.JFrame {
     public double getConsoleHeight() {
 		return  (Math.round(this.getInsets().top / 10.0) * 10);
 	}
+    
+    public void darkTheme() {
+    	java.awt.Color bg = new java.awt.Color(0,0,0);
+    	java.awt.Color fg = new java.awt.Color(255,165,0);
+    	java.awt.Color hi = new java.awt.Color(232,150,0);
+    	java.awt.Color so = new java.awt.Color(201,130,0);
+    	java.awt.Color si = new java.awt.Color(183,119,0);    	
+    	javax.swing.border.BevelBorder b = new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.RAISED,
+    			fg, hi, so, si);
+    	
+    	setContentPane(new GradientPanel());
+    	questionLabel.setForeground(fg);
+    	bestAnswerLabel.setForeground(fg);
+    	settingsLabel.setForeground(fg);
+    	statusLabel.setForeground(fg);
+    	bestAnswerField.setBorder(b);
+    	yes.setForeground(fg);
+    	no.setForeground(fg);
+    	textArea.setBackground(bg);
+    	textArea.setForeground(fg);
+    	
+    	no.setBackground(new java.awt.Color(172,22, 103));
+    	yes.setBackground(new java.awt.Color(172,22, 103));
+
+    }
 
     // Variables declaration - do not modify                     
     public javax.swing.JTextField bestAnswerField;
@@ -264,14 +299,32 @@ public class CashShowNew extends javax.swing.JFrame {
     public javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JScrollPane jScrollPane3;
     public javax.swing.JTable jTable1;
     public javax.swing.JTextArea textArea;
+    public javax.swing.JTextArea questionField;
     public javax.swing.JRadioButton no;
-    public javax.swing.JLabel questionField;
     public javax.swing.JLabel questionLabel;
     public javax.swing.JLabel settingsLabel;
     public javax.swing.JTextField statusField;
     public javax.swing.JLabel statusLabel;
     public javax.swing.JRadioButton yes;
     // End of variables declaration                   
+}
+
+class GradientPanel extends JPanel {
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		int w = getWidth();
+		int h = getHeight();
+		Color color2 = new Color(255,0,91);
+		Color color1 = new Color(108, 41, 114);
+		GradientPaint gp = new GradientPaint(0, 0, color1, 0, h, color2);
+		g2d.setPaint(gp);
+		g2d.fillRect(0, 0, w, h);
+	}
 }
