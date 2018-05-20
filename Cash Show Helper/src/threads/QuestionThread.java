@@ -2,6 +2,7 @@ package threads;
 
 import java.io.IOException;
 
+import main.Config;
 import main.Main;
 import vision.ImageProcessor;
 
@@ -24,7 +25,7 @@ public class QuestionThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Main.console.println("Question time: " + String.valueOf(System.currentTimeMillis() - startTime));
+		Config.printStream.println("Question time: " + String.valueOf(System.currentTimeMillis() - startTime));
 		isFinished = true;
 
 	}

@@ -62,7 +62,7 @@ public class Trivia {
 			robot.keyRelease(KeyEvent.VK_CONTROL);
 			robot.keyRelease(KeyEvent.VK_MINUS);
 		}
-//oh rip
+		//oh rip
 		String question = "what company was first to release in north america a video game console that stored games on compact discs?";
 		question = StringUtils.lowerCase(question);
 		question = Algorithms.filterQuestionText(question);
@@ -79,7 +79,7 @@ public class Trivia {
 		GoogleSearcherThread gt = new GoogleSearcherThread();
 		gt.setQuery(trivia.getFilteredQuestionText());
 		gt.run();
-		
+
 		trivia.setJSONTools(gt.getResult());
 		trivia.calculate();
 
@@ -91,6 +91,8 @@ public class Trivia {
 	}
 
 	public void calculate() throws IOException {
+		Main.console.questionField.setText(question);
+
 		String filteredQuestion = StringUtils.lowerCase(question);
 		for (String o : Config.negatedGiveaways) {
 			if (filteredQuestion.contains(o)) {
@@ -123,8 +125,8 @@ public class Trivia {
 		//			}
 		//		}
 
-		googleResult = (new StringBuilder(googleResult)).append(HtmlParser.getContainedText(json.getAllResultURLs(), Config.htmlToParse))
-				.toString();
+		googleResult = (new StringBuilder(googleResult))
+				.append(HtmlParser.getContainedText(json.getAllResultURLs(), Config.htmlToParse)).toString();
 		filteredQuestion = Algorithms.filterQuestionText(filteredQuestion);
 		if (isNegated) {
 			filteredQuestion = Algorithms.removeNegation(filteredQuestion);
@@ -224,29 +226,69 @@ public class Trivia {
 			totalScore += o;
 		}
 
+		int[] percents = new int[3];
+		
 		for (int i = 0; i < 3; i++) {
 			double percent = Math.round((double) allScores[i] / ((double) totalScore) * 100.0);
 			Config.printStream.println((new StringBuilder(answerCandidates[i])).append(": ").append(allScores[i])
 					.append(" (").append(percent).append("%)").toString());
-
+			percents[i] = (int) percent;
 			if (allScores[i] > largestScore) {
 				largestScore = allScores[i];
 				largestIndex = i;
 			}
 
 			if (allScores[i] < smallestScore) {
+				
 				smallestScore = allScores[i];
 				smallestIndex = i;
 			}
 
-			allScores[i] = 0;
+			
 		}
+		int bestIndex;
 		if (isNegated) {
 			Config.printStream
 					.println((new StringBuilder("Best Answer: ").append(answerCandidates[smallestIndex])).toString());
+			Main.console.bestAnswerField.setText(answerCandidates[smallestIndex]);
+			bestIndex = smallestIndex;
 		} else {
 			Config.printStream
 					.println((new StringBuilder("Best Answer: ").append(answerCandidates[largestIndex])).toString());
+			Main.console.bestAnswerField.setText(answerCandidates[largestIndex]);
+			bestIndex = largestIndex;
 		}
+	
+		Main.console.jTable1.setModel(new javax.swing.table.DefaultTableModel(
+	            new Object [][] {
+	                {answerCandidates[0], allScores[0], percents[0]},
+	                {answerCandidates[1], allScores[1], percents[1]},
+	                {answerCandidates[2], allScores[2], percents[2]}
+	            },
+	            new String [] {
+	                "Answer Choices", "Score", "Confidence"
+	            }
+	        ) {
+	            Class[] types = new Class [] {
+	                java.lang.String.class, java.lang.String.class, java.lang.String.class
+	            };
+	            boolean[] canEdit = new boolean [] {
+	                false, false, false
+	            };
+
+	            public Class getColumnClass(int columnIndex) {
+	                return types [columnIndex];
+	            }
+
+	            public boolean isCellEditable(int rowIndex, int columnIndex) {
+	                return canEdit [columnIndex];
+	            }
+	        });
+		Main.console.jTable1.changeSelection(bestIndex, 0, false, false);
+	
+		for(int o:allScores) {
+			o = 0;
+		}
+	
 	}
 }
