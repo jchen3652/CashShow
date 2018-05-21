@@ -14,7 +14,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import chromeWindow.ChromeWindow;
 import consoleOutput.CashShowNew;
-import consoleOutput.ConsoleOutput;
 import threads.AnswerThread;
 import threads.GoogleSearcherThread;
 import threads.QuestionThread;
@@ -62,24 +61,28 @@ public class Main {
 			robot.keyRelease(KeyEvent.VK_CONTROL);
 			robot.keyRelease(KeyEvent.VK_MINUS);
 		}
-		
-//		console = new CashShowNew();
+
+		//		console = new CashShowNew();
 		try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException ex) {
+			java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (InstantiationException ex) {
+			java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (IllegalAccessException ex) {
+			java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			java.util.logging.Logger.getLogger(CashShowNew.class.getName()).log(java.util.logging.Level.SEVERE, null,
+					ex);
+		}
 		console = new CashShowNew();
 		console.setVisible(true);
 		console.setSize(690, 980);
@@ -97,12 +100,11 @@ public class Main {
 		timerListener = new PixelListener(
 				smartscreen.scaleToNewMonitor(Config.timerXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.scaleToNewMonitor(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
-		
-//		console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
+
+		//		console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
 
 		// Do everything in this forever
 		while (true) {
-			
 
 			// Do nothing until the wheel has turned gray/green and white box showed up		
 			timerListener.refreshPixelListener();
@@ -115,7 +117,7 @@ public class Main {
 			// Exited loop, this means a question popped up
 			console.println("Detected Question");
 			Trivia trivia = new Trivia();
-			
+
 			// Waiting for the cash show text to load
 			Thread.sleep(Config.msWaitForQuestionTime);
 			console.println("Done waiting");
@@ -165,18 +167,16 @@ public class Main {
 			}
 
 			console.println("Screen changed away from question");
-			
-			
 
 			// Wait until the next question or answer reveal shows up
-			
+
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
 			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
 				whiteListener.refreshPixelListener();
 			}
-			
+
 			if (Config.isLiveShow) {
 				console.println("JK it's actually the answer reveal, waiting until it's over");
 

@@ -3,7 +3,6 @@ package threads;
 import java.io.IOException;
 
 import main.Config;
-import main.Main;
 import vision.ImageProcessor;
 
 public class QuestionThread implements Runnable {
@@ -31,9 +30,9 @@ public class QuestionThread implements Runnable {
 	}
 
 	public String getQuestionText() {
-//		while (isFinished == false) {
-//			
-//		}
+		//		while (isFinished == false) {
+		//			
+		//		}
 		return questionText;
 	}
 }

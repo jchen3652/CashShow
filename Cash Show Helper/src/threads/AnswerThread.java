@@ -3,14 +3,13 @@ package threads;
 import java.io.IOException;
 
 import main.Config;
-import main.Main;
 import vision.ImageProcessor;
 
 public class AnswerThread implements Runnable {
 	private ImageProcessor processor;
 	String[] answerList;
 	public boolean isFinished = false;
-	private long startTime; 
+	private long startTime;
 
 	public AnswerThread(ImageProcessor processor) {
 		this.processor = processor;
@@ -18,7 +17,8 @@ public class AnswerThread implements Runnable {
 
 	@Override
 	public void run() {
-		startTime = System.currentTimeMillis();;
+		startTime = System.currentTimeMillis();
+		;
 		try {
 			answerList = processor.getAnswerList();
 		} catch (IOException e) {
