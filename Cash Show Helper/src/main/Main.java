@@ -99,8 +99,6 @@ public class Main {
 				smartscreen.scaleToNewMonitor(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
 		
 //		console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
-		
-		console.println((new StringBuilder("Is live show: ")).append(Config.isLiveShow).toString());
 
 		// Do everything in this forever
 		while (true) {
