@@ -157,40 +157,44 @@ public class Main {
 
 			trivia.setJSONTools(gt.getResult());
 
-			trivia.calculate();
-			trivia.printInfo();
+			try {
+				trivia.calculate();
+				trivia.printInfo();
 
-			// Wait until the question disappears
-			whiteListener.refreshPixelListener();
-			while ((whiteListener.isWhite())) {
+				// Wait until the question disappears
 				whiteListener.refreshPixelListener();
-			}
-
-			console.println("Screen changed away from question");
-
-			// Wait until the next question or answer reveal shows up
-
-			timerListener.refreshPixelListener();
-			whiteListener.refreshPixelListener();
-			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
-				timerListener.refreshPixelListener();
-				whiteListener.refreshPixelListener();
-			}
-
-			if (Config.isLiveShow) {
-				console.println("JK it's actually the answer reveal, waiting until it's over");
-
-				whiteListener.refreshPixelListener();
-				while (whiteListener.isWhite()) {
+				while ((whiteListener.isWhite())) {
 					whiteListener.refreshPixelListener();
 				}
 
-				console.println("Answer Reveal is over");
+				console.println("Screen changed away from question");
+
+				// Wait until the next question or answer reveal shows up
 
 				timerListener.refreshPixelListener();
-				Thread.sleep(50);
-			} else {
-				console.println("Screen changed back to questions");
+				whiteListener.refreshPixelListener();
+				while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
+					timerListener.refreshPixelListener();
+					whiteListener.refreshPixelListener();
+				}
+
+				if (Config.isLiveShow) {
+					console.println("JK it's actually the answer reveal, waiting until it's over");
+
+					whiteListener.refreshPixelListener();
+					while (whiteListener.isWhite()) {
+						whiteListener.refreshPixelListener();
+					}
+
+					console.println("Answer Reveal is over");
+
+					timerListener.refreshPixelListener();
+					Thread.sleep(50);
+				} else {
+					console.println("Screen changed back to questions");
+				}
+			} catch (Exception e) {
+				Config.printStream.println("ERROR HAPPENED: Skipping to next cycle");
 			}
 		}
 	}
