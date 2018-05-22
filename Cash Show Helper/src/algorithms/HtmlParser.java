@@ -16,13 +16,10 @@ public class HtmlParser {
 		for (int i = 0; i < index; i++) {
 			try {
 			Document doc = Jsoup.connect(urls.get(i)).get();
-			totalText = (new StringBuilder(totalText)).append(doc.text()).toString();
-			totalText += doc.text();
 			
-//			Elements el = doc.body().getAllElements();
-//			for (Element e : el) {
-//				totalText += e.text();
-//			}
+			totalText = (new StringBuilder(totalText)).append(doc.text()).toString();
+			
+
 			} catch(Exception e) {
 				
 			}
@@ -32,7 +29,7 @@ public class HtmlParser {
 
 	public static void main(String[] args) throws IOException {
 		ArrayList<String> list = new ArrayList<String>();
-		list.add("https://jsoup.org/cookbook/extracting-data/attributes-text-html");
+		list.add("https://infowars.com");
 		System.out.println(getContainedText(list, 1));
 	}
 }

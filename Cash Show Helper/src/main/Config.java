@@ -11,7 +11,7 @@ public class Config {
 	
 	public static final int msWaitForQuestionTime = 750;
 	public static final boolean internetIsShit = false;
-	public static final int htmlToParse = 3;
+	public static final int htmlToParse = 5;
 	public static final boolean isDebug = false;
 
 	/**

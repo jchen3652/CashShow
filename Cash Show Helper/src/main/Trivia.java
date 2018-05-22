@@ -15,6 +15,7 @@ import algorithms.HtmlParser;
 import algorithms.JSONTools;
 import chromeWindow.ChromeWindow;
 import threads.GoogleSearcherThread;
+import threads.HtmlParserThread;
 import threads.PrimaryAlgorithmThread;
 import vision.ScreenUtils;
 
@@ -105,25 +106,25 @@ public class Trivia {
 		}
 		googleResult = json.getAllSearchText();
 
-		//		HtmlParserThread[] allParserThreads = new HtmlParserThread[2];
-		//
-		//		for (int i = 0; i < 2; i++) {
-		//			allParserThreads[i] = new HtmlParserThread(json.getAllResultURLs().get(i));
-		//
-		//		}
-		//
-		//		boolean doneParsing = false;
-		//		while (!doneParsing) {
-		//			doneParsing = true;
-		//			for (HtmlParserThread o : allParserThreads) {
-		//				if (o.isFinished()) {
-		//					(new StringBuilder(googleResult)).append(o.getText()).toString();
-		//				} else {
-		//					doneParsing = false;
-		//				}
-		//
-		//			}
-		//		}
+//				HtmlParserThread[] allParserThreads = new HtmlParserThread[Config.htmlToParse];
+//		
+//				for (int i = 0; i < Config.htmlToParse; i++) {
+//					allParserThreads[i] = new HtmlParserThread(json.getAllResultURLs().get(i));
+//		
+//				}
+//		
+//				boolean doneParsing = false;
+//				while (!doneParsing) {
+//					doneParsing = true;
+//					for (HtmlParserThread o : allParserThreads) {
+//						if (o.isFinished()) {
+//							(new StringBuilder(googleResult)).append(o.getText()).toString();
+//						} else {
+//							doneParsing = false;
+//						}
+//		
+//					}
+//				}
 
 		googleResult = (new StringBuilder(googleResult))
 				.append(HtmlParser.getContainedText(json.getAllResultURLs(), Config.htmlToParse)).toString();
@@ -169,13 +170,7 @@ public class Trivia {
 		for (int i : allScores) {
 			i = (int) Math.round(((double) i) / Config.googleResultsScaleDown);
 		}
-		//		} else {
-		//			Main.console.println("Negation detected");
-		//			for (int i = 0; i < 3; i++) {
-		//				allScores[i] = Algorithms.googleResultsAlgorithm(question, answerCandidates[i]);
-		//			}
-		//		}
-
+	
 	}
 
 	public String getAnswer(int index) {

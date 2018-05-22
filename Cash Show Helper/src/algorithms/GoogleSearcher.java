@@ -82,7 +82,7 @@ public class GoogleSearcher {
 			//Main.console.out.println(results.toString());
 
 		} catch (UnknownHostException e) {
-			System.out.println("You ain't connected to the internet dumbass");
+			Config.printStream.println("You ain't connected to the internet dumbass");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

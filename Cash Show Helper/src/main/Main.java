@@ -142,7 +142,7 @@ public class Main {
 			QuestionThread qt = new QuestionThread(processor);
 			GoogleSearcherThread gt = new GoogleSearcherThread();
 
-			new Thread(qt).run();
+			new Thread(qt).start();
 			new Thread(at).run();
 			while (trivia.getQuestionText() == null || trivia.getAnswerArray() == null) {
 				if (trivia.getQuestionText() == null) {
