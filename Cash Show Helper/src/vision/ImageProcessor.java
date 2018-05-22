@@ -135,9 +135,9 @@ public class ImageProcessor {
 			}
 
 		}
-		answerOcr0.setImage(allAnswerImg[0]);
-		answerOcr1.setImage(allAnswerImg[1]);
-		answerOcr2.setImage(allAnswerImg[2]);
+		answerOcr0 = new OCRThread(allAnswerImg[0]);
+		answerOcr1= new OCRThread(allAnswerImg[1]);
+		answerOcr2= new OCRThread(allAnswerImg[2]);
 
 		answerOcr0.run();
 		answerOcr1.run();

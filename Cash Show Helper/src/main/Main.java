@@ -38,31 +38,41 @@ public class Main {
 		File tessDataFolder = new File("Tesseract-OCR");
 		tessDataPath = tessDataFolder.getAbsolutePath();
 		robot = new Robot();
-		System.setProperty("webdriver.chrome.args", "--disable-logging");
-		System.setProperty("webdriver.chrome.silentOutput", "true");
-		System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--log-level=3");
+		Runnable chromeInit = new Runnable() {
 
-		driver = new ChromeDriver(options);
-		driver.switchTo().defaultContent();
-		org.openqa.selenium.Point windowPosition = new org.openqa.selenium.Point(0, 0);
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
 
-		Main.driver.manage().window().setPosition(windowPosition);
-		Main.driver.manage().window().setSize(
-				new Dimension((int) ((int) ScreenUtils.getScreenWidth() / 3.5), (int) ScreenUtils.getScreenHeight()));
+				System.setProperty("webdriver.chrome.args", "--disable-logging");
+				System.setProperty("webdriver.chrome.silentOutput", "true");
+				System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
 
-		// 
-		driver.get("about:blank");
-		for (int i = 0; i < 5; i++) {
-			robot.keyPress(KeyEvent.VK_CONTROL);
-			robot.keyPress(KeyEvent.VK_MINUS);
-			robot.keyRelease(KeyEvent.VK_CONTROL);
-			robot.keyRelease(KeyEvent.VK_MINUS);
-		}
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("--log-level=3");
 
-		//		console = new CashShowNew();
+				driver = new ChromeDriver(options);
+				driver.switchTo().defaultContent();
+				org.openqa.selenium.Point windowPosition = new org.openqa.selenium.Point(0, 0);
+
+				Main.driver.manage().window().setPosition(windowPosition);
+				Main.driver.manage().window().setSize(new Dimension((int) ((int) ScreenUtils.getScreenWidth() / 3.5),
+						(int) ScreenUtils.getScreenHeight()));
+
+				driver.get("about:blank");
+				for (int i = 0; i < 5; i++) {
+					robot.keyPress(KeyEvent.VK_CONTROL);
+					robot.keyPress(KeyEvent.VK_MINUS);
+					robot.keyRelease(KeyEvent.VK_CONTROL);
+					robot.keyRelease(KeyEvent.VK_MINUS);
+				}
+			}
+
+		};
+		new Thread(chromeInit).start();
+
+		// console = new CashShowNew();
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -101,17 +111,21 @@ public class Main {
 				smartscreen.scaleToNewMonitor(Config.timerXLocation, smartscreen.screenshotXCoordinate),
 				smartscreen.scaleToNewMonitor(Config.timerYLocation, smartscreen.screenshotYCoordinate), robot);
 
-		//		console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
+		// console.println("MAKE SURE YOU LOOK AT THE CHROME WINDOW, RETARD");
 
 		// Do everything in this forever
 		while (true) {
 
-			// Do nothing until the wheel has turned gray/green and white box showed up		
+			// Do nothing until the wheel has turned gray/green and white box showed up
 			timerListener.refreshPixelListener();
 			whiteListener.refreshPixelListener();
 			while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 				timerListener.refreshPixelListener();
 				whiteListener.refreshPixelListener();
+				if (console.bttnClicked) {
+					console.bttnClicked = false;
+					break;
+				}
 			}
 
 			// Exited loop, this means a question popped up
@@ -165,6 +179,10 @@ public class Main {
 				whiteListener.refreshPixelListener();
 				while ((whiteListener.isWhite())) {
 					whiteListener.refreshPixelListener();
+					if (console.bttnClicked) {
+						console.bttnClicked = false;
+						break;
+					}
 				}
 
 				console.println("Screen changed away from question");
@@ -176,6 +194,10 @@ public class Main {
 				while (!((timerListener.isGray() || timerListener.isGreen()) && whiteListener.isWhite())) {
 					timerListener.refreshPixelListener();
 					whiteListener.refreshPixelListener();
+					if (console.bttnClicked) {
+						console.bttnClicked = false;
+						break;
+					}
 				}
 
 				if (Config.isLiveShow) {
@@ -184,6 +206,10 @@ public class Main {
 					whiteListener.refreshPixelListener();
 					while (whiteListener.isWhite()) {
 						whiteListener.refreshPixelListener();
+						if (console.bttnClicked) {
+							console.bttnClicked = false;
+							break;
+						}
 					}
 
 					console.println("Answer Reveal is over");
