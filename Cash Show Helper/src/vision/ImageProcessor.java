@@ -86,7 +86,7 @@ public class ImageProcessor {
 		String result = null;
 
 		questionOcr = new OCRThread(questionArea);
-		questionOcr.run();
+		new Thread(questionOcr).run();
 		result = questionOcr.getResult();
 
 		rawQuestionText = result;

@@ -142,18 +142,18 @@ public class Main {
 			QuestionThread qt = new QuestionThread(processor);
 			GoogleSearcherThread gt = new GoogleSearcherThread();
 
-			(qt).run();
-			(at).run();
+			new Thread(qt).run();
+			new Thread(at).run();
 			while (trivia.getQuestionText() == null || trivia.getAnswerArray() == null) {
 				if (trivia.getQuestionText() == null) {
 					trivia.setQuestionText(qt.getQuestionText());
 					if (trivia.getQuestionText() != null) {
 
-						(new ChromeWindow(driver, trivia.getFilteredQuestionText())).run();
+						new Thread(new ChromeWindow(driver, trivia.getFilteredQuestionText())).start();
 
 						console.println(processor.rawQuestionText);
 						gt.setQuery(trivia.getFilteredQuestionText());
-						gt.run();
+						new Thread(gt).run();
 					}
 				}
 				if (trivia.getAnswerArray() == null) {

@@ -78,7 +78,7 @@ public class Trivia {
 		trivia.setAnswerArray(allAnswers);
 		GoogleSearcherThread gt = new GoogleSearcherThread();
 		gt.setQuery(trivia.getFilteredQuestionText());
-		gt.run();
+		new Thread(gt).run();
 
 		trivia.setJSONTools(gt.getResult());
 		trivia.calculate();
@@ -137,7 +137,7 @@ public class Trivia {
 		//		if (!isNegated) {
 		for (int i = 0; i < 3; i++) {
 			algorithms[i] = new PrimaryAlgorithmThread(filteredQuestion, googleResult, answerCandidates[i]);
-			algorithms[i].run();
+			new Thread(algorithms[i]).run();
 		}
 
 		for (int i = 0; i < 3; i++) {
