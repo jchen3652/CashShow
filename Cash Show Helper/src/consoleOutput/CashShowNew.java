@@ -286,6 +286,7 @@ public class CashShowNew extends javax.swing.JFrame {
 		textArea.setBorder(b);
 		jTable1.setShowVerticalLines(true);
 		jTable1.setSelectionBackground((new Color(109, 234, 183)));
+		jTable1.setSelectionForeground((new Color(0, 0, 0)));
 
 		questionField.setEditable(false);
 		questionField.setEnabled(false);
