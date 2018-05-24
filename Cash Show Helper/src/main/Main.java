@@ -5,6 +5,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.openqa.selenium.Dimension;
@@ -94,6 +95,7 @@ public class Main {
 					ex);
 		}
 		console = new CashShowNew();
+		readAPIFromFile();
 		console.setVisible(true);
 		console.setSize(690, 980);
 		smartscreen = new SmartScreen(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight(),
@@ -222,6 +224,54 @@ public class Main {
 			} catch (Exception e) {
 				Config.printStream.println("ERROR HAPPENED: Skipping to next cycle");
 			}
+		}
+	}
+	public static void updateGoogleAPI() {
+		try {
+			java.io.BufferedReader in = new java.io.BufferedReader(new java.io.FileReader("configKEY.txt"));
+			int index;
+			index = Integer.parseInt(in.readLine());
+			in.close();
+			if(index + 1>=Config.GOOGLE_AND_SEARCH_ARRAY.length) {
+				index = -1;
+			}
+			java.io.PrintWriter out = new java.io.PrintWriter(new java.io.FileWriter("configKEY.txt"));
+			out.println(index +1);
+			for (int i = 0; i< 3; i++) {
+				out.println(Config.GOOGLE_AND_SEARCH_ARRAY[index + 1][i]);
+			}
+			out.close();
+			console.println("Updated Keys");
+			readAPIFromFile();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private static void readAPIFromFile() {
+		try {
+			java.io.BufferedReader in = new java.io.BufferedReader(new java.io.FileReader("configKEY.txt"));
+			in.readLine();
+			in.readLine();
+			Config.GOOGLE_API_KEY = in.readLine();
+			Config.SEARCH_ENGINE_ID = in.readLine();
+			if(Config.isDebug) {
+				console.println("Read Keys");
+			}
+			in.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

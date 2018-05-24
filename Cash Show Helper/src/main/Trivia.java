@@ -100,31 +100,32 @@ public class Trivia {
 				isNegated = true;
 				System.out.println("Is negated");
 				Config.printStream.println("Is negated");
+				break;
 			} else {
 				isNegated = false;
 			}
 		}
 		googleResult = json.getAllSearchText();
 
-//				HtmlParserThread[] allParserThreads = new HtmlParserThread[Config.htmlToParse];
-//		
-//				for (int i = 0; i < Config.htmlToParse; i++) {
-//					allParserThreads[i] = new HtmlParserThread(json.getAllResultURLs().get(i));
-//		
-//				}
-//		
-//				boolean doneParsing = false;
-//				while (!doneParsing) {
-//					doneParsing = true;
-//					for (HtmlParserThread o : allParserThreads) {
-//						if (o.isFinished()) {
-//							(new StringBuilder(googleResult)).append(o.getText()).toString();
-//						} else {
-//							doneParsing = false;
-//						}
-//		
-//					}
-//				}
+		//				HtmlParserThread[] allParserThreads = new HtmlParserThread[Config.htmlToParse];
+		//		
+		//				for (int i = 0; i < Config.htmlToParse; i++) {
+		//					allParserThreads[i] = new HtmlParserThread(json.getAllResultURLs().get(i));
+		//		
+		//				}
+		//		
+		//				boolean doneParsing = false;
+		//				while (!doneParsing) {
+		//					doneParsing = true;
+		//					for (HtmlParserThread o : allParserThreads) {
+		//						if (o.isFinished()) {
+		//							(new StringBuilder(googleResult)).append(o.getText()).toString();
+		//						} else {
+		//							doneParsing = false;
+		//						}
+		//		
+		//					}
+		//				}
 
 		googleResult = (new StringBuilder(googleResult))
 				.append(HtmlParser.getContainedText(json.getAllResultURLs(), Config.htmlToParse)).toString();
@@ -170,7 +171,7 @@ public class Trivia {
 		for (int i : allScores) {
 			i = (int) Math.round(((double) i) / Config.googleResultsScaleDown);
 		}
-	
+
 	}
 
 	public String getAnswer(int index) {
@@ -244,20 +245,20 @@ public class Trivia {
 		int bestIndex;
 		if (isNegated) {
 			Config.printStream
-					.println((new StringBuilder("Best Answer: ").append(answerCandidates[smallestIndex])).toString());
+			.println((new StringBuilder("Best Answer: ").append(answerCandidates[smallestIndex])).toString());
 			Main.console.bestAnswerField.setText(answerCandidates[smallestIndex]);
 			bestIndex = smallestIndex;
 		} else {
 			Config.printStream
-					.println((new StringBuilder("Best Answer: ").append(answerCandidates[largestIndex])).toString());
+			.println((new StringBuilder("Best Answer: ").append(answerCandidates[largestIndex])).toString());
 			Main.console.bestAnswerField.setText(answerCandidates[largestIndex]);
 			bestIndex = largestIndex;
 		}
 
 		Main.console.jTable1.setModel(new javax.swing.table.DefaultTableModel(
 				new Object[][] {{answerCandidates[0], allScores[0], percents[0]},
-						{answerCandidates[1], allScores[1], percents[1]},
-						{answerCandidates[2], allScores[2], percents[2]}},
+					{answerCandidates[1], allScores[1], percents[1]},
+					{answerCandidates[2], allScores[2], percents[2]}},
 				new String[] {"Answer Choices", "Score", "Confidence"}) {
 			@SuppressWarnings("rawtypes")
 			Class[] types = new Class[] {java.lang.String.class, java.lang.String.class, java.lang.String.class};

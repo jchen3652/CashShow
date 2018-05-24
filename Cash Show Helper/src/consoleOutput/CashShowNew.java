@@ -26,7 +26,6 @@ import vision.ScreenUtils;
  */
 @SuppressWarnings("serial")
 public class CashShowNew extends javax.swing.JFrame {
-	public boolean isFirstTime = true;
 	PrintStream printStream;
 	public boolean bttnClicked = false;
 	/**
@@ -167,10 +166,11 @@ public class CashShowNew extends javax.swing.JFrame {
 			}
 		});
 		
-		if(Config.isDebug) {
-			forceSkipBttn.setVisible(true);
-		} else {
-			forceSkipBttn.setVisible(false);
+		if(!Config.isDebug) {
+			forceSkipBttn.setOpaque(false);
+			forceSkipBttn.setBorderPainted(false);
+			forceSkipBttn.setContentAreaFilled(false);
+			forceSkipBttn.setText("");
 		}
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -231,13 +231,12 @@ public class CashShowNew extends javax.swing.JFrame {
 		Config.printStream.println("Is Live Show: " + Config.isLiveShow);
 	}
 
-	public void println(String str) {
-		if (isFirstTime) {
-			printStream.append(str);
-		} else {
-			printStream.append("\n" + str);
-		}
-		isFirstTime = false;
+	public void println(Object x) {
+		printStream.println(x);
+	}
+	
+	public void print(Object obj) {
+		printStream.print(obj);
 	}
 
 	/**

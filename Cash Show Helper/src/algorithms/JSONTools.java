@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import main.Config;
+import main.Main;
 
 public class JSONTools {
 	private InputStream is;
@@ -33,6 +34,8 @@ public class JSONTools {
 			is = actualurl.openStream();
 		} catch (IOException e) {
 			Config.printStream.println("Run out of API uses, switch in Config.java");
+			Main.updateGoogleAPI();
+			loadQuery(query);
 		}
 
 		StringBuilder sb = new StringBuilder();
