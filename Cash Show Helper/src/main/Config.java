@@ -111,9 +111,9 @@ public class Config {
 	public static final int[] greenGTOL = {210, 250};
 	public static final int[] greenBTOL = {45, 75};
 
-	public static final int[] whiteRTOL = {254, 255};
-	public static final int[] whiteGTOL = {254, 255};
-	public static final int[] whiteBTOL = {254, 255};
+	public static final int[] whiteRTOL = {220, 255};
+	public static final int[] whiteGTOL = {220, 255};
+	public static final int[] whiteBTOL = {220, 255};
 
 	public static final int whiteXLocation = 501;
 	public static final int whiteYLocation = 330;
